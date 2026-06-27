@@ -29,7 +29,7 @@
     </a>
 </div>
 
-<form method="POST" action="/salvar-avaliacao/" id="formAvaliacao">
+<form method="POST" action="/estado/salvar-avaliacao/" id="formAvaliacao">
     <input type="hidden" name="artigo_id_real" value="{{ artigo.id }}">
     <input type="hidden" name="page" value="{{ request.query_params.page or 1 }}">
 
@@ -210,7 +210,7 @@
     </div>
 
     <div class="d-flex justify-content-end gap-2 mb-5">
-        <a href="/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
+        <a href="/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
         <button type="submit" class="btn btn-success px-5 fw-bold">Concluir Avaliação</button>
     </div>
 </form>

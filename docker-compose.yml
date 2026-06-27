@@ -14,16 +14,3 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
 
-  # dashboard:
-  #   build:
-  #     context: .
-  #     dockerfile: Dockerfile.streamlit
-
-  #   volumes:
-  #     - ./data:/data
-
-  #   ports:
-  #     - "8501:8501"
-
-  #   depends_on:
-  #     - api

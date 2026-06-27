@@ -12,7 +12,7 @@ from app.routers import (
 )
 
 app = FastAPI(
-    title="LabGira API",
+    title="Estado API",
     root_path="/estado",
     docs_url="/docs",          
     openapi_url="/openapi.json"
@@ -31,9 +31,13 @@ app.add_middleware(
 # --- Criação de tabelas ---
 database.Base.metadata.create_all(bind=database.engine)
 
+@app.get("/")
+async def raiz_para_login():
+    # Usamos o caminho completo que o navegador deve seguir
+    return RedirectResponse(url="/estado/login/", status_code=302)
+
 # --- Rotas de autenticação ---
 app.include_router(auth.router)
-
 app.include_router(html_avaliacao.router)
 app.include_router(html_filtros.router)
 app.include_router(artigos_routes.router)
