@@ -19,4 +19,4 @@ COPY backend ./backend
 
 EXPOSE 8501
 
-CMD ["streamlit", "run", "backend/app/dashboard/dashboard.py", "--server.headless=true", "--server.port=8501", "--server.address=0.0.0.0", "--server.baseUrlPath=/doutoramento/dashboard/app/", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]
+CMD ["streamlit", "run", "backend/app/dashboard/dashboard.py", "--server.headless=true", "--server.port=9001", "--server.address=0.0.0.0", "--server.baseUrlPath=/doutoramento/dashboard/app/", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]

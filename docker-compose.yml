@@ -9,7 +9,7 @@ services:
       - ./data:/data
 
     ports:
-      - "8500:8500"
+      - "9000:9000"
 
     environment:
       - PYTHONUNBUFFERED=1
