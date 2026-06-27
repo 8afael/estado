@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Temas{% endblock %}
+
+{% block content %}
+<h3>Temas</h3>
+
+<a href="/doutoramento/temas/novo" class="btn btn-primary mb-3">Novo</a>
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Outro</th>
+        <th></th>
+    </tr>
+    {% for t in temas %}
+    <tr>
+        <td>{{ t.id }}</td>
+        <td>{{ t.descricao }}</td>
+        <td>{{ t.outro }}</td>
+        <td>
+            <a href="/doutoramento/temas/{{ t.id }}/editar" class="btn btn-sm btn-warning">Editar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

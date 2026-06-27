@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block title %}Avaliação do Artigo{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    .card-secao {
+        border: none;
+        border-radius: 0.75rem;
+    }
+    .bg-header-secao {
+        background-color: #e3f2fd;
+        color: #0d47a1;
+    }
+    .form-label {
+        color: #212529;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-0">Avaliação de Artigo</h3>
+        <span class="text-muted">Preencha os critérios metodológicos e analíticos</span>
+    </div>
+    <a href="/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-sm btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> Voltar para a Lista
+    </a>
+</div>
+
+<form method="POST" action="/salvar-avaliacao/" id="formAvaliacao">
+    <input type="hidden" name="artigo_id_real" value="{{ artigo.id }}">
+    <input type="hidden" name="page" value="{{ request.query_params.page or 1 }}">
+
+    <div class="card card-secao shadow-sm mb-4">
+        <div class="card-header bg-header-secao d-flex justify-content-between align-items-center py-2">
+            <span class="fw-bold">
+                <i class="bi bi-info-circle-fill me-2"></i> Identificação do Artigo e Avaliador
+            </span>
+            {% if artigo.link %}
+                <a href="{{ artigo.link }}" target="_blank" class="btn btn-sm btn-primary fw-semibold">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Artigo Original
+                </a>
+            {% else %}
+                <button class="btn btn-sm btn-secondary" disabled>Link Indisponível</button>
+            {% endif %}
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">ID do Artigo</label>
+                <input type="text" class="form-control bg-light" value="{{ artigo.id }}" readonly>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold">Identificação do Avaliador</label>
+                <input type="text" class="form-control bg-light" value="{{ current_user.username }}" readonly>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label fw-semibold" for="titulo_editavel">Título do Artigo</label>
+                <input type="text" name="titulo" id="titulo_editavel" class="form-control" value="{{ artigo.titulo }}" required>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label fw-semibold" for="resumo">Resumo do Artigo</label>
+                <textarea name="resumo" id="resumo" class="form-control" rows="4" required>{{ artigo.resumo or '' }}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-secao shadow-sm mb-4">
+        <div class="card-header bg-dark text-white fw-bold py-3">
+            <i class="bi bi-gear-fill me-2"></i> Classificação Metodológica
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-4">
+                <label class="form-label fw-semibold" for="codigo">Código de Identificação</label>
+                <input type="text" name="codigo" id="codigo" class="form-control" value="{{ artigo.codigo | default('', true) }}" required placeholder="DOI, ISBN ...">
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold" for="ano_publicacao">Ano de Publicação</label>
+                <select name="ano_publicacao" id="ano_publicacao" class="form-select" required>
+                    <option value="">Selecione...</option>
+                    {% for ano in dicionarios.anos %}
+                        <option value="{{ ano }}" {% if artigo.ano_publicacao == ano %}selected{% endif %}>{{ ano }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label fw-semibold" for="idioma">Idioma do Artigo</label>
+                <select name="idioma" id="idioma" class="form-select" required>
+                    <option value="">Selecione...</option>
+                    {% for lang in dicionarios.idiomas %}
+                        <option value="{{ lang }}" {% if artigo.idioma == lang %}selected{% endif %}>{{ lang }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="paises_afiliacao">Países de Afiliação dos Autores</label>
+                <input type="text" name="paises_autores" id="paises_afiliacao" class="form-control" value="{{ artigo.paises_autores or '' }}" placeholder="Digite para buscar os países..." autocomplete="off" list="listaPaises">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="pais_estudado">País Analisado no Estudo</label>
+                <input type="text" name="pais_estudado" id="pais_estudado" class="form-control" value="{{ artigo.pais_estudado or '' }}" placeholder="Digite para buscar o país ou selecione N/A..." autocomplete="off" list="listaPaises">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="checkNA" onclick="marcarComoNA()">
+                    <label class="form-check-label small text-muted" for="checkNA">Marcar este estudo como Não Aplicável (N/A)</label>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="tipo_documento">Tipo de Documento</label>
+                <select name="tipo_documento" id="tipo_documento" class="form-select" required>
+                    <option value="">Selecione...</option>
+                    {% for tipo in dicionarios.tipos_documento %}
+                        <option value="{{ tipo }}" {% if artigo.tipo_documento == tipo %}selected{% endif %}>{{ tipo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="abordagem">Abordagem Metodológica</label>
+                <select name="abordagem_metodologica" id="abordagem" class="form-select" required>
+                    <option value="">Selecione...</option>
+                    {% for abor in dicionarios.abordagens %}
+                        <option value="{{ abor }}" {% if artigo.abordagem_metodologica == abor %}selected{% endif %}>{{ abor }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-secao shadow-sm mb-4">
+        <div class="card-header bg-secondary text-white fw-bold py-3">
+            <i class="bi bi-journal-check me-2"></i> Critérios de Conteúdo (T1 a T4)
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="t1">O título, o resumo ou as palavras-chave mencionam explicitamente pelo menos um dos seguintes termos...</label>
+                <select name="t1_termos_chave" id="t1" class="form-select" required>
+                    <option value="">Selecione uma opção...</option>
+                    {% for opt in dicionarios.t1_opcoes %}
+                        <option value="{{ opt }}" {% if avaliacao and avaliacao.t1_termos_chave == opt %}selected{% endif %}>{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="t2">O termo “open” é utilizado no contexto de Estado, governo...</label>
+                <select name="t2_contexto_publico" id="t2" class="form-select" required>
+                    <option value="">Selecione uma opção...</option>
+                    {% for opt in dicionarios.t2_opcoes %}
+                        <option value="{{ opt }}" {% if avaliacao and avaliacao.t2_contexto_publico == opt %}selected{% endif %}>{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional...</label>
+                <select name="t3_tema_institucional" id="t3" class="form-select" required>
+                    <option value="">Selecione uma opção...</option>
+                    {% for opt in dicionarios.t3_opcoes %}
+                        <option value="{{ opt }}" {% if avaliacao and avaliacao.t3_tema_institucional == opt %}selected{% endif %}>{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="t4">O artigo analisa diretamente instituições, políticas ou práticas...</label>
+                <select name="t4_analise_direta" id="t4" class="form-select" required>
+                    <option value="">Selecione uma opção...</option>
+                    {% for opt in dicionarios.t4_opcoes %}
+                        <option value="{{ opt }}" {% if avaliacao and avaliacao.t4_analise_direta == opt %}selected{% endif %}>{{ opt }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-secao shadow-sm mb-4">
+        <div class="card-header bg-warning text-dark fw-bold py-3">
+            <i class="bi bi-cpu-fill me-2"></i> Uso de Tecnologias de suporte (IA) e Notas
+        </div>
+        <div class="card-body row g-3">
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA para fazer a avaliação? Descrever qual ou quais ferramentas e como foram utilizadas.</label>
+                <input type="text" name="usou_ia" id="usou_ia" class="form-control" 
+                       value="{% if avaliacao and avaliacao.usou_ia %}{{ avaliacao.usou_ia }}{% endif %}" 
+                       placeholder="Ex: Sim, ChatGPT-4o para sumarização">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label fw-semibold" for="ia_prompts">Caso a resposta anterior seja sim, quais prompts usou? Copiar e colar exatamente</label>
+                <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" 
+                       value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" 
+                       placeholder="Descreva os prompts/instruções que forneceu à IA">
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label fw-semibold" for="observacoes">Se desejar, adicione observações à avaliação.</label>
+                <textarea name="observacoes" id="observacoes" class="form-control" rows="3" 
+                          placeholder="Insira considerações adicionais pertinentes...">{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mb-5">
+        <a href="/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
+        <button type="submit" class="btn btn-success px-5 fw-bold">Concluir Avaliação</button>
+    </div>
+</form>
+
+<datalist id="listaPaises">
+    {% for pais in dicionarios.paises %}
+        <option value="{{ pais }}"></option>
+    {% endfor %}
+</datalist>
+
+<script>
+function marcarComoNA() {
+    const checkbox = document.getElementById('checkNA');
+    const inputPais = document.getElementById('pais_estudado');
+    if (checkbox.checked) {
+        inputPais.value = "N/A";
+        inputPais.setAttribute('readonly', true);
+    } else {
+        inputPais.value = "";
+        inputPais.removeAttribute('readonly');
+    }
+}
+</script>
+{% endblock %}

@@ -1,0 +1,6 @@
+[theme]
+primaryColor = "#0d6efd"          # Azul Padrão Bootstrap
+backgroundColor = "#ffffff"       # Branco Puro
+secondaryBackgroundColor = "#f8f9fa" # Cinza bem claro (bg-light do Bootstrap)
+textColor = "#212529"             # Cinza muito escuro (quase preto) para leitura
+font = "sans serif"

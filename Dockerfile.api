@@ -1,0 +1,22 @@
+FROM python:3.11
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y poppler-utils \
+    && apt-get install -y libmagic1 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir traits==6.3.2
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend/app ./app
+
+EXPOSE 8500
+
+CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "8500"]

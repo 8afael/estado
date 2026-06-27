@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Tema{% endblock %}
+
+{% block content %}
+<h3>{{ 'Editar' if tema else 'Novo' }} Tema</h3>
+
+<form method="post" action="{% if tema %}/doutoramento/temas/{{ tema.id }}/editar{% else %}/doutoramento/temas/novo{% endif %}">
+    
+    <div class="mb-3">
+        <label class="form-label">Descrição</label>
+        <input type="text" name="descricao" class="form-control"
+               value="{{ tema.descricao if tema else '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Outro</label>
+        <input type="text" name="outro" class="form-control"
+               value="{{ tema.outro if tema else '' }}">
+
+               
+    <button class="btn btn-success">Salvar</button>
+
+    <a href="/doutoramento/temas" class="btn btn-secondary ms-2">
+        Cancelar
+    </a>
+    </div>
+</form>
+{% endblock %}

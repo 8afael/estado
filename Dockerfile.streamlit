@@ -1,0 +1,22 @@
+FROM python:3.11
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y \
+    && apt-get install -y libmagic1 \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir traits==6.3.2
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY backend ./backend
+
+EXPOSE 8501
+
+CMD ["streamlit", "run", "backend/app/dashboard/dashboard.py", "--server.headless=true", "--server.port=8501", "--server.address=0.0.0.0", "--server.baseUrlPath=/doutoramento/dashboard/app/", "--server.enableCORS=false", "--server.enableXsrfProtection=false"]

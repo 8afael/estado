@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Enquadramentos{% endblock %}
+
+{% block content %}
+<h3>Enquadramentos Responsabilidade</h3>
+
+<a href="/doutoramento/enquadramentos/novo" class="btn btn-primary mb-3">Novo</a>
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Descrição</th>
+        <th>Outro</th>
+        <th></th>
+    </tr>
+    {% for e in enquadramentos %}
+    <tr>
+        <td>{{ e.id }}</td>
+        <td>{{ e.descricao }}</td>
+        <td>{{ e.outro }}</td>
+        <td>
+            <a href="/doutoramento/enquadramentos/{{ e.id }}/editar" class="btn btn-sm btn-warning">Editar</a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

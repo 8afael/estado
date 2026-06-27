@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+{% block title %}Artigos{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #ffffff;
+    }
+    .card-filtros {
+        background-color: #e3f2fd;
+        border: none;
+    }
+    .footer-institucional {
+        border-top: 1px solid #dee2e6;
+        padding-top: 2rem;
+        margin-top: 4rem;
+        padding-bottom: 3rem;
+    }
+    .text-cost {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+</style>
+
+{# Captura dos parâmetros da URL para manter o estado nos links #}
+{% set q_id = request.query_params.id or '' %}
+{% set q_codigo = request.query_params.codigo or '' %}
+{% set q_idioma = request.query_params.idioma or '' %}
+{% set q_ano = request.query_params.ano or '' %}
+
+{# Montagem da string de filtros para paginação #}
+{% set filtros_url = "&id=" ~ q_id ~ "&codigo=" ~ q_codigo ~ "&idioma=" ~ q_idioma ~ "&ano=" ~ q_ano %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-0">Artigos para avaliação</h3>
+        <span class="text-muted">Usuário: <strong>{{ current_user.username }}</strong></span>
+    </div>
+    <a href="/logout" class="btn btn-sm btn-outline-danger">
+        <i class="bi bi-box-arrow-left"></i> Logout
+    </a>
+</div>
+
+<div class="card mb-4 shadow-sm card-filtros">
+    <div class="card-body">
+        {# Alterado para POST para usar a rota de tratamento seguro que criamos #}
+        <form method="POST" action="/artigos/" class="row g-3 align-items-end" id="formFiltros">
+            <input type="hidden" name="size" value="{{ size }}">
+            
+            <div class="col-md-1">
+                <label class="form-label fw-semibold">ID</label>
+                <input type="number" name="id" class="form-control form-control-sm" value="{{ q_id }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Código</label>
+                <input type="text" name="codigo" class="form-control form-control-sm" value="{{ q_codigo }}" placeholder="Código do artigo...">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">Idioma</label>
+                <select name="idioma" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    {% for lang in idiomas_lista %}
+                        <option value="{{ lang }}" {% if q_idioma == lang %}selected{% endif %}>{{ lang }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Ano</label>
+                <input type="number" name="ano" class="form-control form-control-sm" value="{{ q_ano }}" placeholder="Ex: 2024">
+            </div>
+
+            <div class="col-md-3 text-end">
+                <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtro</button>
+                <a href="/artigos/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <label class="fw-semibold">Registros:</label>
+        <select class="form-select form-select-sm d-inline-block w-auto" onchange="alterarTamanho(this.value)">
+            <option value="20" {% if size == 20 %}selected{% endif %}>20</option>
+            <option value="50" {% if size == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if size == 100 %}selected{% endif %}>100</option>
+        </select>
+    </div>
+    <span class="text-muted">Total: <strong>{{ total_registros }}</strong> artigos localizados</span>
+</div>
+
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover table-bordered table-sm mb-0">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 5%;">ID</th>
+                <th style="width: 15%;">Código</th>
+                <th>Título</th>
+                <th class="text-center" style="width: 10%;">Ano</th>
+                <th class="text-center" style="width: 10%;">Idioma</th>
+                <th class="text-center" style="width: 10%;">Status</th> {# NOVA COLUNA #}
+                <th class="text-center" style="width: 15%;">Ações</th>
+            </tr>
+        </thead>
+        <tbody class="bg-white">
+            {% for artigo in artigos %}
+            <tr>
+                <td class="text-center fw-bold">{{ artigo.id }}</td>
+                <td><code>{{ artigo.codigo }}</code></td>
+                <td>
+                    <div class="fw-semibold text-truncate" style="max-width: 450px;" title="{{ artigo.titulo }}">
+                        {{ artigo.titulo }}
+                    </div>
+                </td>
+                <td class="text-center">{{ artigo.ano_publicacao or '-' }}</td>
+                <td class="text-center"><span class="badge bg-secondary">{{ artigo.idioma or 'N/A' }}</span></td>
+                
+                {# EXIBIÇÃO DO STATUS DA INTERMEDIÁRIA #}
+                <td class="text-center">
+                    {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
+                        <span class="badge bg-success">Concluído</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Pendente</span>
+                    {% endif %}
+                </td>
+
+                <td class="text-center">
+                    {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
+                        <a href="/editar-avaliacao/{{ artigo.id }}/1" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-pencil-square"></i> Editar Avaliação
+                        </a>
+                    {% else %}
+                        <a href="/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
+                            <i class="bi bi-play-fill"></i> Avaliar
+                        </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="7" class="text-center text-muted py-3">Nenhum artigo corresponde aos filtros.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{# Paginação Dinâmica #}
+{% set query_params = "&size=" ~ size ~ filtros_url %}
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination pagination-sm justify-content-center">
+    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+      <a class="page-link" href="/artigos/?page={{ page - 1 }}{{ query_params }}">Prev</a>
+    </li>
+
+    {% set janela = 10 %}
+    {% set inicio = page - (janela // 2) %}
+    {% set fim = page + (janela // 2) %}
+    {% if inicio < 1 %}{% set fim = fim + (1 - inicio) %}{% set inicio = 1 %}{% endif %}
+    {% if fim > total_paginas %}{% set inicio = inicio - (fim - total_paginas) %}{% set fim = total_paginas %}{% endif %}
+    {% if inicio < 1 %}{% set inicio = 1 %}{% endif %}
+
+    {% for p in range(inicio, fim + 1) %}
+    <li class="page-item {% if p == page %}active{% endif %}">
+      <a class="page-link" href="/artigos/?page={{ p }}{{ query_params }}">{{ p }}</a>
+    </li>
+    {% endfor %}
+
+    <li class="page-item {% if page >= total_paginas %}disabled{% endif %}">
+      <a class="page-link" href="/artigos/?page={{ page + 1 }}{{ query_params }}">Next</a>
+    </li>
+  </ul>
+</nav>
+
+<script>
+function alterarTamanho(valor) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('size', valor);
+    urlParams.set('page', '1');
+    window.location.href = window.location.pathname + '?' + urlParams.toString();
+}
+</script>
+{% endblock %}
