@@ -27,7 +27,7 @@ async def listar_artigos_avaliador(
     id: Optional[str] = None,     
     codigo: Optional[str] = None,
     idioma: Optional[str] = None,
-    ano: Optional[str] = None,    
+    status: Optional[str] = None,    
     db: Session = Depends(get_db)
 ):
     # 1. PEGA O USUÁRIO DIRETO DA SESSÃO (Alinhado com o seu core/auth.py)
@@ -46,9 +46,9 @@ async def listar_artigos_avaliador(
         v_id = form_data.get("id", "")
         v_codigo = form_data.get("codigo", "")
         v_idioma = form_data.get("idioma", "")
-        v_ano = form_data.get("ano", "")
+        v_status = form_data.get("status", "")
         
-        url_redirecionamento = f"/estado/artigos/?page=1&size={size}&id={v_id}&codigo={v_codigo}&idioma={v_idioma}&ano={v_ano}"
+        url_redirecionamento = f"/estado/artigos/?page=1&size={size}&id={v_id}&codigo={v_codigo}&idioma={v_idioma}&status={v_status}"
         return RedirectResponse(url=url_redirecionamento, status_code=303)
 
     # --- FLUXO DO GET ---
@@ -76,9 +76,16 @@ async def listar_artigos_avaliador(
     if idioma and idioma.strip() != "":
         query = query.filter(models.ArtigoModel.idioma == idioma)
         
-    if ano and ano.strip() != "":
-        try: query = query.filter(models.ArtigoModel.ano_publicacao == int(ano))
-        except ValueError: pass 
+    if status and status.strip() != "":
+        st_lower = status.lower()
+        if st_lower in ["concluido", "concluído"]:
+            # Filtra aceitando tanto a versão com acento ou sem acento do banco
+            query = query.filter(models.ArtigoAvaliacaoModel.status.in_(["concluido", "Concluído"]))
+        elif st_lower in ["pendente"]:
+            query = query.filter(
+                (models.ArtigoAvaliacaoModel.status.notin_(["concluido", "Concluído"])) | 
+                (models.ArtigoAvaliacaoModel.status == None)
+            )
 
     # 5. Paginação matemática
     total_registros = query.count()

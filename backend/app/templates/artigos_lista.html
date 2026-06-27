@@ -27,10 +27,10 @@
 {% set q_id = request.query_params.id or '' %}
 {% set q_codigo = request.query_params.codigo or '' %}
 {% set q_idioma = request.query_params.idioma or '' %}
-{% set q_ano = request.query_params.ano or '' %}
+{% set q_status = request.query_params.status or '' %}
 
 {# Montagem da string de filtros para paginação #}
-{% set filtros_url = "&id=" ~ q_id ~ "&codigo=" ~ q_codigo ~ "&idioma=" ~ q_idioma ~ "&ano=" ~ q_ano %}
+{% set filtros_url = "&id=" ~ q_id ~ "&codigo=" ~ q_codigo ~ "&idioma=" ~ q_idioma ~ "&status=" ~ q_status %}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
@@ -44,7 +44,6 @@
 
 <div class="card mb-4 shadow-sm card-filtros">
     <div class="card-body">
-        {# Alterado para POST para usar a rota de tratamento seguro que criamos #}
         <form method="POST" action="/estado/artigos/" class="row g-3 align-items-end" id="formFiltros">
             <input type="hidden" name="size" value="{{ size }}">
             
@@ -54,8 +53,8 @@
             </div>
 
             <div class="col-md-3">
-                <label class="form-label fw-semibold">Código</label>
-                <input type="text" name="codigo" class="form-control form-control-sm" value="{{ q_codigo }}" placeholder="Código do artigo...">
+                <label class="form-label fw-semibold">DOI/ISBN/ISSN</label>
+                <input type="text" name="codigo" class="form-control form-control-sm" value="{{ q_codigo }}" placeholder="DOI/ISBN/ISSN">
             </div>
 
             <div class="col-md-3">
@@ -69,8 +68,12 @@
             </div>
 
             <div class="col-md-2">
-                <label class="form-label fw-semibold">Ano</label>
-                <input type="number" name="ano" class="form-control form-control-sm" value="{{ q_ano }}" placeholder="Ex: 2024">
+                <label class="form-label fw-semibold">Status</label>
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="pendente" {% if q_status == 'pendente' %}selected{% endif %}>Pendente</option>
+                    <option value="concluido" {% if q_status == 'concluido' %}selected{% endif %}>Concluído</option>
+                </select>
             </div>
 
             <div class="col-md-3 text-end">
@@ -98,11 +101,11 @@
         <thead class="table-dark">
             <tr>
                 <th class="text-center" style="width: 5%;">ID</th>
-                <th style="width: 15%;">Código</th>
+                <th style="width: 15%;">DOI/ISBN/ISSN</th>
                 <th>Título</th>
                 <th class="text-center" style="width: 10%;">Ano</th>
                 <th class="text-center" style="width: 10%;">Idioma</th>
-                <th class="text-center" style="width: 10%;">Status</th> {# NOVA COLUNA #}
+                <th class="text-center" style="width: 10%;">Status</th>
                 <th class="text-center" style="width: 15%;">Ações</th>
             </tr>
         </thead>
@@ -119,7 +122,6 @@
                 <td class="text-center">{{ artigo.ano_publicacao or '-' }}</td>
                 <td class="text-center"><span class="badge bg-secondary">{{ artigo.idioma or 'N/A' }}</span></td>
                 
-                {# EXIBIÇÃO DO STATUS DA INTERMEDIÁRIA #}
                 <td class="text-center">
                     {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
                         <span class="badge bg-success">Concluído</span>
@@ -181,7 +183,6 @@ function alterarTamanho(valor) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('size', valor);
     urlParams.set('page', '1');
-    // Força o caminho fixo incluindo o prefixo do servidor
     window.location.href = '/estado/artigos/?' + urlParams.toString();
 }
 </script>
