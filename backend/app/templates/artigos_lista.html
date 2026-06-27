@@ -74,7 +74,7 @@
             </div>
 
             <div class="col-md-3 text-end">
-                <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtro</button>
+                <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtrar</button>
                 <a href="/estado/artigos/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
             </div>
         </form>
@@ -181,7 +181,8 @@ function alterarTamanho(valor) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('size', valor);
     urlParams.set('page', '1');
-    window.location.href = window.location.pathname + '?' + urlParams.toString();
+    // Força o caminho fixo incluindo o prefixo do servidor
+    window.location.href = '/estado/artigos/?' + urlParams.toString();
 }
 </script>
 {% endblock %}
