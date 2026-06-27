@@ -37,7 +37,7 @@
         <h3 class="fw-bold mb-0">Artigos para avaliação</h3>
         <span class="text-muted">Usuário: <strong>{{ current_user.username }}</strong></span>
     </div>
-    <a href="/logout" class="btn btn-sm btn-outline-danger">
+    <a href="/estado/logout" class="btn btn-sm btn-outline-danger">
         <i class="bi bi-box-arrow-left"></i> Logout
     </a>
 </div>
@@ -130,11 +130,11 @@
 
                 <td class="text-center">
                     {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
-                        <a href="/editar-avaliacao/{{ artigo.id }}/1" class="btn btn-sm btn-outline-primary">
+                        <a href="/estado/editar-avaliacao/{{ artigo.id }}/1" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil-square"></i> Editar Avaliação
                         </a>
                     {% else %}
-                        <a href="/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
+                        <a href="/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-play-fill"></i> Avaliar
                         </a>
                     {% endif %}
@@ -154,7 +154,7 @@
 <nav aria-label="Page navigation" class="mt-4">
   <ul class="pagination pagination-sm justify-content-center">
     <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-      <a class="page-link" href="/artigos/?page={{ page - 1 }}{{ query_params }}">Prev</a>
+      <a class="page-link" href="/estado/artigos/?page={{ page - 1 }}{{ query_params }}">Prev</a>
     </li>
 
     {% set janela = 10 %}
@@ -166,12 +166,12 @@
 
     {% for p in range(inicio, fim + 1) %}
     <li class="page-item {% if p == page %}active{% endif %}">
-      <a class="page-link" href="/artigos/?page={{ p }}{{ query_params }}">{{ p }}</a>
+      <a class="page-link" href="/estado/artigos/?page={{ p }}{{ query_params }}">{{ p }}</a>
     </li>
     {% endfor %}
 
     <li class="page-item {% if page >= total_paginas %}disabled{% endif %}">
-      <a class="page-link" href="/artigos/?page={{ page + 1 }}{{ query_params }}">Next</a>
+      <a class="page-link" href="/estado/artigos/?page={{ page + 1 }}{{ query_params }}">Next</a>
     </li>
   </ul>
 </nav>
