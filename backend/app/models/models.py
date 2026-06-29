@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, CheckConstraint, UniqueConstraint
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, CheckConstraint, Text, UniqueConstraint
 from sqlalchemy.sql import func
 from app.core.database import Base
 from sqlalchemy.orm import relationship
@@ -33,7 +33,19 @@ class AvaliacaoModel(Base):
     usuario_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     artigo_id = Column(Integer, ForeignKey("artigo.id", ondelete="CASCADE"), nullable=False)
     etapa = Column(Integer, nullable=False)
+
+    codigo = Column(String, nullable=False)
+    titulo = Column(String, nullable=False)
     
+    resumo = Column(Text, nullable=False) 
+    
+    ano_publicacao = Column(Integer)
+    idioma = Column(String)
+    paises_autores = Column(String)
+    pais_estudado = Column(String)
+    tipo_documento = Column(String)
+    abordagem_metodologica = Column(String)
+
     t1_termos_chave = Column(String)
     t2_contexto_publico = Column(String)
     t3_tema_institucional = Column(String)
@@ -48,7 +60,7 @@ class AvaliacaoModel(Base):
 
     artigo = relationship("ArtigoModel", backref="avaliacoes")
     
-    # Restrições equivalentes ao SQL anterior
+    # Restrições equivalentes ao SQL
     __table_args__ = (
         CheckConstraint("etapa IN (1, 2, 3)", name="check_etapa_valida"),
         UniqueConstraint("usuario_id", "artigo_id", "etapa", name="uq_usuario_artigo_etapa"),

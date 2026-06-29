@@ -25,9 +25,12 @@ def get_db():
 @require_login
 def exibir_formulario(
     request: Request, 
-    artigo_id: int, 
+    artigo_id: Optional[int] = None, # 1. Ajustado para evitar erros caso a URL venha mal formatada
     db: Session = Depends(get_db)
 ):
+    if not artigo_id:
+        raise HTTPException(status_code=400, detail="ID do artigo não fornecido.")
+
     # 1. Busca o artigo pedido na base de dados pelo ID
     artigo = db.query(models.ArtigoModel).filter(models.ArtigoModel.id == artigo_id).first()
     if not artigo:
@@ -43,21 +46,25 @@ def exibir_formulario(
     # 3. Buscar o ID numérico do usuário
     user_db = db.query(models.User).filter(models.User.username == username_sessao).first()
     
-    # 4. CORREÇÃO DA QUERY: Agora buscando estritamente o artigo_id correto dentro de avaliacoes
+    # 4. Busca se o avaliador atual já possui um registro salvo para este artigo
     avaliacao_existente = None
     if user_db:
         avaliacao_existente = db.query(models.AvaliacaoModel).filter(
             models.AvaliacaoModel.usuario_id == user_db.id,
-            models.AvaliacaoModel.artigo_id == artigo_id,  # <--- CORRIGIDO AQUI!
+            models.AvaliacaoModel.artigo_id == artigo_id,
             models.AvaliacaoModel.etapa == 1
         ).first()
 
-    # 5. Envia os dados para o HTML
+    # 🟢 EXTRAI APENAS O LINK DO ARTIGO
+    artigo_link = artigo.link if artigo else None
+
+    # 5. Envia as variáveis necessárias para o HTML
     return templates.TemplateResponse(
         "avaliacao_form.html", 
         {
             "request": request,
-            "artigo": artigo,
+            "artigo_id": artigo_id,
+            "artigo_link": artigo_link,  # 🟢 PASSANDO APENAS O LINK ISOLADO
             "avaliacao": avaliacao_existente,  
             "dicionarios": DICIONARIOS_AVALIACAO,  
             "current_user": current_user
@@ -71,7 +78,7 @@ async def salvar_formulario(
     artigo_id_real: int = Form(...),
     page: int = Form(1),
     
-    # Dados do artigo
+    # Dados do artigo recebidos do formulário
     titulo: str = Form(...),
     resumo: str = Form(...),
     codigo: str = Form(...),
@@ -101,7 +108,7 @@ async def salvar_formulario(
     if not user_db:
         return RedirectResponse(url="/estado/login/", status_code=303)
 
-    # 1. ATUALIZAR OS DADOS DO ARTIGO
+    # [OPCIONAL] Mantido caso queira manter a tabela global 'artigo' atualizada em paralelo
     artigo = db.query(models.ArtigoModel).filter(models.ArtigoModel.id == artigo_id_real).first()
     if artigo:
         artigo.titulo = titulo
@@ -113,13 +120,9 @@ async def salvar_formulario(
         artigo.pais_estudado = pais_estudado
         artigo.tipo_documento = tipo_documento
         artigo.abordagem_metodologica = abordagem_metodologica
-        db.add(artigo) # Garante o rastreamento do artigo modificado
+        db.add(artigo)
 
-    # 2. SALVAR OU ATUALIZAR A AVALIAÇÃO (Upsert Forçado)
     etapa_atual = 1
-
-    print("\n[DEBUG BANCO] Realizando consulta na tabela 'avaliacoes'...")
-    print(f"[DEBUG BANCO] Buscando por: usuario_id={user_db.id} (user: {username_logado}) | artigo_id={artigo_id_real} | etapa={etapa_atual}")
           
     avaliacao_existente = db.query(models.AvaliacaoModel).filter(
         models.AvaliacaoModel.usuario_id == user_db.id,
@@ -128,8 +131,18 @@ async def salvar_formulario(
     ).first()
 
     if av_existente := avaliacao_existente:
-        print(f"[DEBUG FLUXO] -> ENSTROU NO 'IF' (ID da Avaliação Localizada: {av_existente.id}) - Atualizando dados existentes...")
-        # Se já existe, atualiza as colunas e força o SQLAlchemy a rastreá-lo novamente
+        # 🟢 CORREÇÃO: Atualizando os NOVOS campos também no registro de avaliação existente
+        av_existente.titulo = titulo
+        av_existente.resumo = resumo
+        av_existente.codigo = codigo
+        av_existente.ano_publicacao = ano_publicacao
+        av_existente.idioma = idioma
+        av_existente.paises_autores = paises_autores
+        av_existente.pais_estudado = pais_estudado
+        av_existente.tipo_documento = tipo_documento
+        av_existente.abordagem_metodologica = abordagem_metodologica
+        
+        # Campos de critérios e IA
         av_existente.t1_termos_chave = t1_termos_chave
         av_existente.t2_contexto_publico = t2_contexto_publico
         av_existente.t3_tema_institucional = t3_tema_institucional
@@ -140,14 +153,22 @@ async def salvar_formulario(
         av_existente.observacoes = observacoes
         av_existente.resultado = "Concluído"
         
-        db.add(av_existente) # <--- CORREÇÃO: Força o ORM a entender que o objeto existente mudou!
+        db.add(av_existente)
     else:
-        print("[DEBUG FLUXO] -> ENTROU NO 'ELSE' - Nenhuma avaliação idêntica foi encontrada. Tentando criar um novo registro do zero...")
-        # Se não existe, cria o novo registro
+        # 🟢 CORREÇÃO: Inserindo os NOVOS campos na criação da nova avaliação
         nova_avaliacao = models.AvaliacaoModel(
             usuario_id=user_db.id,
             artigo_id=artigo_id_real,
             etapa=etapa_atual, 
+            titulo=titulo,
+            resumo=resumo,
+            codigo=codigo,
+            ano_publicacao=ano_publicacao,
+            idioma=idioma,
+            paises_autores=paises_autores,
+            pais_estudado=pais_estudado,
+            tipo_documento=tipo_documento,
+            abordagem_metodologica=abordagem_metodologica,
             t1_termos_chave=t1_termos_chave,
             t2_contexto_publico=t2_contexto_publico,
             t3_tema_institucional=t3_tema_institucional,
@@ -160,7 +181,7 @@ async def salvar_formulario(
         )
         db.add(nova_avaliacao)
 
-    # 3. ATUALIZAR O STATUS NA TABELA INTERMEDIÁRIA
+    # Atualiza o status na tabela intermediária de controle de fluxo
     distribuicao = db.query(models.ArtigoAvaliacaoModel).filter(
         models.ArtigoAvaliacaoModel.artigo_id == artigo_id_real,
         models.ArtigoAvaliacaoModel.username == username_logado
@@ -170,9 +191,7 @@ async def salvar_formulario(
         distribuicao.status = "concluido"
         db.add(distribuicao)
 
-    # Força a gravação síncrona de todas as entidades adicionadas
     db.commit()
-
     return RedirectResponse(url=f"/estado/artigos/?page={page}", status_code=303)
 
 

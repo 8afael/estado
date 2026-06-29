@@ -30,7 +30,7 @@
 </div>
 
 <form method="POST" action="/estado/salvar-avaliacao/" id="formAvaliacao">
-    <input type="hidden" name="artigo_id_real" value="{{ artigo.id }}">
+    <input type="hidden" name="artigo_id_real" value="{{ artigo_id }}">
     <input type="hidden" name="page" value="{{ request.query_params.page or 1 }}">
 
     <div class="card card-secao shadow-sm mb-4">
@@ -38,8 +38,9 @@
             <span class="fw-bold">
                 <i class="bi bi-info-circle-fill me-2"></i> Identificação do Artigo e Avaliador
             </span>
-            {% if artigo.link %}
-                <a href="{{ artigo.link }}" target="_blank" class="btn btn-sm btn-primary fw-semibold">
+            {# 🟢 Alterado para ler a variável isolada artigo_link #}
+            {% if artigo_link %}
+                <a href="{{ artigo_link }}" target="_blank" class="btn btn-sm btn-primary fw-semibold">
                     <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Artigo Original
                 </a>
             {% else %}
@@ -49,7 +50,7 @@
         <div class="card-body row g-3">
             <div class="col-md-6">
                 <label class="form-label fw-semibold">ID do Artigo</label>
-                <input type="text" class="form-control bg-light" value="{{ artigo.id }}" readonly>
+                <input type="text" class="form-control bg-light" value="{{ artigo_id }}" readonly>
             </div>
 
             <div class="col-md-6">
@@ -59,12 +60,12 @@
 
             <div class="col-md-12">
                 <label class="form-label fw-semibold" for="titulo_editavel">Título do Artigo</label>
-                <input type="text" name="titulo" id="titulo_editavel" class="form-control" value="{{ artigo.titulo }}" required>
+                <input type="text" name="titulo" id="titulo_editavel" class="form-control" value="{{ avaliacao.titulo or '' }}" required>
             </div>
 
             <div class="col-md-12">
                 <label class="form-label fw-semibold" for="resumo">Resumo do Artigo</label>
-                <textarea name="resumo" id="resumo" class="form-control" rows="4" required>{{ artigo.resumo or '' }}</textarea>
+                <textarea name="resumo" id="resumo" class="form-control" rows="4" required>{{ avaliacao.resumo or '' }}</textarea>
             </div>
         </div>
     </div>
@@ -75,8 +76,8 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-4">
-                <label class="form-label fw-semibold" for="codigo">Código de Identificação</label>
-                <input type="text" name="codigo" id="codigo" class="form-control" value="{{ artigo.codigo | default('', true) }}" required placeholder="DOI, ISBN ...">
+                <label class="form-label fw-semibold" for="codigo">DOI/ISBN/ISSN</label>
+                <input type="text" name="codigo" id="codigo" class="form-control" value="{{ avaliacao.codigo or '' }}" required placeholder="DOI, ISBN ...">
             </div>
 
             <div class="col-md-4">
@@ -84,7 +85,7 @@
                 <select name="ano_publicacao" id="ano_publicacao" class="form-select" required>
                     <option value="">Selecione...</option>
                     {% for ano in dicionarios.anos %}
-                        <option value="{{ ano }}" {% if artigo.ano_publicacao == ano %}selected{% endif %}>{{ ano }}</option>
+                        <option value="{{ ano }}" {% if avaliacao.ano_publicacao == ano %}selected{% endif %}>{{ ano }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -94,19 +95,19 @@
                 <select name="idioma" id="idioma" class="form-select" required>
                     <option value="">Selecione...</option>
                     {% for lang in dicionarios.idiomas %}
-                        <option value="{{ lang }}" {% if artigo.idioma == lang %}selected{% endif %}>{{ lang }}</option>
+                        <option value="{{ lang }}" {% if avaliacao.idioma == lang %}selected{% endif %}>{{ lang }}</option>
                     {% endfor %}
                 </select>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="paises_afiliacao">Países de Afiliação dos Autores</label>
-                <input type="text" name="paises_autores" id="paises_afiliacao" class="form-control" value="{{ artigo.paises_autores or '' }}" placeholder="Digite para buscar os países..." autocomplete="off" list="listaPaises">
+                <input type="text" name="paises_autores" id="paises_afiliacao" class="form-control" value="{{ avaliacao.paises_autores or '' }}" placeholder="Digite para buscar os países..." autocomplete="off" list="listaPaises">
             </div>
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="pais_estudado">País Analisado no Estudo</label>
-                <input type="text" name="pais_estudado" id="pais_estudado" class="form-control" value="{{ artigo.pais_estudado or '' }}" placeholder="Digite para buscar o país ou selecione N/A..." autocomplete="off" list="listaPaises">
+                <input type="text" name="pais_estudado" id="pais_estudado" class="form-control" value="{{ avaliacao.pais_estudado or '' }}" placeholder="Digite para buscar o país ou selecione N/A..." autocomplete="off" list="listaPaises">
                 <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" id="checkNA" onclick="marcarComoNA()">
                     <label class="form-check-label small text-muted" for="checkNA">Marcar este estudo como Não Aplicável (N/A)</label>
@@ -118,7 +119,7 @@
                 <select name="tipo_documento" id="tipo_documento" class="form-select" required>
                     <option value="">Selecione...</option>
                     {% for tipo in dicionarios.tipos_documento %}
-                        <option value="{{ tipo }}" {% if artigo.tipo_documento == tipo %}selected{% endif %}>{{ tipo }}</option>
+                        <option value="{{ tipo }}" {% if avaliacao.tipo_documento == tipo %}selected{% endif %}>{{ tipo }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -128,7 +129,7 @@
                 <select name="abordagem_metodologica" id="abordagem" class="form-select" required>
                     <option value="">Selecione...</option>
                     {% for abor in dicionarios.abordagens %}
-                        <option value="{{ abor }}" {% if artigo.abordagem_metodologica == abor %}selected{% endif %}>{{ abor }}</option>
+                        <option value="{{ abor }}" {% if avaliacao.abordagem_metodologica == abor %}selected{% endif %}>{{ abor }}</option>
                     {% endfor %}
                 </select>
             </div>

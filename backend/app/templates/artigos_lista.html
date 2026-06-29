@@ -111,28 +111,48 @@
         </thead>
         <tbody class="bg-white">
             {% for artigo in artigos %}
+            {# 🟢 Define uma variável de atalho para a avaliação do usuário logado (se houver) #}
+            {% set minha_avaliacao = artigo.avaliacoes[0] if (artigo.avaliacoes and artigo.avaliacoes|length > 0) else None %}
             <tr>
                 <td class="text-center fw-bold">{{ artigo.id }}</td>
-                <td><code>{{ artigo.codigo }}</code></td>
+                
+                {# 🟢 DOI/ISBN/ISSN: Mostra o da avaliação ou vazio #}
                 <td>
-                    <div class="fw-semibold text-truncate" style="max-width: 450px;" title="{{ artigo.titulo }}">
-                        {{ artigo.titulo }}
+                    <code>{{ minha_avaliacao.codigo if minha_avaliacao else '' }}</code>
+                </td>
+                
+                {# 🟢 Título: Mostra o da avaliação ou vazio #}
+                <td>
+                    <div class="fw-semibold text-truncate" style="max-width: 450px;" title="{{ minha_avaliacao.titulo if minha_avaliacao else '' }}">
+                        {{ minha_avaliacao.titulo if minha_avaliacao else '' }}
                     </div>
                 </td>
-                <td class="text-center">{{ artigo.ano_publicacao or '-' }}</td>
-                <td class="text-center"><span class="badge bg-secondary">{{ artigo.idioma or 'N/A' }}</span></td>
                 
+                {# 🟢 Ano: Mostra o da avaliação ou '-' #}
                 <td class="text-center">
-                    {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
+                    {{ minha_avaliacao.ano_publicacao if minha_avaliacao else '-' }}
+                </td>
+                
+                {# 🟢 Idioma: Mostra o da avaliação ou 'N/A' #}
+                <td class="text-center">
+                    <span class="badge bg-secondary">
+                        {{ minha_avaliacao.idioma if minha_avaliacao else 'N/A' }}
+                    </span>
+                </td>
+                
+                {# Status da avaliação do usuário logado #}
+                <td class="text-center">
+                    {% if minha_avaliacao %}
                         <span class="badge bg-success">Concluído</span>
                     {% else %}
                         <span class="badge bg-warning text-dark">Pendente</span>
                     {% endif %}
                 </td>
 
+                {# Ações da avaliação do usuário logado #}
                 <td class="text-center">
-                    {% if artigo.distribuicoes and artigo.distribuicoes[0].status == 'concluido' %}
-                        <a href="/estado/editar-avaliacao/{{ artigo.id }}/1" class="btn btn-sm btn-outline-primary">
+                    {% if minha_avaliacao %}
+                        <a href="/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil-square"></i> Editar Avaliação
                         </a>
                     {% else %}
