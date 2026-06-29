@@ -188,9 +188,16 @@ async def salvar_formulario(
     ).first()
     
     if distribuicao:
+        print(f"[DEBUG STATUS] Sucesso: {username_logado} concluiu o seu próprio artigo {artigo_id_real}.")
         distribuicao.status = "concluido"
         db.add(distribuicao)
+    else:
+        # Se cair aqui, significa que o usuário logado tentou forçar o envio de um artigo que não é dele
+        print(f"[DEBUG STATUS] ERRO CRÍTICO: Usuário {username_logado} tentou avaliar o artigo {artigo_id_real}, mas não é o dono da distribuição.")
+        # Opcional: Descomente a linha abaixo se quiser bloquear a operação com erro na tela
+        # raise HTTPException(status_code=403, detail="Você não tem permissão para avaliar este artigo.")
 
+    # Força a gravação síncrona no banco
     db.commit()
     return RedirectResponse(url=f"/estado/artigos/?page={page}", status_code=303)
 
