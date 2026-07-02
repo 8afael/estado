@@ -38,7 +38,6 @@
             <span class="fw-bold">
                 <i class="bi bi-info-circle-fill me-2"></i> Identificação do Artigo e Avaliador
             </span>
-            {# 🟢 Alterado para ler a variável isolada artigo_link #}
             {% if artigo_link %}
                 <a href="{{ artigo_link }}" target="_blank" class="btn btn-sm btn-primary fw-semibold">
                     <i class="bi bi-box-arrow-up-right me-1"></i> Abrir Artigo Original
@@ -78,6 +77,10 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold" for="codigo">DOI/ISBN/ISSN</label>
                 <input type="text" name="codigo" id="codigo" class="form-control" value="{{ avaliacao.codigo or '' }}" required placeholder="DOI, ISBN ...">
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="doisNA" onclick="doiNA()">
+                    <label class="form-check-label small text-muted" for="doisNA">Marcar este estudo como Não Aplicável (N/A)</label>
+                </div>
             </div>
 
             <div class="col-md-4">
@@ -102,12 +105,16 @@
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="paises_afiliacao">Países de Afiliação dos Autores</label>
-                <input type="text" name="paises_autores" id="paises_afiliacao" class="form-control" value="{{ avaliacao.paises_autores or '' }}" placeholder="Digite para buscar os países..." autocomplete="off" list="listaPaises">
+                <input type="text" name="paises_autores" id="paises_afiliacao" class="form-control" value="{{ avaliacao.paises_autores or '' }}" placeholder="Digite para buscar os países..." autocomplete="off" list="listaPaises" required>
+                <div class="form-check mt-1">
+                    <input class="form-check-input" type="checkbox" id="autoresNA" onclick="paisesAutoresNA()">
+                    <label class="form-check-label small text-muted" for="autoresNA">Marcar este estudo como Não Aplicável (N/A)</label>
+                </div>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="pais_estudado">País Analisado no Estudo</label>
-                <input type="text" name="pais_estudado" id="pais_estudado" class="form-control" value="{{ avaliacao.pais_estudado or '' }}" placeholder="Digite para buscar o país ou selecione N/A..." autocomplete="off" list="listaPaises">
+                <input type="text" name="pais_estudado" id="pais_estudado" class="form-control" value="{{ avaliacao.pais_estudado or '' }}" placeholder="Digite para buscar o país ou selecione N/A..." autocomplete="off" list="listaPaises" required>
                 <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" id="checkNA" onclick="marcarComoNA()">
                     <label class="form-check-label small text-muted" for="checkNA">Marcar este estudo como Não Aplicável (N/A)</label>
@@ -142,7 +149,7 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t1">O título, o resumo ou as palavras-chave mencionam explicitamente pelo menos um dos seguintes termos...</label>
+                <label class="form-label fw-semibold" for="t1">O título e o resumo mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol?</label>
                 <select name="t1_termos_chave" id="t1" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t1_opcoes %}
@@ -152,7 +159,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t2">O termo “open” é utilizado no contexto de Estado, governo...</label>
+                <label class="form-label fw-semibold" for="t2">O termo “open” é utilizado no contexto de Estado, governo, parlamento, justiça ou governança pública?</label>
                 <select name="t2_contexto_publico" id="t2" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t2_opcoes %}
@@ -162,7 +169,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional...</label>
+                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional, político, jurídico, organizacional ou relacional no setor público, e não apenas como tema técnico, instrumental ou operacional de tecnologia, sistemas, portais, interoperabilidade, arquitetura da informação, proteção de dados ou gestão de TI?</label>
                 <select name="t3_tema_institucional" id="t3" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t3_opcoes %}
@@ -172,7 +179,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t4">O artigo analisa diretamente instituições, políticas ou práticas...</label>
+                <label class="form-label fw-semibold" for="t4">O artigo analisa diretamente instituições, políticas ou práticas do setor público relacionadas à abertura?</label>
                 <select name="t4_analise_direta" id="t4" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t4_opcoes %}
@@ -192,20 +199,20 @@
                 <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA para fazer a avaliação? Descrever qual ou quais ferramentas e como foram utilizadas.</label>
                 <input type="text" name="usou_ia" id="usou_ia" class="form-control" 
                        value="{% if avaliacao and avaliacao.usou_ia %}{{ avaliacao.usou_ia }}{% endif %}" 
-                       placeholder="Ex: Sim, ChatGPT-4o para sumarização">
+                       placeholder="Ex: Não / Sim, ChatGPT-4o para sumarização" required>
             </div>
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="ia_prompts">Caso a resposta anterior seja sim, quais prompts usou? Copiar e colar exatamente</label>
                 <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" 
                        value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" 
-                       placeholder="Descreva os prompts/instruções que forneceu à IA">
+                       placeholder="Digite os prompts ou 'Não aplicável'" required>
             </div>
 
             <div class="col-md-12">
                 <label class="form-label fw-semibold" for="observacoes">Se desejar, adicione observações à avaliação.</label>
                 <textarea name="observacoes" id="observacoes" class="form-control" rows="3" 
-                          placeholder="Insira considerações adicionais pertinentes...">{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
+                          placeholder="Insira considerações adicionais pertinentes ou 'Nenhuma'..." required>{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
             </div>
         </div>
     </div>
@@ -234,5 +241,30 @@ function marcarComoNA() {
         inputPais.removeAttribute('readonly');
     }
 }
+
+function paisesAutoresNA() {
+    const checkbox = document.getElementById('autoresNA');
+    const inputPais = document.getElementById('paises_afiliacao');
+    if (checkbox.checked) {
+        inputPais.value = "N/A";
+        inputPais.setAttribute('readonly', true);
+    } else {
+        inputPais.value = "";
+        inputPais.removeAttribute('readonly');
+    }
+}
+
+function doiNA() {
+    const checkbox = document.getElementById('doisNA');
+    const inputPais = document.getElementById('codigo');
+    if (checkbox.checked) {
+        inputPais.value = "N/A";
+        inputPais.setAttribute('readonly', true);
+    } else {
+        inputPais.value = "";
+        inputPais.removeAttribute('readonly');
+    }
+}
+
 </script>
 {% endblock %}
