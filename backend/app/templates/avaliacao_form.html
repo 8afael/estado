@@ -205,12 +205,12 @@
 
             <div class="col-md-6">
                 <label class="form-label fw-semibold" for="ia_prompts">Caso a resposta anterior seja sim, quais prompts usou?</label>
-                <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" placeholder="Digite os prompts ou 'Não aplicável'" required>
+                <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" placeholder="Digite os prompts ou 'Não aplicável'">
             </div>
 
             <div class="col-md-12">
                 <label class="form-label fw-semibold" for="observacoes">Se desejar, adicione observações à avaliação.</label>
-                <textarea name="observacoes" id="observacoes" class="form-control" rows="3" placeholder="Insira considerações adicionais pertinentes ou 'Nenhuma'..." required>{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
+                <textarea name="observacoes" id="observacoes" class="form-control" rows="3" placeholder="Insira considerações adicionais pertinentes ou 'Nenhuma'..." >{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
             </div>
         </div>
     </div>
