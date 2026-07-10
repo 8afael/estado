@@ -152,7 +152,12 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t1">O título e o resumo mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol...</label>
+                <label class="form-label fw-semibold" for="t1">O título, o resumo ou as palavras-chave mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol?
+                    open state / Estado aberto
+                    open parliament / parlamento aberto
+                    open justice / justiça aberta
+                    open government / governo aberto
+                    open governance / governança aberta.</label>
                 <select name="t1_termos_chave" id="t1" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t1_opcoes %}
@@ -172,7 +177,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional...</label>
+                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional, político, jurídico, organizacional ou relacional no setor público, e não apenas como tema técnico, instrumental ou operacional de tecnologia, sistemas, portais, interoperabilidade, arquitetura da informação, proteção de dados ou gestão de TI?</label>
                 <select name="t3_tema_institucional" id="t3" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t3_opcoes %}
@@ -199,7 +204,7 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA...</label>
+                <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA para fazer a avaliação? Descrever qual ou quais ferramentas e como foram utilizadas.</label>
                 <input type="text" name="usou_ia" id="usou_ia" class="form-control" value="{% if avaliacao and avaliacao.usou_ia %}{{ avaliacao.usou_ia }}{% endif %}" placeholder="Ex: Não / Sim, ChatGPT-4o para sumarização" required>
             </div>
 
