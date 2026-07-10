@@ -15,7 +15,7 @@ class ArtigoModel(Base):
     __tablename__ = "artigo"
     
     id = Column(Integer, primary_key=True, index=True)
-    codigo = Column(String, unique=True, nullable=False)
+    codigo = Column(String, nullable=False)
     link = Column(String, nullable=False)
     titulo = Column(String, nullable=False)
     resumo = Column(String)

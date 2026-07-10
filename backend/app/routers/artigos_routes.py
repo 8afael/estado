@@ -1,5 +1,5 @@
-from fastapi import APIRouter, Depends, Request
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi import APIRouter, Depends, Query, Request
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session, contains_eager
 from math import ceil
@@ -124,3 +124,29 @@ async def listar_artigos_avaliador(
         }
     )
 
+@router.get("/verificar-codigo/", response_class=JSONResponse)
+def verificar_codigo_duplicado(
+    codigo: str = Query(...), 
+    artigo_id: int = Query(...), 
+    db: Session = Depends(get_db)
+):
+    """
+    Verifica assincronamente se um DOI/ISBN/ISSN já está em uso por OUTRO artigo.
+    Ignora a checagem se o código for igual ao do próprio artigo em edição.
+    """
+    codigo_limpo = codigo.strip()
+    
+    # Evita travar caso o valor enviado seja "N/A" ou vazio
+    if not codigo_limpo or codigo_limpo.upper() == "N/A":
+        return {"existe": False}
+
+    # Procura se o código existe em algum artigo cujo ID seja diferente do atual
+    artigo_duplicado = db.query(models.ArtigoModel).filter(
+        models.ArtigoModel.codigo == codigo_limpo,
+        models.ArtigoModel.id != artigo_id
+    ).first()
+    
+    if artigo_duplicado:
+        return {"existe": True}
+        
+    return {"existe": False}

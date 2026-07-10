@@ -30,7 +30,7 @@
 </div>
 
 <form method="POST" action="/estado/salvar-avaliacao/" id="formAvaliacao">
-    <input type="hidden" name="artigo_id_real" value="{{ artigo_id }}">
+    <input type="hidden" name="artigo_id_real" id="artigo_id_real" value="{{ artigo_id }}">
     <input type="hidden" name="page" value="{{ request.query_params.page or 1 }}">
 
     <div class="card card-secao shadow-sm mb-4">
@@ -77,6 +77,9 @@
             <div class="col-md-4">
                 <label class="form-label fw-semibold" for="codigo">DOI/ISBN/ISSN</label>
                 <input type="text" name="codigo" id="codigo" class="form-control" value="{{ avaliacao.codigo or '' }}" required placeholder="DOI, ISBN ...">
+                <div id="codigo-error" class="invalid-feedback fw-bold" style="display: none;">
+                    Este DOI/ISBN/ISSN já está cadastrado em outro artigo!
+                </div>
                 <div class="form-check mt-1">
                     <input class="form-check-input" type="checkbox" id="doisNA" onclick="doiNA()">
                     <label class="form-check-label small text-muted" for="doisNA">Marcar este estudo como Não Aplicável (N/A)</label>
@@ -149,7 +152,7 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t1">O título e o resumo mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol: open state, open parliament, open justice, open government, open governance?</label>
+                <label class="form-label fw-semibold" for="t1">O título e o resumo mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol...</label>
                 <select name="t1_termos_chave" id="t1" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t1_opcoes %}
@@ -169,7 +172,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional, político, jurídico, organizacional ou relacional no setor público, e não apenas como tema técnico, instrumental ou operacional de tecnologia, sistemas, portais, interoperabilidade, arquitetura da informação, proteção de dados ou gestão de TI?</label>
+                <label class="form-label fw-semibold" for="t3">Com base no título e no resumo, o artigo trata a abertura como tema institucional...</label>
                 <select name="t3_tema_institucional" id="t3" class="form-select" required>
                     <option value="">Selecione uma opção...</option>
                     {% for opt in dicionarios.t3_opcoes %}
@@ -196,30 +199,25 @@
         </div>
         <div class="card-body row g-3">
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA para fazer a avaliação? Descrever qual ou quais ferramentas e como foram utilizadas.</label>
-                <input type="text" name="usou_ia" id="usou_ia" class="form-control" 
-                       value="{% if avaliacao and avaliacao.usou_ia %}{{ avaliacao.usou_ia }}{% endif %}" 
-                       placeholder="Ex: Não / Sim, ChatGPT-4o para sumarização" required>
+                <label class="form-label fw-semibold" for="usou_ia">O avaliador usou alguma ferramenta de IA...</label>
+                <input type="text" name="usou_ia" id="usou_ia" class="form-control" value="{% if avaliacao and avaliacao.usou_ia %}{{ avaliacao.usou_ia }}{% endif %}" placeholder="Ex: Não / Sim, ChatGPT-4o para sumarização" required>
             </div>
 
             <div class="col-md-6">
-                <label class="form-label fw-semibold" for="ia_prompts">Caso a resposta anterior seja sim, quais prompts usou? Copiar e colar exatamente</label>
-                <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" 
-                       value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" 
-                       placeholder="Digite os prompts ou 'Não aplicável'" required>
+                <label class="form-label fw-semibold" for="ia_prompts">Caso a resposta anterior seja sim, quais prompts usou?</label>
+                <input type="text" name="ia_prompts" id="ia_prompts" class="form-control" value="{% if avaliacao and avaliacao.ia_prompts %}{{ avaliacao.ia_prompts }}{% endif %}" placeholder="Digite os prompts ou 'Não aplicável'" required>
             </div>
 
             <div class="col-md-12">
                 <label class="form-label fw-semibold" for="observacoes">Se desejar, adicione observações à avaliação.</label>
-                <textarea name="observacoes" id="observacoes" class="form-control" rows="3" 
-                          placeholder="Insira considerações adicionais pertinentes ou 'Nenhuma'..." required>{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
+                <textarea name="observacoes" id="observacoes" class="form-control" rows="3" placeholder="Insira considerações adicionais pertinentes ou 'Nenhuma'..." required>{% if avaliacao and avaliacao.observacoes %}{{ avaliacao.observacoes }}{% endif %}</textarea>
             </div>
         </div>
     </div>
 
     <div class="d-flex justify-content-end gap-2 mb-5">
         <a href="/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
-        <button type="submit" class="btn btn-success px-5 fw-bold">Concluir Avaliação</button>
+        <button type="submit" id="btnSalvar" class="btn btn-success px-5 fw-bold">Concluir Avaliação</button>
     </div>
 </form>
 
@@ -230,6 +228,7 @@
 </datalist>
 
 <script>
+// Mantendo suas funções existentes
 function marcarComoNA() {
     const checkbox = document.getElementById('checkNA');
     const inputPais = document.getElementById('pais_estudado');
@@ -260,11 +259,58 @@ function doiNA() {
     if (checkbox.checked) {
         inputPais.value = "N/A";
         inputPais.setAttribute('readonly', true);
+        validarCodigo(); // Dispara validação limpa para N/A
     } else {
         inputPais.value = "";
         inputPais.removeAttribute('readonly');
     }
 }
 
+// NOVA ESTRATÉGIA: Validador Assíncrono para o campo Código
+const inputCodigo = document.getElementById('codigo');
+const msgErro = document.getElementById('codigo-error');
+const btnSalvar = document.getElementById('btnSalvar');
+const artigoId = document.getElementById('artigo_id_real').value;
+
+async function validarCodigo() {
+    const valor = inputCodigo.value.trim();
+
+    // Se estiver em branco ou for "N/A", permite passar livremente
+    if (!valor || valor.toUpperCase() === 'N/A') {
+        inputCodigo.classList.remove('is-invalid');
+        msgErro.style.display = 'none';
+        btnSalvar.removeAttribute('disabled');
+        return;
+    }
+
+    try {
+        // Faz a chamada assíncrona ao FastAPI passando o código e o ID do artigo atual
+        const response = await fetch(`/estado/verificar-codigo/?codigo=${encodeURIComponent(valor)}&artigo_id=${artigoId}`);
+        const data = await response.json();
+
+        if (data.existe) {
+            // Se já existir em outro artigo: Bloqueia e avisa
+            inputCodigo.classList.add('is-invalid');
+            msgErro.style.display = 'block';
+            btnSalvar.setAttribute('disabled', 'true');
+        } else {
+            // Se estiver liberado: Destrava tudo
+            inputCodigo.classList.remove('is-invalid');
+            msgErro.style.display = 'none';
+            btnSalvar.removeAttribute('disabled');
+        }
+    } catch (err) {
+        console.error("Erro na validação do código:", err);
+    }
+}
+
+// Dispara a checagem toda vez que o usuário termina de digitar ou cola um valor
+inputCodigo.addEventListener('blur', validarCodigo);
+inputCodigo.addEventListener('input', function() {
+    // Remove o aviso de erro enquanto digita para melhorar a experiência
+    inputCodigo.classList.remove('is-invalid');
+    msgErro.style.display = 'none';
+    btnSalvar.removeAttribute('disabled');
+});
 </script>
 {% endblock %}
