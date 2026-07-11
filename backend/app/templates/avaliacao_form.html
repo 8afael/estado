@@ -90,9 +90,14 @@
                 <label class="form-label fw-semibold" for="ano_publicacao">Ano de Publicação</label>
                 <select name="ano_publicacao" id="ano_publicacao" class="form-select" required>
                     <option value="">Selecione...</option>
+                    
                     {% for ano in dicionarios.anos %}
-                        <option value="{{ ano }}" {% if avaliacao.ano_publicacao == ano %}selected{% endif %}>{{ ano }}</option>
+                        {% if ano != 0 and ano != '0' and ano|string|lower != 'outro' %}
+                            <option value="{{ ano }}" {% if avaliacao.ano_publicacao == ano %}selected{% endif %}>{{ ano }}</option>
+                        {% endif %}
                     {% endfor %}
+                    
+                    <option value="0" {% if avaliacao and (avaliacao.ano_publicacao == 0 or avaliacao.ano_publicacao == '0') %}selected{% endif %}>Outro</option>
                 </select>
             </div>
 

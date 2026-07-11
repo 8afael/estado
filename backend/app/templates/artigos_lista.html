@@ -128,9 +128,17 @@
                     </div>
                 </td>
                 
-                {# 🟢 Ano: Mostra o da avaliação ou '-' #}
+                {# 🟢 Ano: Mostra 'Outro' se for 0, o ano normal, ou '-' #}
                 <td class="text-center">
-                    {{ minha_avaliacao.ano_publicacao if minha_avaliacao else '-' }}
+                    {% if minha_avaliacao %}
+                        {% if minha_avaliacao.ano_publicacao == 0 or minha_avaliacao.ano_publicacao == '0' %}
+                            Outro
+                        {% else %}
+                            {{ minha_avaliacao.ano_publicacao }}
+                        {% endif %}
+                    {% else %}
+                        -
+                    {% endif %}
                 </td>
                 
                 {# 🟢 Idioma: Mostra o da avaliação ou 'N/A' #}

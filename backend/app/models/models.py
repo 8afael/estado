@@ -19,7 +19,7 @@ class ArtigoModel(Base):
     link = Column(String, nullable=False)
     titulo = Column(String, nullable=False)
     resumo = Column(String)
-    ano_publicacao = Column(Integer)
+    ano_publicacao = Column(String)
     idioma = Column(String)
     paises_autores = Column(String)
     pais_estudado = Column(String)
