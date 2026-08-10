@@ -25,6 +25,8 @@ class ArtigoModel(Base):
     pais_estudado = Column(String)
     tipo_documento = Column(String)
     abordagem_metodologica = Column(String)
+    nome_arquivo = Column(String)
+    resultado_final = Column(String)
 
 class AvaliacaoModel(Base):
     __tablename__ = "avaliacoes"

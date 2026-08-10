@@ -57,9 +57,14 @@
                 <input type="text" class="form-control bg-light" value="{{ current_user.username }}" readonly>
             </div>
 
-            <div class="col-md-12">
+            <div class="col-md-7">
                 <label class="form-label fw-semibold" for="titulo_editavel">Título do Artigo</label>
                 <input type="text" name="titulo" id="titulo_editavel" class="form-control" value="{{ avaliacao.titulo or '' }}" required>
+            </div>
+
+            <div class="col-md-5">
+                <label class="form-label fw-semibold" for="nome_arquivo">Nome do Arquivo</label>
+                <input type="text" name="nome_arquivo" id="nome_arquivo" class="form-control bg-light" value="{{ nome_arquivo or '' }}" readonly>
             </div>
 
             <div class="col-md-12">

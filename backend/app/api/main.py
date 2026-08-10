@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from starlette.middleware.sessions import SessionMiddleware
 import secrets
 from app.core import database
@@ -8,7 +8,8 @@ from app.routers import (
     auth,
     html_avaliacao,
     html_filtros,
-    artigos_routes
+    artigos_routes,
+    resultados_router,
 )
 
 app = FastAPI(
@@ -36,8 +37,10 @@ async def raiz_para_login():
     # Usamos o caminho completo que o navegador deve seguir
     return RedirectResponse(url="/estado/login/", status_code=302)
 
+
 # --- Rotas de autenticação ---
 app.include_router(auth.router)
 app.include_router(html_avaliacao.router)
 app.include_router(html_filtros.router)
 app.include_router(artigos_routes.router)
+app.include_router(resultados_router.router)

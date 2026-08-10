@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Avaliações - Triagem & Decisão Final</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .card-header-blue {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        .card-header-dark {
+            background-color: #1e293b;
+            color: #ffffff;
+        }
+        .badge-incluir {
+            background-color: #dcfce7;
+            color: #15803d;
+            border: 1px solid #86efac;
+        }
+        .badge-excluir {
+            background-color: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fca5a5;
+        }
+        .badge-incerto {
+            background-color: #fef3c7;
+            color: #b45309;
+            border: 1px solid #fde047;
+        }
+        .badge-terceiro {
+            background-color: #e0e7ff;
+            color: #4338ca;
+            border: 1px solid #a5b4fc;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Top Bar Navigation -->
+    <header class="bg-slate-900 text-white px-6 py-3 flex justify-between items-center shadow-md">
+        <div class="flex items-center gap-3">
+            <span class="font-bold text-lg tracking-wide">Artigos</span>
+            <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-full text-slate-300">Painel do Avaliador</span>
+        </div>
+        <div class="flex items-center gap-6 text-sm">
+            <a href="/estado/artigos/" class="hover:underline font-medium text-slate-300">Lista de Artigos</a>
+            <button id="toggleDataSource" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded transition">
+                <i class="fa-solid fa-server mr-1"></i> Fonte: <span id="sourceLabel">API Real (/avaliacoes)</span>
+            </button>
+            <a href="/estado/logout/" class="hover:underline text-slate-300">Logout</a>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-grow">
+        
+        <!-- Header Page Section -->
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b border-slate-200">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-900">Avaliação de Artigo & Resultados</h1>
+                <p class="text-sm text-slate-500 mt-1">Consolidado das respostas metodológicas, triagem individual e decisão final dos artigos.</p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-3">
+                <button onclick="carregarDados()" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition">
+                    <i class="fa-solid fa-rotate mr-2 text-slate-500"></i> Atualizar Dados
+                </button>
+            </div>
+        </div>
+
+        <!-- Metric KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total de Artigos</p>
+                    <p id="kpiTotal" class="text-2xl font-bold text-slate-800 mt-1">0</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-newspaper text-lg"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Inclusão Final</p>
+                    <p id="kpiIncluidos" class="text-2xl font-bold text-emerald-700 mt-1">0</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600">
+                    <i class="fa-solid fa-circle-check text-lg"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-rose-600 uppercase tracking-wider">Exclusão Final</p>
+                    <p id="kpiExcluidos" class="text-2xl font-bold text-rose-700 mt-1">0</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-rose-100 flex items-center justify-center text-rose-600">
+                    <i class="fa-solid fa-circle-xmark text-lg"></i>
+                </div>
+            </div>
+
+            <div class="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold text-indigo-600 uppercase tracking-wider">Encaminhar 3º Avaliador</p>
+                    <p id="kpiPendentes" class="text-2xl font-bold text-indigo-700 mt-1">0</p>
+                </div>
+                <div class="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                    <i class="fa-solid fa-user-clock text-lg"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Table -->
+        <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                <h2 class="text-base font-semibold text-slate-800">Resultado Consolidado dos Artigos</h2>
+                <span class="text-xs text-slate-500">Clique em um artigo para abrir o pop-up com os detalhes de triagem</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-100 text-xs text-slate-700 uppercase font-semibold border-b border-slate-200">
+                        <tr>
+                            <th class="px-6 py-3">ID</th>
+                            <th class="px-6 py-3">Título do Artigo</th>
+                            <th class="px-6 py-3 text-center">Avaliador 1 (A1)</th>
+                            <th class="px-6 py-3 text-center">Avaliador 2 (A2)</th>
+                            <th class="px-6 py-3 text-center">Avaliador 3 (A3)</th>
+                            <th class="px-6 py-3 text-center">Decisão Final</th>
+                            <th class="px-6 py-3 text-right">Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaArtigos" class="divide-y divide-slate-200">
+                        <!-- Renderizado via JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Modal / Pop-up de Detalhes -->
+    <div id="modalDetalhes" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh] animate-fade-in">
+            
+            <!-- Modal Header -->
+            <div class="card-header-blue px-6 py-4 flex justify-between items-center border-b border-sky-200">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-file-lines text-sky-700"></i>
+                    <h3 class="font-bold text-slate-800 text-base">Detalhes da Triagem e Decisão Final</h3>
+                </div>
+                <button onclick="fecharModal()" class="text-slate-500 hover:text-slate-800 p-1 rounded-lg transition">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-5 overflow-y-auto">
+                
+                <!-- Identificação -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">ID do Artigo</label>
+                        <input id="detalheId" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="-">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Avaliadores Envolvidos</label>
+                        <input id="detalheAvaliador" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="A1 / A2">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Título do Artigo</label>
+                    <input id="detalheTitulo" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="-">
+                </div>
+
+                <!-- Metadados -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">DOI / ISBN / ISSN</label>
+                        <input id="detalheDoi" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="N/A">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Ano de Publicação</label>
+                        <input id="detalheAno" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="-">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Idioma do Artigo</label>
+                        <input id="detalheIdioma" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="-">
+                    </div>
+                </div>
+
+                <!-- Quadro de Decisão -->
+                <div class="border-t border-slate-200 pt-4">
+                    <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">Resultado das Triagens Individualizadas</h4>
+                    <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div class="flex items-center gap-4">
+                            <div><span class="text-xs text-slate-500 block">Avaliador 1:</span> <span id="tagA1" class="px-2.5 py-1 rounded text-xs font-semibold badge-incerto">-</span></div>
+                            <div><span class="text-xs text-slate-500 block">Avaliador 2:</span> <span id="tagA2" class="px-2.5 py-1 rounded text-xs font-semibold badge-incerto">-</span></div>
+                            <div><span class="text-xs text-slate-500 block">Avaliador 3:</span> <span id="tagA3" class="px-2.5 py-1 rounded text-xs font-semibold bg-slate-100 text-slate-400">N/A</span></div>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-500 block">Decisão Final:</span>
+                            <span id="tagDecisaoFinal" class="px-3 py-1 rounded-full text-xs font-bold badge-incerto uppercase tracking-wide">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
+                <button onclick="fecharModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-md text-sm font-medium transition">
+                    Fechar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 px-6 text-center text-xs text-slate-500">
+        Dashboard de Monitoramento de Triagem Metodológica — Integrado FastAPI
+    </footer>
+
+    <!-- JS Logic -->
+    <script>
+        let useMockData = false;
+
+        const mockArtigos = [
+            {
+                artigo_id: 13,
+                titulo: "The Next Generation of Administrative Law: Building the Legal Infrastructure for Collaborative Governance",
+                codigo: "10.1016/j.law.2021.01",
+                a1: "incluir",
+                a2: "incluir",
+                a3: null,
+                decisao_final: "inclusao_final",
+                ano: 2021,
+                idioma: "Inglês"
+            },
+            {
+                artigo_id: 14,
+                titulo: "Digital Transformation in Public Sector Management",
+                codigo: "10.1016/j.pubsec.2022.05",
+                a1: "incluir",
+                a2: "excluir",
+                a3: "incluir",
+                decisao_final: "inclusao_final",
+                ano: 2022,
+                idioma: "Inglês"
+            },
+            {
+                artigo_id: 15,
+                titulo: "Análise Qualitativa da Transparência Passiva nos Municípios",
+                codigo: "10.1016/j.transp.2018.09",
+                a1: "excluir",
+                a2: "excluir",
+                a3: null,
+                decisao_final: "exclusao_final",
+                ano: 2018,
+                idioma: "Português"
+            },
+            {
+                artigo_id: 16,
+                titulo: "Governança Orçamentária e Participação Cidadã",
+                codigo: "10.1016/j.gov.2023.03",
+                a1: "incluir",
+                a2: "incerto",
+                a3: null,
+                decisao_final: "encaminhar_terceiro",
+                ano: 2023,
+                idioma: "Espanhol"
+            }
+        ];
+
+        document.getElementById('toggleDataSource').addEventListener('click', () => {
+            useMockData = !useMockData;
+            document.getElementById('sourceLabel').innerText = useMockData ? "Dados Simulados (Mock)" : "API Real (/avaliacoes)";
+            carregarDados();
+        });
+
+        async function carregarDados() {
+            if (useMockData) {
+                renderizarTabela(mockArtigos);
+                atualizarKPIs(mockArtigos);
+                return;
+            }
+
+            try {
+                const resProcessar = await fetch('/estado/avaliacoes/processar');
+                if (!resProcessar.ok) throw new Error("Falha ao buscar /estado/avaliacoes/processar");
+                const listaTriagens = await resProcessar.json();
+
+                const idsUnicos = [...new Set(listaTriagens.map(item => item.artigo_id))];
+                const listaConsolidada = [];
+
+                for (const artigoId of idsUnicos) {
+                    try {
+                        const resDecisao = await fetch(`/estado/avaliacoes/artigos/${artigoId}/decisao-final`);
+                        if (resDecisao.ok) {
+                            const dados = await resDecisao.json();
+                            dados.titulo = `Artigo #${dados.artigo_id}`;
+                            dados.codigo = "N/A";
+                            dados.ano = "-";
+                            dados.idioma = "-";
+                            listaConsolidada.push(dados);
+                        }
+                    } catch (e) {
+                        console.error(`Erro ao obter decisão do artigo ${artigoId}:`, e);
+                    }
+                }
+
+                renderizarTabela(listaConsolidada);
+                atualizarKPIs(listaConsolidada);
+
+            } catch (err) {
+                console.warn("API indisponível ou em carregamento. Usando Mock Data temporariamente:", err);
+                renderizarTabela(mockArtigos);
+                atualizarKPIs(mockArtigos);
+            }
+        }
+
+        function getBadgeClass(status) {
+            if (!status) return "bg-slate-100 text-slate-400";
+            const s = status.toLowerCase();
+            if (s === "incluir" || s === "inclusao_final") return "badge-incluir";
+            if (s === "excluir" || s === "exclusao_final") return "badge-excluir";
+            if (s === "incerto") return "badge-incerto";
+            if (s === "encaminhar_terceiro") return "badge-terceiro";
+            return "bg-slate-100 text-slate-600";
+        }
+
+        function formatarTexto(texto) {
+            if (!texto) return "N/A";
+            return texto.replace('_', ' ').toUpperCase();
+        }
+
+        function renderizarTabela(artigos) {
+            const tbody = document.getElementById('tabelaArtigos');
+            tbody.innerHTML = '';
+
+            artigos.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-slate-50 cursor-pointer transition";
+                tr.onclick = () => abrirModal(item);
+
+                tr.innerHTML = `
+                    <td class="px-6 py-4 font-semibold text-slate-800">#${item.artigo_id}</td>
+                    <td class="px-6 py-4 font-medium text-slate-900 max-w-md truncate">${item.titulo || ('Artigo #' + item.artigo_id)}</td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(item.a1)}">${item.a1 || '-'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(item.a2)}">${item.a2 || '-'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(item.a3)}">${item.a3 || 'N/A'}</span>
+                    </td>
+                    <td class="px-6 py-4 text-center">
+                        <span class="px-3 py-1 rounded-full text-xs font-bold ${getBadgeClass(item.decisao_final)}">
+                            ${formatarTexto(item.decisao_final)}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                        <button class="text-blue-600 hover:text-blue-800 font-medium text-xs">Ver Detalhes</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function atualizarKPIs(artigos) {
+            document.getElementById('kpiTotal').innerText = artigos.length;
+            document.getElementById('kpiIncluidos').innerText = artigos.filter(a => a.decisao_final === 'inclusao_final').length;
+            document.getElementById('kpiExcluidos').innerText = artigos.filter(a => a.decisao_final === 'exclusao_final').length;
+            document.getElementById('kpiPendentes').innerText = artigos.filter(a => a.decisao_final === 'encaminhar_terceiro').length;
+        }
+
+        function abrirModal(artigo) {
+            document.getElementById('detalheId').value = artigo.artigo_id;
+            document.getElementById('detalheAvaliador').value = "A1 / A2" + (artigo.a3 ? " / A3" : "");
+            document.getElementById('detalheTitulo').value = artigo.titulo || ("Artigo #" + artigo.artigo_id);
+            document.getElementById('detalheDoi').value = artigo.codigo || "N/A";
+            document.getElementById('detalheAno').value = artigo.ano || "-";
+            document.getElementById('detalheIdioma').value = artigo.idioma || "-";
+
+            const tagA1 = document.getElementById('tagA1');
+            tagA1.innerText = artigo.a1 || 'N/A';
+            tagA1.className = `px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(artigo.a1)}`;
+
+            const tagA2 = document.getElementById('tagA2');
+            tagA2.innerText = artigo.a2 || 'N/A';
+            tagA2.className = `px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(artigo.a2)}`;
+
+            const tagA3 = document.getElementById('tagA3');
+            tagA3.innerText = artigo.a3 || 'N/A';
+            tagA3.className = `px-2.5 py-1 rounded text-xs font-semibold ${getBadgeClass(artigo.a3)}`;
+
+            const tagDecisao = document.getElementById('tagDecisaoFinal');
+            tagDecisao.innerText = formatarTexto(artigo.decisao_final);
+            tagDecisao.className = `px-3 py-1 rounded-full text-xs font-bold ${getBadgeClass(artigo.decisao_final)}`;
+
+            // Exibe o modal sem dar scroll na página
+            document.getElementById('modalDetalhes').classList.remove('hidden');
+        }
+
+        function fecharModal() {
+            document.getElementById('modalDetalhes').classList.add('hidden');
+        }
+
+        // Fechar com a tecla ESC ou clicando no fundo
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') fecharModal();
+        });
+
+        document.getElementById('modalDetalhes').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalDetalhes')) fecharModal();
+        });
+
+        // Inicializa ao carregar a página
+        carregarDados();
+    </script>
+</body>
+</html>

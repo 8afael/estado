@@ -57,6 +57,7 @@ def exibir_formulario(
 
     # 🟢 EXTRAI APENAS O LINK DO ARTIGO
     artigo_link = artigo.link if artigo else None
+    nome_arquivo = artigo.nome_arquivo if artigo else None
 
     # 5. Envia as variáveis necessárias para o HTML
     return templates.TemplateResponse(
@@ -64,7 +65,8 @@ def exibir_formulario(
         {
             "request": request,
             "artigo_id": artigo_id,
-            "artigo_link": artigo_link,  # 🟢 PASSANDO APENAS O LINK ISOLADO
+            "artigo_link": artigo_link,
+            "nome_arquivo": nome_arquivo,  
             "avaliacao": avaliacao_existente,  
             "dicionarios": DICIONARIOS_AVALIACAO,  
             "current_user": current_user
