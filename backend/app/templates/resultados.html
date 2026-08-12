@@ -18,10 +18,6 @@
             background-color: #e0f2fe;
             color: #0369a1;
         }
-        .card-header-dark {
-            background-color: #1e293b;
-            color: #ffffff;
-        }
         .badge-incluir {
             background-color: #dcfce7;
             color: #15803d;
@@ -63,7 +59,7 @@
 
     <!-- Main Container -->
     <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-grow">
-        
+
         <!-- Header Page Section -->
         <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 pb-4 border-b border-slate-200">
             <div>
@@ -71,10 +67,32 @@
                 <p class="text-sm text-slate-500 mt-1">Consolidado das respostas metodológicas, triagem individual e decisão final dos artigos.</p>
             </div>
             <div class="mt-4 md:mt-0 flex gap-3">
-                <button onclick="carregarDados()" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition">
-                    <i class="fa-solid fa-rotate mr-2 text-slate-500"></i> Atualizar Dados
+                <button id="btnAtualizar" onclick="carregarDados()" class="inline-flex items-center px-4 py-2 border border-slate-300 rounded-md text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 shadow-sm transition">
+                    <i id="iconBtnAtualizar" class="fa-solid fa-rotate mr-2 text-slate-500"></i> Atualizar Dados
+                </button>
+                <button id="btnRedistribuir" onclick="redistribuirTerceiroAvaliador()" class="inline-flex items-center px-4 py-2 border border-indigo-300 rounded-md text-sm font-medium text-indigo-700 bg-indigo-50 hover:bg-indigo-100 shadow-sm transition">
+                    <i id="iconBtnRedistribuir" class="fa-solid fa-shuffle mr-2"></i> Redistribuir 3º Avaliador
                 </button>
             </div>
+        </div>
+
+        <!-- BARRA DE PROGRESSO DO CARREGAMENTO -->
+        <div id="containerProgressBar" class="bg-white border border-slate-200 rounded-lg p-4 mb-6 shadow-sm hidden">
+            <div class="flex justify-between items-center mb-2 text-sm">
+                <span id="labelLoadingStatus" class="font-medium text-slate-700 flex items-center gap-2">
+                    <i class="fa-solid fa-spinner fa-spin text-indigo-600"></i> Buscando triagens dos artigos...
+                </span>
+                <span id="percentualLoading" class="font-bold text-indigo-600">0%</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-3 overflow-hidden">
+                <div id="innerProgressBar" class="bg-indigo-600 h-3 rounded-full transition-all duration-300 ease-out" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <!-- RESUMO DA REDISTRIBUIÇÃO (some por padrão; aparece após clicar em "Redistribuir 3º Avaliador") -->
+        <div id="resumoRedistribuicao" class="hidden bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6 text-sm text-indigo-800">
+            <i class="fa-solid fa-circle-info mr-1"></i>
+            <span id="textoResumoRedistribuicao"></span>
         </div>
 
         <!-- Metric KPI Cards -->
@@ -123,14 +141,14 @@
         <!-- Main Dashboard Table -->
         <div class="bg-white rounded-lg border border-slate-200 shadow-sm overflow-hidden mb-8">
             <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
-                <h2 class="text-base font-semibold text-slate-800">Resultado Consolidado dos Artigos</h2>
-                <span class="text-xs text-slate-500">Clique em um artigo para abrir o pop-up com os detalhes de triagem</span>
+                <h2 id="tituloTabela" class="text-base font-semibold text-slate-800">Resultado Consolidado dos Artigos</h2>
+                <span id="dicaTabela" class="text-xs text-slate-500">Clique em um artigo para abrir os detalhes</span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm text-slate-600">
                     <thead class="bg-slate-100 text-xs text-slate-700 uppercase font-semibold border-b border-slate-200">
-                        <tr>
+                        <tr id="theadArtigos">
                             <th class="px-6 py-3">ID</th>
                             <th class="px-6 py-3">Título do Artigo</th>
                             <th class="px-6 py-3 text-center">Avaliador 1 (A1)</th>
@@ -141,7 +159,13 @@
                         </tr>
                     </thead>
                     <tbody id="tabelaArtigos" class="divide-y divide-slate-200">
-                        <!-- Renderizado via JavaScript -->
+                        <!-- Estado de Carregamento Inicial -->
+                        <tr>
+                            <td colspan="7" class="px-6 py-8 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-xl text-indigo-600 mb-2"></i>
+                                <p>Carregando registros do banco de dados...</p>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -151,9 +175,8 @@
 
     <!-- Modal / Pop-up de Detalhes -->
     <div id="modalDetalhes" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh] animate-fade-in">
-            
-            <!-- Modal Header -->
+        <div class="bg-white rounded-xl shadow-2xl max-w-2xl w-full overflow-hidden flex flex-col max-h-[90vh]">
+
             <div class="card-header-blue px-6 py-4 flex justify-between items-center border-b border-sky-200">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-file-lines text-sky-700"></i>
@@ -164,10 +187,7 @@
                 </button>
             </div>
 
-            <!-- Modal Body -->
             <div class="p-6 space-y-5 overflow-y-auto">
-                
-                <!-- Identificação -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">ID do Artigo</label>
@@ -184,7 +204,6 @@
                     <input id="detalheTitulo" type="text" readonly class="w-full bg-slate-50 border border-slate-200 rounded px-3 py-2 text-sm text-slate-800" value="-">
                 </div>
 
-                <!-- Metadados -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">DOI / ISBN / ISSN</label>
@@ -200,7 +219,6 @@
                     </div>
                 </div>
 
-                <!-- Quadro de Decisão -->
                 <div class="border-t border-slate-200 pt-4">
                     <h4 class="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3">Resultado das Triagens Individualizadas</h4>
                     <div class="p-4 rounded-lg bg-slate-50 border border-slate-200 flex flex-col md:flex-row items-center justify-between gap-4">
@@ -217,7 +235,6 @@
                 </div>
             </div>
 
-            <!-- Modal Footer -->
             <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end">
                 <button onclick="fecharModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white rounded-md text-sm font-medium transition">
                     Fechar
@@ -234,6 +251,13 @@
     <!-- JS Logic -->
     <script>
         let useMockData = false;
+
+        // Guarda o cabeçalho e o título/dica ORIGINAIS da tabela, pra poder
+        // restaurar quando o usuário clicar em "Atualizar Dados" depois de
+        // ter visto a tela de redistribuição.
+        const THEAD_ORIGINAL_HTML = document.getElementById('theadArtigos').innerHTML;
+        const TITULO_TABELA_ORIGINAL = document.getElementById('tituloTabela').innerText;
+        const DICA_TABELA_ORIGINAL = document.getElementById('dicaTabela').innerText;
 
         const mockArtigos = [
             {
@@ -288,45 +312,214 @@
             carregarDados();
         });
 
+        function atualizarBarraProgresso(percentual, textoStatus) {
+            const container = document.getElementById('containerProgressBar');
+            const inner = document.getElementById('innerProgressBar');
+            const percentLabel = document.getElementById('percentualLoading');
+            const statusLabel = document.getElementById('labelLoadingStatus');
+
+            container.classList.remove('hidden');
+            inner.style.width = `${percentual}%`;
+            percentLabel.innerText = `${Math.round(percentual)}%`;
+            if (textoStatus) {
+                statusLabel.innerHTML = `<i class="fa-solid fa-spinner fa-spin text-indigo-600 mr-1"></i> ${textoStatus}`;
+            }
+        }
+
+        function ocultarBarraProgresso() {
+            setTimeout(() => {
+                document.getElementById('containerProgressBar').classList.add('hidden');
+            }, 800); // Aguarda um pequeno tempo para o usuário ver o 100%
+        }
+
+        function restaurarCabecalhoOriginal() {
+            document.getElementById('theadArtigos').innerHTML = THEAD_ORIGINAL_HTML;
+            document.getElementById('tituloTabela').innerText = TITULO_TABELA_ORIGINAL;
+            document.getElementById('dicaTabela').innerText = DICA_TABELA_ORIGINAL;
+            document.getElementById('resumoRedistribuicao').classList.add('hidden');
+        }
+
         async function carregarDados() {
+            const btnAtualizar = document.getElementById('btnAtualizar');
+            const iconBtn = document.getElementById('iconBtnAtualizar');
+            btnAtualizar.disabled = true;
+            iconBtn.classList.add('fa-spin');
+
+            // Sempre que os dados originais forem recarregados, volta a
+            // tabela pro estado padrão (caso o usuário tenha acabado de
+            // ver a tela de redistribuição).
+            restaurarCabecalhoOriginal();
+
             if (useMockData) {
-                renderizarTabela(mockArtigos);
-                atualizarKPIs(mockArtigos);
+                atualizarBarraProgresso(50, "Carregando dados mockados...");
+                setTimeout(() => {
+                    atualizarBarraProgresso(100, "Concluído!");
+                    renderizarTabela(mockArtigos);
+                    atualizarKPIs(mockArtigos);
+                    ocultarBarraProgresso();
+                    btnAtualizar.disabled = false;
+                    iconBtn.classList.remove('fa-spin');
+                }, 400);
                 return;
             }
 
             try {
+                // Etapa 1: Busca triagens
+                atualizarBarraProgresso(10, "Buscando lista de avaliações...");
                 const resProcessar = await fetch('/estado/avaliacoes/processar');
                 if (!resProcessar.ok) throw new Error("Falha ao buscar /estado/avaliacoes/processar");
                 const listaTriagens = await resProcessar.json();
 
                 const idsUnicos = [...new Set(listaTriagens.map(item => item.artigo_id))];
+                const totalArtigos = idsUnicos.length;
                 const listaConsolidada = [];
 
+                if (totalArtigos === 0) {
+                    atualizarBarraProgresso(100, "Nenhum artigo encontrado.");
+                    renderizarTabela([]);
+                    atualizarKPIs([]);
+                    ocultarBarraProgresso();
+                    btnAtualizar.disabled = false;
+                    iconBtn.classList.remove('fa-spin');
+                    return;
+                }
+
+                // Etapa 2: Busca decisões finais dinamicamente
+                let processados = 0;
                 for (const artigoId of idsUnicos) {
                     try {
                         const resDecisao = await fetch(`/estado/avaliacoes/artigos/${artigoId}/decisao-final`);
                         if (resDecisao.ok) {
                             const dados = await resDecisao.json();
-                            dados.titulo = `Artigo #${dados.artigo_id}`;
-                            dados.codigo = "N/A";
-                            dados.ano = "-";
-                            dados.idioma = "-";
                             listaConsolidada.push(dados);
                         }
                     } catch (e) {
                         console.error(`Erro ao obter decisão do artigo ${artigoId}:`, e);
                     }
+
+                    processados++;
+                    // Cálculo da porcentagem (entre 20% e 100%)
+                    const pct = 20 + Math.round((processados / totalArtigos) * 80);
+                    atualizarBarraProgresso(pct, `Processando decisão final (${processados}/${totalArtigos} artigos)...`);
                 }
 
                 renderizarTabela(listaConsolidada);
                 atualizarKPIs(listaConsolidada);
+                atualizarBarraProgresso(100, "Processamento concluído!");
+                ocultarBarraProgresso();
 
             } catch (err) {
                 console.warn("API indisponível ou em carregamento. Usando Mock Data temporariamente:", err);
+                atualizarBarraProgresso(100, "Falha na API. Carregando dados simulados...");
                 renderizarTabela(mockArtigos);
                 atualizarKPIs(mockArtigos);
+                ocultarBarraProgresso();
+            } finally {
+                btnAtualizar.disabled = false;
+                iconBtn.classList.remove('fa-spin');
             }
+        }
+
+        // ---------------------------------------------------------------
+        // Redistribuição para o 3º avaliador
+        // ---------------------------------------------------------------
+        // Dispara POST /avaliacoes/distribuir-avaliacao-3 (que por baixo dos
+        // panos usa _artigos_pendentes_avaliacao_3 pra achar os artigos com
+        // resultado_final NULL) e substitui a planilha da "primeira
+        // distribuição" pelo resultado desta distribuição na tabela avaliacao_3.
+        async function redistribuirTerceiroAvaliador() {
+            const btn = document.getElementById('btnRedistribuir');
+            const icon = document.getElementById('iconBtnRedistribuir');
+            btn.disabled = true;
+            icon.classList.add('fa-spin');
+
+            atualizarBarraProgresso(20, "Redistribuindo artigos para o 3º avaliador...");
+
+            try {
+                const res = await fetch('/estado/avaliacoes/distribuir-avaliacao-3', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({}) // usa o pool padrão de avaliadores (ver docstring do endpoint)
+                });
+
+                if (!res.ok) {
+                    const detalhe = await res.json().catch(() => null);
+                    throw new Error(detalhe?.detail || `Falha ao redistribuir (HTTP ${res.status})`);
+                }
+
+                const dados = await res.json();
+                atualizarBarraProgresso(100, "Redistribuição concluída!");
+                renderizarTabelaRedistribuicao(dados);
+                ocultarBarraProgresso();
+
+            } catch (err) {
+                console.error("Erro ao redistribuir 3º avaliador:", err);
+                atualizarBarraProgresso(100, "Falha na redistribuição.");
+                ocultarBarraProgresso();
+                alert(`Não foi possível redistribuir os artigos: ${err.message}`);
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('fa-spin');
+            }
+        }
+
+        function renderizarTabelaRedistribuicao(dados) {
+            // Troca o cabeçalho da tabela pra refletir as colunas da
+            // segunda distribuição (artigo -> 3º avaliador atribuído).
+            const thead = document.getElementById('theadArtigos');
+            thead.innerHTML = `
+                <th class="px-6 py-3">Artigo ID</th>
+                <th class="px-6 py-3">3º Avaliador (usuario_id)</th>
+                <th class="px-6 py-3 text-center">Status</th>
+            `;
+            document.getElementById('tituloTabela').innerText = "Redistribuição — 3º Avaliador";
+            document.getElementById('dicaTabela').innerText = "Resultado da última execução de redistribuição";
+
+            const tbody = document.getElementById('tabelaArtigos');
+            tbody.innerHTML = '';
+
+            const linhas = [
+                ...dados.atribuidos.map(a => ({ artigo_id: a.artigo_id, usuario_id: a.usuario_id, status: 'atribuido' })),
+                ...dados.sem_avaliador_disponivel.map(id => ({ artigo_id: id, usuario_id: null, status: 'sem_avaliador' })),
+            ];
+
+            if (linhas.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="3" class="px-6 py-8 text-center text-slate-400">
+                            Nenhum artigo pendente de 3º avaliador no momento.
+                        </td>
+                    </tr>
+                `;
+            } else {
+                linhas.forEach(item => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-50";
+                    const statusBadge = item.status === 'atribuido'
+                        ? `<span class="px-2.5 py-1 rounded text-xs font-semibold badge-incluir">Atribuído</span>`
+                        : `<span class="px-2.5 py-1 rounded text-xs font-semibold badge-excluir">Sem avaliador disponível</span>`;
+                    tr.innerHTML = `
+                        <td class="px-6 py-4 font-semibold text-slate-800">#${item.artigo_id}</td>
+                        <td class="px-6 py-4 text-slate-700">${item.usuario_id ?? '-'}</td>
+                        <td class="px-6 py-4 text-center">${statusBadge}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
+
+            // Resumo textual acima da tabela
+            const resumo = document.getElementById('resumoRedistribuicao');
+            const texto = document.getElementById('textoResumoRedistribuicao');
+            texto.innerText = `${dados.total_pendentes} artigo(s) pendente(s) de 3º avaliador — `
+                + `${dados.atribuidos.length} atribuído(s) agora, `
+                + `${dados.sem_avaliador_disponivel.length} sem avaliador disponível.`;
+            resumo.classList.remove('hidden');
+
+            // KPIs passam a refletir a redistribuição enquanto essa tela estiver visível
+            document.getElementById('kpiTotal').innerText = dados.total_pendentes;
+            document.getElementById('kpiIncluidos').innerText = dados.atribuidos.length;
+            document.getElementById('kpiExcluidos').innerText = dados.sem_avaliador_disponivel.length;
+            document.getElementById('kpiPendentes').innerText = dados.total_pendentes;
         }
 
         function getBadgeClass(status) {
@@ -347,6 +540,17 @@
         function renderizarTabela(artigos) {
             const tbody = document.getElementById('tabelaArtigos');
             tbody.innerHTML = '';
+
+            if (artigos.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="px-6 py-8 text-center text-slate-400">
+                            Nenhum registro encontrado.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
 
             artigos.forEach(item => {
                 const tr = document.createElement('tr');
@@ -409,7 +613,6 @@
             tagDecisao.innerText = formatarTexto(artigo.decisao_final);
             tagDecisao.className = `px-3 py-1 rounded-full text-xs font-bold ${getBadgeClass(artigo.decisao_final)}`;
 
-            // Exibe o modal sem dar scroll na página
             document.getElementById('modalDetalhes').classList.remove('hidden');
         }
 
@@ -417,7 +620,6 @@
             document.getElementById('modalDetalhes').classList.add('hidden');
         }
 
-        // Fechar com a tecla ESC ou clicando no fundo
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') fecharModal();
         });

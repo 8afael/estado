@@ -3,7 +3,7 @@ import sqlite3
 
 # --- CONFIGURAÇÕES ---
 CAMINHO_CSV = '/Users/rafa/Documents/projetos/estado.csv'  # Nome ou caminho do seu arquivo CSV
-CAMINHO_BANCO = '/Users/rafa/Documents/projetos/labgira_site/estado_aberto.28072026'    # Nome ou caminho do seu arquivo de banco SQLite
+CAMINHO_BANCO = '/Users/rafa/Documents/projetos/estado_aberto/data/estado_aberto.db'    # Nome ou caminho do seu arquivo de banco SQLite
 
 def atualizar_banco_de_dados():
     # 1. Conecta ao banco de dados SQLite

@@ -76,3 +76,42 @@ class ArtigoAvaliacaoModel(Base):
     status = Column(String, default="pendente")
 
     artigo = relationship("ArtigoModel", backref="distribuicoes")
+
+
+class Avaliacao3Model(Base):
+    __tablename__ = "avaliacoes_3"
+ 
+    id = Column(Integer, primary_key=True, index=True)
+    usuario_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+    artigo_id = Column(Integer, ForeignKey("artigo.id", ondelete="CASCADE"), nullable=False)
+    etapa = Column(Integer, nullable=False, default=2)
+ 
+    codigo = Column(String, nullable=False)
+    titulo = Column(String, nullable=False)
+    resumo = Column(Text, nullable=False)
+ 
+    ano_publicacao = Column(Integer)
+    idioma = Column(String)
+    paises_autores = Column(String)
+    pais_estudado = Column(String)
+    tipo_documento = Column(String)
+    abordagem_metodologica = Column(String)
+ 
+    t1_termos_chave = Column(String)
+    t2_contexto_publico = Column(String)
+    t3_tema_institucional = Column(String)
+    t4_analise_direta = Column(String)
+    resultado = Column(String)
+ 
+    usou_ia = Column(String)
+    ia_ferramentas_uso = Column(String)
+    ia_prompts = Column(String)
+    observacoes = Column(String)
+    data_avaliacao = Column(DateTime, server_default=func.now())
+ 
+    artigo = relationship("ArtigoModel", backref="avaliacoes_3")
+ 
+    __table_args__ = (
+        CheckConstraint("etapa = 2", name="check_etapa_avaliacao_3"),
+        UniqueConstraint("artigo_id", name="uq_artigo_avaliacao_3"),
+    )
