@@ -59,23 +59,23 @@
 
             {# Título / Resumo / DOI vêm da triagem original (copiados na distribuição) e não são reeditáveis aqui #}
             <div class="col-md-7">
-                <label class="form-label fw-semibold">Título do Artigo</label>
-                <input type="text" class="form-control bg-light" value="{{ avaliacao.titulo or '' }}" readonly>
+                <label class="form-label fw-semibold" for="titulo">Título do Artigo</label>
+                <input type="text" name="titulo" id="titulo" class="form-control" value="{{ avaliacao.titulo or '' }}" required>
             </div>
 
             <div class="col-md-5">
-                <label class="form-label fw-semibold">Nome do Arquivo</label>
-                <input type="text" class="form-control bg-light" value="{{ nome_arquivo or '' }}" readonly>
+                <label class="form-label fw-semibold" for="nome_arquivo">Nome do Arquivo</label>
+                <input type="text" name="nome_arquivo" id="nome_arquivo" class="form-control bg-light" value="{{ nome_arquivo or '' }}" readonly>
             </div>
 
             <div class="col-md-12">
-                <label class="form-label fw-semibold">DOI/ISBN/ISSN</label>
-                <input type="text" class="form-control bg-light" value="{{ avaliacao.codigo or '' }}" readonly>
+                <label class="form-label fw-semibold" for="codigo">DOI/ISBN/ISSN</label>
+                <input type="text" name="codigo" id="codigo" class="form-control" value="{{ avaliacao.codigo or '' }}" required>
             </div>
 
             <div class="col-md-12">
-                <label class="form-label fw-semibold">Resumo do Artigo</label>
-                <textarea class="form-control bg-light" rows="4" readonly>{{ avaliacao.resumo or '' }}</textarea>
+                <label class="form-label fw-semibold" for="resumo">Resumo do Artigo</label>
+                <textarea name="resumo" id="resumo" class="form-control" rows="4" required>{{ avaliacao.resumo or '' }}</textarea>
             </div>
         </div>
     </div>

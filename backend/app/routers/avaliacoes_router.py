@@ -131,7 +131,7 @@ async def artigos_pendentes_decisao(
     request: Request,
     page: int = 1,
     size: int = 20,
-    id: Optional[int] = None,
+    id: Optional[str] = None,
     codigo: Optional[str] = None,
     idioma: Optional[str] = None,
     status: Optional[str] = None,
@@ -268,6 +268,7 @@ async def formulario_avaliacao_3(
     avaliacao, _ = _get_avaliacao_3_do_usuario(db, artigo_id, username_logado)
 
     artigo = db.get(models.ArtigoModel, artigo_id)
+    nome_arquivo = artigo.nome_arquivo if artigo else None
 
     class UsuarioSessao:
         def __init__(self, username):
@@ -282,6 +283,7 @@ async def formulario_avaliacao_3(
             "current_user": current_user,
             "artigo_id": artigo_id,
             "artigo_link": artigo.link if artigo else None,
+            "nome_arquivo": nome_arquivo, 
             "avaliacao": avaliacao,
             "dicionarios": DICIONARIOS_AVALIACAO,
         },
@@ -294,6 +296,9 @@ async def salvar_avaliacao_3(
     request: Request,
     artigo_id_real: int = Form(...),
     page: int = Form(1),
+    titulo: str = Form(...),  
+    resumo: str = Form(...),  
+    codigo: str = Form(...),  
     ano_publicacao: int = Form(...),
     idioma: str = Form(...),
     paises_autores: Optional[str] = Form(None),
@@ -327,6 +332,9 @@ async def salvar_avaliacao_3(
     username_logado = request.session.get("user")
     avaliacao, _ = _get_avaliacao_3_do_usuario(db, artigo_id_real, username_logado)
 
+    avaliacao.titulo = titulo         
+    avaliacao.resumo = resumo         
+    avaliacao.codigo = codigo 
     avaliacao.ano_publicacao = ano_publicacao
     avaliacao.idioma = idioma
     avaliacao.paises_autores = paises_autores

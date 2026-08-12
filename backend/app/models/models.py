@@ -74,6 +74,7 @@ class ArtigoAvaliacaoModel(Base):
     artigo_id = Column(Integer, ForeignKey("artigo.id"))
     username = Column(String)
     status = Column(String, default="pendente")
+    etapa = Column(Integer, nullable=False, default=2)
 
     artigo = relationship("ArtigoModel", backref="distribuicoes")
 
