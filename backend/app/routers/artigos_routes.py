@@ -5,11 +5,17 @@ from sqlalchemy.orm import Session, contains_eager
 from math import ceil
 from typing import Optional
 from app.models import models
-from app.core import database
+from app.core import database, config
 from app.core.auth import require_login
 
 router = APIRouter()
 templates = Jinja2Templates(directory="app/templates")
+
+# Usernames com acesso administrativo (veem TODOS os artigos, não só os
+# atribuídos a eles). Ajuste esta lista se criar mais admins, ou troque
+# por uma coluna `role` na tabela users quando ela existir.
+ADMIN_USERNAMES = {"admin"}
+
 
 def get_db():
     db = database.SessionLocal()
@@ -32,7 +38,8 @@ async def listar_artigos_avaliador(
 ):
     # 1. PEGA O USUÁRIO DIRETO DA SESSÃO
     username_logado = request.session.get("user")
-    
+    is_admin = username_logado in ADMIN_USERNAMES
+
     class UsuarioSessao:
         def __init__(self, username):
             self.username = username
@@ -52,32 +59,52 @@ async def listar_artigos_avaliador(
 
     # --- FLUXO DO GET ---
 
-    # 3. Busca os idiomas apenas dos artigos designados a este usuário para o <select>
-    idiomas_lista = [
-        r[0] for r in db.query(models.ArtigoModel.idioma)\
-        .join(models.ArtigoAvaliacaoModel, models.ArtigoModel.id == models.ArtigoAvaliacaoModel.artigo_id)\
-        .filter(models.ArtigoAvaliacaoModel.username == username_logado)\
-        .distinct().all() if r[0]
-    ]
+    # 3. Busca os idiomas para o <select>: admin vê idiomas de TODOS os
+    # artigos; usuário comum vê só os idiomas dos artigos atribuídos a ele.
+    if is_admin:
+        idiomas_lista = [
+            r[0] for r in db.query(models.ArtigoModel.idioma).distinct().all() if r[0]
+        ]
+    else:
+        idiomas_lista = [
+            r[0] for r in db.query(models.ArtigoModel.idioma)\
+            .join(models.ArtigoAvaliacaoModel, models.ArtigoModel.id == models.ArtigoAvaliacaoModel.artigo_id)\
+            .filter(models.ArtigoAvaliacaoModel.username == username_logado)\
+            .distinct().all() if r[0]
+        ]
 
-    # 4. CONSTRUÇÃO DA QUERY CORRIGIDA
+    # 4. CONSTRUÇÃO DA QUERY
     user_db = db.query(models.User).filter(models.User.username == username_logado).first()
+
+    if is_admin:
+        # Admin: sem join restritivo por username -- vê todos os artigos.
+        # Mantém o outerjoin com AvaliacaoModel só pra permitir exibir,
+        # quando existir, a avaliação do PRÓPRIO admin (se ele também
+        # avaliar artigos); se ele não tiver nenhuma, o campo fica vazio.
+        query = db.query(models.ArtigoModel)\
+        .outerjoin(
+            models.AvaliacaoModel,
+            (models.ArtigoModel.id == models.AvaliacaoModel.artigo_id) &
+            (models.AvaliacaoModel.usuario_id == (user_db.id if user_db else None))
+        )\
+        .options(contains_eager(models.ArtigoModel.avaliacoes))\
+        .populate_existing()
+    else:
+        query = db.query(models.ArtigoModel)\
+        .join(
+            models.ArtigoAvaliacaoModel,
+            (models.ArtigoModel.id == models.ArtigoAvaliacaoModel.artigo_id) &
+            (models.ArtigoAvaliacaoModel.username == username_logado)
+        )\
+        .outerjoin(
+            models.AvaliacaoModel,
+            (models.ArtigoModel.id == models.AvaliacaoModel.artigo_id) &
+            (models.AvaliacaoModel.usuario_id == user_db.id)
+        )\
+        .options(contains_eager(models.ArtigoModel.avaliacoes))\
+        .populate_existing()
     
-    query = db.query(models.ArtigoModel)\
-    .join(
-        models.ArtigoAvaliacaoModel, 
-        (models.ArtigoModel.id == models.ArtigoAvaliacaoModel.artigo_id) & 
-        (models.ArtigoAvaliacaoModel.username == username_logado)
-    )\
-    .outerjoin(
-        models.AvaliacaoModel, 
-        (models.ArtigoModel.id == models.AvaliacaoModel.artigo_id) & 
-        (models.AvaliacaoModel.usuario_id == user_db.id)
-    )\
-    .options(contains_eager(models.ArtigoModel.avaliacoes))\
-    .populate_existing()
-    
-    # --- FILTROS ---
+    # --- FILTROS (iguais para admin e usuário comum) ---
     if id and id.strip() != "":
         try: query = query.filter(models.ArtigoModel.id == int(id))
         except ValueError: pass 
@@ -90,14 +117,22 @@ async def listar_artigos_avaliador(
         
     if status and status.strip() != "":
         st_lower = status.lower()
-        if st_lower in ["concluido", "concluído"]:
-            # 🟢 Usa a tabela intermediária que agora foi devidamente vinculada (Joined)
-            query = query.filter(models.ArtigoAvaliacaoModel.status.in_(["concluido", "Concluído"]))
-        elif st_lower in ["pendente"]:
-            query = query.filter(
-                (models.ArtigoAvaliacaoModel.status.notin_(["concluido", "Concluído"])) | 
-                (models.ArtigoAvaliacaoModel.status == None)
-            )
+        if is_admin:
+            if st_lower == "incluido":
+                query = query.filter(models.ArtigoModel.resultado_final == "incluir")
+            elif st_lower == "excluido":
+                query = query.filter(models.ArtigoModel.resultado_final == "excluir")
+            elif st_lower == "em_avaliacao":
+                query = query.filter(models.ArtigoModel.resultado_final.is_(None))
+        else:
+            if st_lower in ["concluido", "concluído"]:
+                query = query.filter(models.ArtigoAvaliacaoModel.status.in_(["concluido", "Concluído"]))
+            elif st_lower in ["pendente"]:
+                query = query.filter(
+                    (models.ArtigoAvaliacaoModel.status.notin_(["concluido", "Concluído"])) | 
+                    (models.ArtigoAvaliacaoModel.status == None)
+                )
+
 
     # 5. Paginação matemática
     total_registros = query.count()
@@ -120,7 +155,9 @@ async def listar_artigos_avaliador(
             "page": page,
             "size": size,
             "total_registros": total_registros,
-            "total_paginas": total_paginas
+            "total_paginas": total_paginas,
+            "is_admin": is_admin,
+            "bloquear_edicao_1": config.BLOQUEAR_EDICAO_AVALIACAO_1, 
         }
     )
 
@@ -136,11 +173,9 @@ def verificar_codigo_duplicado(
     """
     codigo_limpo = codigo.strip()
     
-    # Evita travar caso o valor enviado seja "N/A" ou vazio
     if not codigo_limpo or codigo_limpo.upper() == "N/A":
         return {"existe": False}
 
-    # Procura se o código existe em algum artigo cujo ID seja diferente do atual
     artigo_duplicado = db.query(models.ArtigoModel).filter(
         models.ArtigoModel.codigo == codigo_limpo,
         models.ArtigoModel.id != artigo_id
@@ -150,3 +185,5 @@ def verificar_codigo_duplicado(
         return {"existe": True}
         
     return {"existe": False}
+
+

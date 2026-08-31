@@ -10,7 +10,11 @@ from app.routers import (
     html_filtros,
     artigos_routes,
     resultados_router,
-    avaliacoes_router
+    avaliacoes_router,
+    avaliacao3_router,
+    extracao_router,
+    avaliacao_final_router,
+    regras_router
 )
 
 app = FastAPI(
@@ -46,3 +50,7 @@ app.include_router(html_filtros.router)
 app.include_router(artigos_routes.router)
 app.include_router(resultados_router.router)
 app.include_router(avaliacoes_router.router)
+app.include_router(avaliacao3_router.router)
+app.include_router(extracao_router.router)
+app.include_router(avaliacao_final_router.router)
+app.include_router(regras_router.router)

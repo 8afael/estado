@@ -9,7 +9,7 @@ from pydantic import BaseModel
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from app.core import database
+from app.core import database, config
 from app.core.auth import require_login
 from app.core.dicionarios import DICIONARIOS_AVALIACAO
 from app.models import models
@@ -212,6 +212,7 @@ async def artigos_pendentes_decisao(
             "total_registros": total_registros,
             "total_paginas": total_paginas,
             "idiomas_lista": idiomas_lista,
+            "bloquear_edicao_1": config.BLOQUEAR_EDICAO_AVALIACAO_1,
         },
     )
 
@@ -441,7 +442,7 @@ def obter_decisao_final(artigo_id: int, db: Session = Depends(get_db)):
 
     terceiro = (
         db.query(models.AvaliacaoModel)
-        .filter(models.AvaliacaoModel.artigo_id == artigo_id, models.AvaliacaoModel.etapa == 2)
+        .filter(models.Avaliacao3Model.artigo_id == artigo_id)
         .first()
     )
     a3 = calcular_resultado_avaliador(terceiro) if terceiro else None
@@ -463,101 +464,6 @@ class ProcessamentoFinalOut(BaseModel):
     excluidos: int
     aguardando_terceiro: int
 
-
-@router.post("/processar-decisoes-finais", response_model=ProcessamentoFinalOut)
-def processar_decisoes_finais(db: Session = Depends(get_db)):
-    """
-    Roda a decisão final (matriz A1/A2/A3) para TODOS os artigos que tenham
-    as 2 avaliações de etapa=1 completas, e persiste `resultado_final` em
-    ArtigoModel:
-      - 'incluir' / 'excluir' quando a decisão já está fechada;
-      - NULL quando o artigo precisa de 3º avaliador (discordância ou
-        'incerto' em A1/A2, e o A3 — se já existir em etapa=2 — não fechou
-        a decisão).
-
-    É esse `resultado_final IS NULL` que o endpoint de redistribuição usa
-    depois como filtro rápido pra achar quem precisa de 3º avaliador, então
-    rode este endpoint antes de redistribuir (ou sempre que novas
-    avaliações de etapa=1/2 forem lançadas).
-    """
-    triagens = (
-        db.query(models.AvaliacaoModel)
-        .filter(models.AvaliacaoModel.etapa == 1)
-        .all()
-    )
-    por_artigo: Dict[int, List[models.AvaliacaoModel]] = {}
-    for av in triagens:
-        por_artigo.setdefault(av.artigo_id, []).append(av)
-
-    terceiros = (
-        db.query(models.AvaliacaoModel)
-        .filter(models.AvaliacaoModel.etapa == 2)
-        .all()
-    )
-    terceiro_por_artigo = {av.artigo_id: av for av in terceiros}
-
-    artigo_ids = list(por_artigo.keys())
-    artigos = (
-        db.query(models.ArtigoModel)
-        .filter(models.ArtigoModel.id.in_(artigo_ids))
-        .all()
-        if artigo_ids
-        else []
-    )
-    artigos_por_id = {a.id: a for a in artigos}
-
-    incluidos = excluidos = aguardando = total = 0
-
-    for artigo_id, avals in por_artigo.items():
-        if len(avals) != 2:
-            continue  # triagem incompleta, ignora por enquanto
-
-        artigo = artigos_por_id.get(artigo_id)
-        if artigo is None:
-            continue
-
-        a1_row, a2_row = sorted(avals, key=lambda a: a.usuario_id)
-        a1 = calcular_resultado_avaliador(a1_row)
-        a2 = calcular_resultado_avaliador(a2_row)
-
-        terceiro = terceiro_por_artigo.get(artigo_id)
-        a3 = calcular_resultado_avaliador(terceiro) if terceiro else None
-
-        resultado = decisao_final(a1, a2, a3)
-        valor_persistir = _MAPA_RESULTADO_FINAL.get(resultado)  # None se 'encaminhar_terceiro'
-
-        artigo.resultado_final = valor_persistir
-        db.add(artigo)
-
-        total += 1
-        if valor_persistir == "incluir":
-            incluidos += 1
-        elif valor_persistir == "excluir":
-            excluidos += 1
-        else:
-            aguardando += 1
-
-    db.commit()
-
-    return ProcessamentoFinalOut(
-        total_processados=total,
-        incluidos=incluidos,
-        excluidos=excluidos,
-        aguardando_terceiro=aguardando,
-    )
-
-
-# ---------------------------------------------------------------------------
-# REDISTRIBUIÇÃO PARA O 3º AVALIADOR (etapa=2)
-# ---------------------------------------------------------------------------
-#
-# PREMISSA (confirme comigo): não recebi um model de Usuário/Avaliador com
-# papel (role) definido, então o "pool" de avaliadores elegíveis é inferido
-# como o conjunto de usuario_id distintos que já fizeram alguma avaliação de
-# etapa=1 (triagem). Se você tiver uma lista fixa de avaliadores (ex: tabela
-# users com role='avaliador'), me avisa que eu troco a origem do pool — ou,
-# enquanto isso, dá pra passar `avaliadores_ids` no corpo da requisição pra
-# sobrescrever o pool manualmente.
 
 def _artigos_pendentes_avaliacao_3(db: Session) -> List[Tuple[int, Set[int]]]:
     """
@@ -718,8 +624,8 @@ def distribuir_avaliacao_3(
             codigo=artigo.codigo,
             titulo=artigo.titulo,
             resumo=artigo.resumo,
-            # demais campos ficam None/NULL de propósito -- avaliador
-            # preenche do zero, sem herdar respostas das triagens anteriores
+            ano_publicacao=artigo.ano_publicacao,
+            idioma=artigo.idioma,
         )
         db.add(nova_avaliacao_3)
 

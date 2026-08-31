@@ -1,0 +1,513 @@
+{% extends "base.html" %}
+
+{% block title %}Regras da Triagem{% endblock %}
+
+{% block content %}
+<style>
+  :root{
+    --navy:#1F3A5F;
+    --navy-deep:#152A47;
+    --paper:#F5F6F8;
+    --card:#FFFFFF;
+    --ink:#1B2430;
+    --ink-soft:#5B6472;
+    --line:#E3E6EB;
+    --success:#1E8E5A;
+    --success-bg:#E6F4EC;
+    --danger:#C0392B;
+    --danger-bg:#FBEAE8;
+    --warning:#9C6B00;
+    --warning-bg:#FBF2DD;
+    --neutral:#5B6472;
+    --neutral-bg:#EDEFF2;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .topbar{
+    background:var(--navy-deep);
+    color:#fff;
+    padding:22px 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .topbar h1{
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:.2px;
+  }
+  .topbar h1 span{
+    display:block;
+    font-size:12px;
+    font-weight:400;
+    color:#9FB0C8;
+    margin-top:2px;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+  }
+
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:28px 24px 60px;
+  }
+
+  .section-title{
+    font-size:15px;
+    font-weight:600;
+    color:var(--navy-deep);
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    margin:34px 0 14px;
+  }
+  .section-title:first-of-type{ margin-top:0; }
+
+  .intro{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--navy);
+    border-radius:8px;
+    padding:16px 18px;
+    font-size:14px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+
+  /* Cards das perguntas T1–T4 */
+  .qa-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .qa-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--navy);
+    border-radius:8px;
+    padding:16px 18px;
+  }
+  .qa-card .qa-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+    color:#fff;
+    background:var(--navy);
+    border-radius:5px;
+    padding:3px 9px;
+    margin-bottom:10px;
+  }
+  .qa-card p{
+    margin:0 0 10px;
+    font-size:13.5px;
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .qa-card p:last-child{ margin-bottom:0; }
+  .qa-chip{
+    background:var(--neutral-bg);
+    color:var(--ink);
+  }
+
+  /* Cards de prioridade da regra do avaliador */
+  .priority-list{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+  }
+  .rule-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:18px 20px;
+    display:flex;
+    gap:16px;
+    align-items:flex-start;
+  }
+  .rule-card .step-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    font-weight:600;
+    color:#fff;
+    background:var(--neutral);
+    border-radius:50%;
+    width:26px;
+    height:26px;
+    min-width:26px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .rule-card.excluir{ border-left:4px solid var(--danger); }
+  .rule-card.excluir .step-num{ background:var(--danger); }
+  .rule-card.incerto{ border-left:4px solid var(--warning); }
+  .rule-card.incerto .step-num{ background:var(--warning); }
+  .rule-card.incluir{ border-left:4px solid var(--success); }
+  .rule-card.incluir .step-num{ background:var(--success); }
+
+  .rule-card .rule-body{ flex:1; }
+  .rule-card .rule-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .rule-card .rule-title h3{
+    margin:0;
+    font-size:15px;
+    font-weight:600;
+  }
+  .rule-card p.desc{
+    margin:0 0 10px;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    line-height:1.55;
+  }
+
+  .cond-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .cond-chip{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    padding:5px 10px;
+    border-radius:6px;
+    background:var(--neutral-bg);
+    color:var(--ink);
+    white-space:nowrap;
+  }
+  .rule-card.excluir .cond-chip{ background:var(--danger-bg); color:var(--danger); }
+  .rule-card.incerto .cond-chip{ background:var(--warning-bg); color:var(--warning); }
+  .rule-card.incluir .cond-chip{ background:var(--success-bg); color:var(--success); }
+
+  /* Badges e tags reaproveitadas do modelo */
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    padding:3px 8px;
+    border-radius:5px;
+    font-weight:500;
+  }
+  .tag-incluir{ background:var(--success-bg); color:var(--success); }
+  .tag-excluir{ background:var(--danger-bg); color:var(--danger); }
+  .tag-incerto{ background:var(--warning-bg); color:var(--warning); }
+  .tag-none{ background:var(--neutral-bg); color:var(--ink-soft); }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:600;
+    padding:5px 11px;
+    border-radius:99px;
+    white-space:nowrap;
+  }
+  .badge::before{
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:currentColor;
+  }
+  .status-incluido{ background:var(--success-bg); color:var(--success); }
+  .status-excluido{ background:var(--danger-bg); color:var(--danger); }
+  .status-aguardando{ background:var(--warning-bg); color:var(--warning); }
+
+  /* Cards de decisão final por dois avaliadores */
+  .final-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:14px;
+    margin-bottom:8px;
+  }
+  .final-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:16px 18px;
+  }
+  .final-card.incluir{ border-left:4px solid var(--success); }
+  .final-card.excluir{ border-left:4px solid var(--danger); }
+  .final-card.terceiro{ border-left:4px solid var(--warning); }
+  .final-card .final-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .final-card h3{
+    margin:0;
+    font-size:14px;
+    font-weight:600;
+  }
+  .final-card ul{
+    margin:0;
+    padding-left:18px;
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.7;
+  }
+  .final-card li code{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    background:var(--neutral-bg);
+    padding:1px 6px;
+    border-radius:4px;
+    color:var(--ink);
+  }
+
+  /* Tabela da matriz */
+  .table-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:auto;
+  }
+  table{
+    width:100%;
+    min-width:620px;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  thead th{
+    position:sticky;
+    top:0;
+    background:var(--navy-deep);
+    color:#fff;
+    text-align:left;
+    padding:11px 14px;
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    white-space:nowrap;
+  }
+  tbody tr{ border-top:1px solid var(--line); }
+  tbody tr:hover{ background:#FAFBFC; }
+  tbody td{
+    padding:10px 14px;
+    vertical-align:middle;
+    white-space:nowrap;
+  }
+  thead th:last-child,
+  tbody td:last-child{
+    padding-right:20px;
+  }
+
+  .note{
+    margin-top:14px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.6;
+  }
+
+  @media (max-width: 760px){
+    .final-grid{ grid-template-columns:1fr; }
+    .qa-grid{ grid-template-columns:1fr; }
+    .topbar{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+
+  <div class="topbar">
+    <h1>Regras de Decisão<span>Etapa de Triagem — Revisão Sistemática (PRISMA)</span></h1>
+  </div>
+  <br>
+
+  <div class="intro">
+    Este documento descreve a lógica utilizada para classificar um artigo na etapa de triagem,
+    bem como a regra para consolidar a decisão final a partir das avaliações de dois (ou, quando necessário, três) avaliadores.
+  </div>
+
+  <div class="section-title">Perguntas de triagem (T1 – T4)</div>
+
+  <div class="qa-grid">
+    <div class="qa-card">
+      <div class="qa-tag">T1</div>
+      <p>O título, o resumo ou as palavras-chave mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol?</p>
+      <div class="cond-list">
+        <span class="cond-chip qa-chip">open state / Estado aberto</span>
+        <span class="cond-chip qa-chip">open parliament / parlamento aberto</span>
+        <span class="cond-chip qa-chip">open justice / justiça aberta</span>
+        <span class="cond-chip qa-chip">open government / governo aberto</span>
+        <span class="cond-chip qa-chip">open governance / governança aberta</span>
+      </div>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-tag">T2</div>
+      <p>O termo "open" é utilizado no contexto de Estado, governo, parlamento, justiça ou governança pública?</p>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-tag">T3</div>
+      <p>Com base no título e no resumo, o artigo trata a abertura como tema institucional, político, jurídico, organizacional ou relacional no setor público — e não apenas como tema técnico, instrumental ou operacional de tecnologia, sistemas, portais, interoperabilidade, arquitetura da informação, proteção de dados ou gestão de TI?</p>
+    </div>
+
+    <div class="qa-card">
+      <div class="qa-tag">T4</div>
+      <p>O artigo analisa diretamente instituições, políticas ou práticas do setor público relacionadas à abertura?</p>
+    </div>
+  </div>
+
+  <div class="section-title">Regra de decisão por avaliador</div>
+
+  <div class="priority-list">
+
+    <div class="rule-card excluir">
+      <div class="step-num">1</div>
+      <div class="rule-body">
+        <div class="rule-title">
+          <h3>Excluir</h3>
+          <span class="tag tag-excluir">prioridade máxima</span>
+        </div>
+        <p class="desc">O artigo é classificado como <strong>Excluir</strong> se qualquer uma das condições abaixo ocorrer — basta uma única ocorrência para excluir.</p>
+        <div class="cond-list">
+          <span class="cond-chip">Ano = Outro</span>
+          <span class="cond-chip">Idioma = Outro</span>
+          <span class="cond-chip">T1 = Não</span>
+          <span class="cond-chip">T2 = Não</span>
+          <span class="cond-chip">T3 = Não</span>
+          <span class="cond-chip">T4 = Não</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-card incerto">
+      <div class="step-num">2</div>
+      <div class="rule-body">
+        <div class="rule-title">
+          <h3>Incerto</h3>
+          <span class="tag tag-incerto">avaliado somente se não houve exclusão</span>
+        </div>
+        <p class="desc">Caso nenhuma condição de exclusão tenha ocorrido, o artigo é classificado como <strong>Incerto</strong> se houver pelo menos uma resposta "Não sei" em T1, T2, T3 ou T4.</p>
+        <div class="cond-list">
+          <span class="cond-chip">T1 = Não sei</span>
+          <span class="cond-chip">T2 = Não sei</span>
+          <span class="cond-chip">T3 = Não sei</span>
+          <span class="cond-chip">T4 = Não sei</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="rule-card incluir">
+      <div class="step-num">3</div>
+      <div class="rule-body">
+        <div class="rule-title">
+          <h3>Incluir</h3>
+          <span class="tag tag-incluir">todas as condições simultaneamente</span>
+        </div>
+        <p class="desc">O artigo é classificado como <strong>Incluir</strong> somente quando todas as condições abaixo forem atendidas ao mesmo tempo.</p>
+        <div class="cond-list">
+          <span class="cond-chip">Ano entre 2009 e 2026</span>
+          <span class="cond-chip">Idioma: Inglês, Português ou Espanhol</span>
+          <span class="cond-chip">T1 = Sim</span>
+          <span class="cond-chip">T2 = Sim</span>
+          <span class="cond-chip">T3 = Sim</span>
+          <span class="cond-chip">T4 = Sim</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-title">Decisão final do artigo (dois avaliadores)</div>
+
+  <div class="final-grid">
+    <div class="final-card incluir">
+      <div class="final-head">
+        <h3>Inclusão final</h3>
+        <span class="badge status-incluido">Incluir</span>
+      </div>
+      <ul>
+        <li>Somente quando:</li>
+        <li><code>A1 = Incluir</code></li>
+        <li><code>A2 = Incluir</code></li>
+      </ul>
+    </div>
+
+    <div class="final-card excluir">
+      <div class="final-head">
+        <h3>Exclusão final</h3>
+        <span class="badge status-excluido">Excluir</span>
+      </div>
+      <ul>
+        <li>Somente quando:</li>
+        <li><code>A1 = Excluir</code></li>
+        <li><code>A2 = Excluir</code></li>
+      </ul>
+    </div>
+
+    <div class="final-card terceiro">
+      <div class="final-head">
+        <h3>Encaminhar para 3º avaliador</h3>
+        <span class="badge status-aguardando">Aguard. 3º avaliador</span>
+      </div>
+      <ul>
+        <li>Quando ocorrer qualquer uma das situações:</li>
+        <li>Discordância entre os avaliadores <code>A1 ≠ A2</code></li>
+        <li>Qualquer avaliador classificar como <code>Incerto</code></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Matriz de combinações e resultados</div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Avaliador A1</th>
+          <th>Avaliador A2</th>
+          <th>Avaliador A3</th>
+          <th>Decisão final</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-none">—</span></td><td><span class="badge status-incluido">Inclusão final</span></td></tr>
+        <tr><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-none">—</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-incluir">Incluir</span></td><td><span class="badge status-incluido">Inclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incluir">Incluir</span></td><td><span class="badge status-incluido">Inclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incluir">Incluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incluir">Incluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-excluir">Excluir</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incluir">Incluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-excluir">Excluir</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+        <tr><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="tag tag-incerto">Incerto</span></td><td><span class="badge status-excluido">Exclusão final</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note">
+    Modelo conservador: qualquer combinação envolvendo "Incerto" no 3º avaliador — ou divergência não resolvida positivamente — resulta em exclusão final, exceto no caso específico A1=Incluir, A2=Incerto, A3=Incluir.
+  </div>
+
+</main>
+
+</body>
+</html>
+{% endblock %}

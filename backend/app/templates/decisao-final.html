@@ -1,0 +1,575 @@
+{% extends "base.html" %}
+
+{% block title %}Resultados da Triagem{% endblock %}
+
+{% block content %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#1F3A5F;
+    --navy-deep:#152A47;
+    --paper:#F5F6F8;
+    --card:#FFFFFF;
+    --ink:#1B2430;
+    --ink-soft:#5B6472;
+    --line:#E3E6EB;
+    --success:#1E8E5A;
+    --success-bg:#E6F4EC;
+    --danger:#C0392B;
+    --danger-bg:#FBEAE8;
+    --warning:#9C6B00;
+    --warning-bg:#FBF2DD;
+    --neutral:#5B6472;
+    --neutral-bg:#EDEFF2;
+  }
+
+  *{ box-sizing:border-box; }
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .topbar{
+    background:var(--navy-deep);
+    color:#fff;
+    padding:22px 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:16px;
+  }
+  .topbar h1{
+    margin:0;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:.2px;
+  }
+  .topbar h1 span{
+    display:block;
+    font-size:12px;
+    font-weight:400;
+    color:#9FB0C8;
+    margin-top:2px;
+    letter-spacing:.4px;
+    text-transform:uppercase;
+  }
+  .topbar h1 span#lastUpdateLabel{
+    text-transform:none;
+    letter-spacing:0;
+  }
+
+  .config{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+  }
+  .config label{ color:#9FB0C8; }
+
+  .btn-navy{
+    background:var(--navy);
+    border:1px solid #3E6291;
+    color:#fff;
+    border-radius:6px;
+    padding:8px 14px;
+    font-size:12px;
+    font-weight:600;
+    cursor:pointer;
+    font-family:'IBM Plex Sans', sans-serif;
+    text-decoration:none;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    transition:background .15s;
+  }
+  .btn-navy:hover{ background:#2A4C78; }
+  .btn-navy:disabled,
+  .btn-navy.disabled{
+    background:#33455C;
+    border-color:#33455C;
+    color:#8291A3;
+    cursor:not-allowed;
+  }
+  .btn-navy:disabled:hover,
+  .btn-navy.disabled:hover{ background:#33455C; }
+
+  main{
+    max-width:1180px;
+    margin:0 auto;
+    padding:28px 24px 60px;
+  }
+
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(4, 1fr);
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .stat-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-left:4px solid var(--neutral);
+    border-radius:8px;
+    padding:16px 18px;
+  }
+  .stat-card .num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:28px;
+    font-weight:600;
+    line-height:1;
+  }
+  .stat-card .lbl{
+    margin-top:6px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:.4px;
+  }
+  .stat-card.avaliados{ border-left-color:var(--navy); }
+  .stat-card.pendentes{ border-left-color:var(--warning); }
+  .stat-card.incluidos{ border-left-color:var(--success); }
+  .stat-card.excluidos{ border-left-color:var(--danger); }
+
+  .progress-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:12px 16px;
+    margin-bottom:20px;
+    display:none;
+  }
+  .progress-wrap.active{ display:block; }
+  .progress-track{
+    background:var(--neutral-bg);
+    border-radius:99px;
+    height:8px;
+    overflow:hidden;
+  }
+  .progress-fill{
+    background:var(--navy);
+    height:100%;
+    width:0%;
+    transition:width .15s ease;
+  }
+  .progress-fill.indeterminate{
+    width:40% !important;
+    animation:indeterminate 1.1s ease-in-out infinite;
+  }
+  @keyframes indeterminate{
+    0%{ margin-left:-40%; }
+    100%{ margin-left:100%; }
+  }
+  .progress-label{
+    margin-top:8px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+  }
+
+  .table-wrap{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:8px;
+    overflow:auto;
+  }
+  table{
+    width:100%;
+    min-width:760px;
+    border-collapse:collapse;
+    font-size:13.5px;
+  }
+  thead th{
+    position:sticky;
+    top:0;
+    background:var(--navy-deep);
+    color:#fff;
+    text-align:left;
+    padding:11px 14px;
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:.4px;
+    white-space:nowrap;
+  }
+  tbody tr{ border-top:1px solid var(--line); }
+  tbody tr:hover{ background:#FAFBFC; }
+  tbody td{
+    padding:10px 14px;
+    vertical-align:middle;
+    white-space:nowrap;
+  }
+  td.id-col{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+  td.titulo-col{
+    max-width:320px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  td.codigo-col{
+    max-width:120px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  thead th:last-child,
+  tbody td:last-child{
+    padding-right:20px;
+  }
+
+  .tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    padding:3px 8px;
+    border-radius:5px;
+    font-weight:500;
+    text-transform:lowercase;
+  }
+  .tag-incluir{ background:var(--success-bg); color:var(--success); }
+  .tag-excluir{ background:var(--danger-bg); color:var(--danger); }
+  .tag-incerto{ background:var(--warning-bg); color:var(--warning); }
+  .tag-none{ background:var(--neutral-bg); color:var(--ink-soft); }
+
+  .badge{
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+    font-size:12px;
+    font-weight:600;
+    padding:5px 11px;
+    border-radius:99px;
+  }
+  .badge::before{
+    content:'';
+    width:7px;
+    height:7px;
+    border-radius:50%;
+    background:currentColor;
+  }
+  .status-incluido{ background:var(--success-bg); color:var(--success); }
+  .status-excluido{ background:var(--danger-bg); color:var(--danger); }
+  .status-aguardando{ background:var(--warning-bg); color:var(--warning); }
+  .status-indefinido{ background:var(--neutral-bg); color:var(--neutral); }
+  .status-erro{ background:var(--neutral-bg); color:var(--danger); }
+  .status-carregando{ background:var(--neutral-bg); color:var(--ink-soft); }
+
+  .spinner{
+    width:12px; height:12px;
+    border:2px solid rgba(255,255,255,.4);
+    border-top-color:#fff;
+    border-radius:50%;
+    display:inline-block;
+    animation:spin .7s linear infinite;
+    vertical-align:middle;
+  }
+  .spinner.dark{
+    border:2px solid var(--line);
+    border-top-color:var(--navy);
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .filter-row{
+    display:flex;
+    gap:10px;
+    margin-bottom:14px;
+    flex-wrap:wrap;
+  }
+  .filter-row input, .filter-row select{
+    padding:8px 10px;
+    border:1px solid var(--line);
+    border-radius:6px;
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:13px;
+    background:var(--card);
+  }
+  .filter-row input{ flex:1; min-width:200px; }
+
+  .empty-state{
+    padding:40px;
+    text-align:center;
+    color:var(--ink-soft);
+    font-size:14px;
+  }
+
+  @media (max-width: 760px){
+    .stats{ grid-template-columns:repeat(2, 1fr); }
+    .topbar{ flex-direction:column; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<main>
+
+  <div class="topbar">
+  <h1>Resultado da Triagem<span id="lastUpdateLabel">Carregando snapshot…</span></h1>
+   <div class="config">
+    <button id="btnAtualizar" class="btn-navy" style="display:none;" title="Verificando permissões…">Atualizar</button>
+  </div>
+</div>
+<br>
+
+  <section class="stats">
+    <div class="stat-card avaliados">
+      <div class="num" id="statAvaliados">–</div>
+      <div class="lbl">Avaliados</div>
+    </div>
+    <div class="stat-card pendentes">
+      <div class="num" id="statPendentes">–</div>
+      <div class="lbl">Pendentes</div>
+    </div>
+    <div class="stat-card incluidos">
+      <div class="num" id="statIncluidos">–</div>
+      <div class="lbl">Incluídos</div>
+    </div>
+    <div class="stat-card excluidos">
+      <div class="num" id="statExcluidos">–</div>
+      <div class="lbl">Excluídos</div>
+    </div>
+  </section>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label">
+      <span id="progressText">Carregando…</span>
+    </div>
+  </div>
+
+  <div class="filter-row">
+    <input id="filtroTexto" type="text" placeholder="Filtrar por ID, código ou título…">
+    <select id="filtroStatus">
+      <option value="">Todos os status</option>
+      <option value="status-incluido">Incluído</option>
+      <option value="status-excluido">Excluído</option>
+      <option value="status-aguardando">Aguardando 3º avaliador</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <!-- <th style="width:120px;">Código</th> -->
+          <th>Título</th>
+          <th>A1</th>
+          <th>A2</th>
+          <th>A3</th>
+          <th>Decisão Final</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="7" class="empty-state">Carregando snapshot…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<script>
+(function(){
+  const BASE_URL = '/estado/avaliacoes3';
+
+  const els = {
+    btnAtualizar: document.getElementById('btnAtualizar'),
+    tbody: document.getElementById('tbody'),
+    lastUpdateLabel: document.getElementById('lastUpdateLabel'),
+    progressWrap: document.getElementById('progressWrap'),
+    progressFill: document.getElementById('progressFill'),
+    progressText: document.getElementById('progressText'),
+    statAvaliados: document.getElementById('statAvaliados'),
+    statPendentes: document.getElementById('statPendentes'),
+    statIncluidos: document.getElementById('statIncluidos'),
+    statExcluidos: document.getElementById('statExcluidos'),
+    filtroTexto: document.getElementById('filtroTexto'),
+    filtroStatus: document.getElementById('filtroStatus'),
+  };
+
+  const STATUS_MAP = {
+    inclusao_final:      { label: 'Incluído',              cls: 'status-incluido' },
+    exclusao_final:      { label: 'Excluído',               cls: 'status-excluido' },
+    encaminhar_terceiro: { label: 'Aguard. 3º avaliador',   cls: 'status-aguardando' },
+  };
+
+  function escapeHtml(str){
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  }
+
+  function tagHtml(val){
+    if (!val) return '<span class="tag tag-none">—</span>';
+    const v = String(val).toLowerCase();
+    let cls = 'tag-none';
+    if (v === 'incluir') cls = 'tag-incluir';
+    else if (v === 'excluir') cls = 'tag-excluir';
+    else if (v === 'incerto') cls = 'tag-incerto';
+    return `<span class="tag ${cls}">${escapeHtml(val)}</span>`;
+  }
+
+  function badgeHtml(cls, label){
+    return `<span class="badge ${cls}">${escapeHtml(label)}</span>`;
+  }
+
+  function formatarDataHora(isoStr){
+    if (!isoStr) return null;
+    // trata string sem timezone (naive UTC do backend) como UTC
+    const iso = /Z$|[+-]\d\d:\d\d$/.test(isoStr) ? isoStr : isoStr + 'Z';
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return null;
+    return d.toLocaleString('pt-BR', {
+      day: '2-digit', month: '2-digit', year: 'numeric',
+      hour: '2-digit', minute: '2-digit'
+    });
+  }
+
+  function renderTabela(artigos){
+    if (!artigos.length){
+      els.tbody.innerHTML = '<tr><td colspan="7" class="empty-state">Nenhum artigo no snapshot ainda. Clique em "Atualizar" (admin) para gerar o primeiro.</td></tr>';
+      return;
+    }
+
+    els.tbody.innerHTML = '';
+    artigos.forEach(art => {
+      const info = STATUS_MAP[art.decisao_final] || { label: art.decisao_final, cls: 'status-indefinido' };
+      const tr = document.createElement('tr');
+      tr.dataset.status = info.cls;
+      tr.dataset.busca = `${art.id} ${(art.codigo||'')} ${(art.titulo||'')}`.toLowerCase();
+      tr.innerHTML = `
+        <td class="id-col">${art.id}</td>
+        <td class="titulo-col" title="${escapeHtml(art.titulo)}">${escapeHtml(art.titulo) || '—'}</td>
+        <td>${tagHtml(art.a1)}</td>
+        <td>${tagHtml(art.a2)}</td>
+        <td>${tagHtml(art.a3)}</td>
+        <td>${badgeHtml(info.cls, info.label)}</td>
+      `;
+      els.tbody.appendChild(tr);
+    });
+  }
+
+  function atualizarStats(artigos){
+    const decisoes = artigos.map(a => a.decisao_final);
+    const avaliados = decisoes.filter(s => s === 'inclusao_final' || s === 'exclusao_final').length;
+    const incluidos = decisoes.filter(s => s === 'inclusao_final').length;
+    const excluidos = decisoes.filter(s => s === 'exclusao_final').length;
+    const total = decisoes.length;
+    const pendentes = total - avaliados;
+
+    els.statAvaliados.textContent = avaliados;
+    els.statPendentes.textContent = pendentes;
+    els.statIncluidos.textContent = incluidos;
+    els.statExcluidos.textContent = excluidos;
+  }
+
+  function aplicarFiltros(){
+    const texto = els.filtroTexto.value.trim().toLowerCase();
+    const status = els.filtroStatus.value;
+    document.querySelectorAll('#tbody tr[data-busca]').forEach(row => {
+      const matchTexto = !texto || row.dataset.busca.includes(texto);
+      const matchStatus = !status || row.dataset.status === status;
+      row.style.display = (matchTexto && matchStatus) ? '' : 'none';
+    });
+  }
+
+  els.filtroTexto.addEventListener('input', aplicarFiltros);
+  els.filtroStatus.addEventListener('change', aplicarFiltros);
+
+  async function carregarSnapshot(){
+    let dados;
+    try{
+      const resp = await fetch(`${BASE_URL}/snapshot-decisao-final`, { credentials: 'same-origin' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      dados = await resp.json();
+    }catch(err){
+      els.tbody.innerHTML = `<tr><td colspan="7" class="empty-state">
+        Não foi possível carregar o snapshot.<br>Detalhe: ${escapeHtml(err.message)}
+      </td></tr>`;
+      els.lastUpdateLabel.textContent = 'Erro ao carregar';
+      return;
+    }
+
+    const dataFormatada = formatarDataHora(dados.atualizado_em);
+    els.lastUpdateLabel.textContent = dataFormatada
+      ? `Última atualização: ${dataFormatada}`
+      : 'Ainda não há snapshot gerado';
+
+    renderTabela(dados.artigos);
+    atualizarStats(dados.artigos);
+    aplicarFiltros();
+  }
+
+  async function verificarAdmin(){
+    try{
+      const resp = await fetch(`${BASE_URL}/me`, { credentials: 'same-origin' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const dados = await resp.json();
+      if (dados.is_admin){
+        els.btnAtualizar.style.display = '';
+        els.btnAtualizar.title = 'Recalcular decisão final de todos os artigos';
+      } else {
+        els.btnAtualizar.style.display = 'none';
+      }
+    }catch(err){
+      els.btnAtualizar.style.display = 'none';
+    }
+  }
+
+  async function atualizarSnapshot(){
+    els.btnAtualizar.disabled = true;
+    const textoOriginal = els.btnAtualizar.textContent;
+    els.btnAtualizar.innerHTML = '<span class="spinner"></span> Atualizando…';
+
+    els.progressWrap.classList.add('active');
+    els.progressFill.classList.add('indeterminate');
+    els.progressText.textContent = 'Recalculando decisões finais no servidor…';
+
+    try{
+      const resp = await fetch(`${BASE_URL}/atualizar-decisoes-finais`, {
+        method: 'POST',
+        credentials: 'same-origin',
+      });
+      if (!resp.ok){
+        let detalhe = `HTTP ${resp.status}`;
+        try{ const j = await resp.json(); if (j.detail) detalhe = j.detail; }catch(e){}
+        throw new Error(detalhe);
+      }
+      await carregarSnapshot();
+    }catch(err){
+      alert(`Falha ao atualizar o snapshot: ${err.message}`);
+    } finally {
+      els.progressFill.classList.remove('indeterminate');
+      els.progressWrap.classList.remove('active');
+      els.btnAtualizar.disabled = false;
+      els.btnAtualizar.textContent = textoOriginal;
+    }
+  }
+
+  els.btnAtualizar.addEventListener('click', atualizarSnapshot);
+
+  async function init(){
+    await Promise.all([ carregarSnapshot(), verificarAdmin() ]);
+  }
+
+  window.addEventListener('DOMContentLoaded', init);
+  if (document.readyState !== 'loading') init();
+})();
+</script>
+
+</body>
+</html>
+
+{% endblock %}

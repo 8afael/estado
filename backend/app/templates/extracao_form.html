@@ -1,0 +1,969 @@
+{% extends "base.html" %}
+
+{% block title %}Formulário de Extração — Artigo #{{ artigo_id }}{% endblock %}
+
+{% block extra_head %}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EEF0EA;
+    --surface:#FCFCF9;
+    --ink:#1C2541;
+    --ink-soft:#525C74;
+    --ink-faint:#8A93A6;
+    --accent:#2F6F62;
+    --accent-soft:#DCE8E3;
+    --brass:#B9862F;
+    --brass-soft:#F1E4C8;
+    --line:#D8D6C9;
+    --line-soft:#E7E5DA;
+    --danger:#A33B3B;
+    --radius:3px;
+    --sidebar-w:280px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    line-height:1.5;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; margin:0;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  .aperture{width:34px;height:34px;flex:none;}
+
+  .progress-wrap{display:flex; align-items:center; gap:10px; font-size:12px; color:#DCE3E9;}
+  .progress-bar{width:120px; height:5px; background:rgba(255,255,255,.18); border-radius:3px; overflow:hidden;}
+  .progress-bar > i{display:block; height:100%; background:var(--brass); width:0%; transition:width .4s ease;}
+  .top-actions{display:flex; gap:8px; flex-wrap:wrap;}
+  button{
+    font-family:'IBM Plex Sans', sans-serif; font-size:12.5px; font-weight:600;
+    border-radius:var(--radius); border:1px solid transparent; cursor:pointer;
+    padding:8px 12px; letter-spacing:.2px;
+  }
+  .btn-brass{background:var(--brass); color:#1C1608; border-color:var(--brass);}
+  .btn-brass:hover{background:#CB9A3E;}
+  .btn-brass:disabled{opacity:.55; cursor:not-allowed;}
+  .btn-ghost{background:transparent; color:var(--paper); border-color:rgba(255,255,255,.35);}
+  .btn-ghost:hover{background:rgba(255,255,255,.08);}
+
+  /* Botão "Salvar" (verde) e variante ghost para fundo claro (sidebar) */
+  .btn-green{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .btn-green:hover{background:#255A50;}
+  .btn-green:disabled{opacity:.55; cursor:not-allowed;}
+  .btn-ghost-light{background:transparent; color:var(--ink-soft); border-color:var(--line);}
+  .btn-ghost-light:hover{background:var(--surface);}
+
+  /* Bloco de progresso + ações, agora na sidebar (acima da lista de Seções) */
+  .sidebar-actions{margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--line);}
+  .sidebar-actions .progress-wrap{display:flex; flex-direction:column; align-items:stretch; gap:6px; font-size:12px; color:var(--ink-soft); margin-bottom:14px;}
+  .sidebar-actions .progress-bar{width:100%; height:5px; background:var(--line-soft); border-radius:3px; overflow:hidden;}
+  .sidebar-actions .progress-bar > i{display:block; height:100%; background:var(--accent); width:0%; transition:width .4s ease;}
+  .sidebar-buttons{display:flex; flex-direction:column; gap:8px;}
+  .sidebar-buttons button{width:100%;}
+
+  .toast-msg{
+  position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(16px);
+  background:var(--ink); color:#fff; padding:10px 18px; border-radius:var(--radius);
+  font-size:13px; font-weight:500; opacity:0; pointer-events:none; z-index:999;
+  box-shadow:0 4px 14px rgba(0,0,0,.2);
+  transition:opacity .25s ease, transform .25s ease;
+}
+.toast-msg.show{opacity:1; transform:translateX(-50%) translateY(0);}
+.toast-msg.toast-erro{background:var(--danger);}
+
+  .layout{display:flex; align-items:flex-start; max-width:1280px; margin:0 auto;}
+  nav.sidebar{
+    position:sticky; top:20px;
+    width:var(--sidebar-w); flex:none;
+    max-height:calc(100vh - 40px); overflow-y:auto;
+    padding:22px 10px 40px 24px;
+  }
+  nav.sidebar .nav-eyebrow{font-size:10.5px; text-transform:uppercase; letter-spacing:1.2px; color:var(--ink-faint); margin:0 0 10px 6px;}
+  nav.sidebar a{
+    display:flex; gap:10px; align-items:baseline;
+    text-decoration:none; color:var(--ink-soft);
+    padding:7px 8px; border-radius:var(--radius); font-size:13px;
+    border-left:2px solid transparent;
+  }
+  nav.sidebar a .n{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--ink-faint); width:16px; flex:none;}
+  nav.sidebar a:hover{background:var(--surface);}
+  nav.sidebar a.active{color:var(--ink); border-left-color:var(--accent); background:var(--surface); font-weight:600;}
+  nav.sidebar a.active .n{color:var(--accent);}
+
+  main{flex:1; min-width:0; padding:28px 32px 120px; max-width:820px;}
+
+  select.section-jump{display:none; width:100%; margin:12px 24px; padding:10px; font-family:inherit; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); color:var(--ink);}
+
+  details.instructions{
+    background:var(--surface); border:1px solid var(--line); border-radius:6px;
+    padding:4px 20px; margin-bottom:28px;
+  }
+  details.instructions summary{cursor:pointer; padding:14px 0; font-weight:600; font-family:'Fraunces', serif; font-size:16px; list-style:none; display:flex; align-items:center; gap:10px;}
+  details.instructions summary::-webkit-details-marker{display:none;}
+  details.instructions summary:before{content:"+"; color:var(--accent); font-size:18px; width:18px;}
+  details.instructions[open] summary:before{content:"–";}
+  details.instructions p{color:var(--ink-soft); font-size:13.5px;}
+  details.instructions ol{padding-left:20px; font-size:13.5px; color:var(--ink-soft);}
+  details.instructions li{margin-bottom:6px;}
+  .absence-grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0 20px;}
+  @media (max-width:640px){.absence-grid{grid-template-columns:1fr;}}
+  .absence-card{background:var(--paper); border:1px solid var(--line-soft); border-radius:var(--radius); padding:10px 12px;}
+  .absence-card b{font-size:12.5px; color:var(--ink);}
+  .absence-card span{display:block; font-size:12px; color:var(--ink-soft); margin-top:2px;}
+
+  section.qsection{margin-bottom:44px; scroll-margin-top:90px;}
+  section.qsection > .section-head{display:flex; align-items:baseline; gap:12px; border-bottom:2px solid var(--ink); padding-bottom:10px; margin-bottom:22px;}
+  section.qsection > .section-head .s-num{font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--accent); background:var(--accent-soft); padding:2px 8px; border-radius:20px;}
+  section.qsection > .section-head h2{font-size:20px;}
+
+  .field{background:var(--surface); border:1px solid var(--line-soft); border-radius:6px; padding:16px 18px 18px; margin-bottom:14px;}
+  .field.answered{border-left:3px solid var(--accent);}
+  .field.readonly-field{background:var(--paper);}
+  .field-label{display:flex; gap:10px; align-items:flex-start; margin-bottom:4px;}
+  .field-label .qnum{font-family:'IBM Plex Mono', monospace; font-size:11.5px; color:var(--ink-faint); padding-top:2px; flex:none;}
+  .field-label label{font-weight:600; font-size:14.5px; line-height:1.35;}
+  .required-dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--brass); margin-left:6px; vertical-align:middle;}
+  .field-meta{display:flex; gap:8px; align-items:center; margin:2px 0 10px 26px;}
+  .type-tag{font-size:10px; text-transform:uppercase; letter-spacing:.6px; color:var(--ink-faint); border:1px solid var(--line); padding:1px 6px; border-radius:10px;}
+  .help-toggle{font-size:11.5px; color:var(--accent); background:none; border:none; padding:0; cursor:pointer; font-weight:600;}
+  .help-text{margin:0 0 12px 26px; font-size:12.5px; color:var(--ink-soft); background:var(--paper); border-radius:var(--radius); padding:9px 11px; display:none; border-left:2px solid var(--brass); white-space:normal;}
+  .help-text.open{display:block;}
+  .help-text ul{margin:6px 0 0 0; padding-left:18px;}
+  .help-text li{margin-bottom:4px;}
+  .field-body{margin-left:26px;}
+
+  .readonly-value{
+    font-family:'IBM Plex Mono', monospace; font-size:13.5px; color:var(--ink);
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius);
+    padding:9px 11px; display:inline-block; min-width:120px;
+  }
+
+  .link-artigo-box{
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:6px;
+    padding:12px 16px; margin-bottom:18px; font-size:13.5px;
+  }
+  .link-artigo-box b{display:block; font-size:11px; text-transform:uppercase; letter-spacing:.4px; color:var(--accent); margin-bottom:4px;}
+  .link-artigo-box a{color:var(--ink); word-break:break-all;}
+
+  input[type=text], textarea, select{
+    width:100%; font-family:inherit; font-size:13.5px; color:var(--ink);
+    border:1px solid var(--line); border-radius:var(--radius); padding:9px 11px; background:#fff;
+  }
+  textarea{min-height:70px; resize:vertical;}
+  input[type=text]:focus, textarea:focus, select:focus{outline:2px solid var(--accent); outline-offset:1px; border-color:var(--accent);}
+
+  .opt-grid{display:grid; grid-template-columns:1fr 1fr; gap:6px 16px;}
+  @media (max-width:600px){.opt-grid{grid-template-columns:1fr;}}
+  .opt{display:flex; align-items:flex-start; gap:8px; font-size:13.5px; padding:3px 0;}
+  .opt input{margin-top:3px; accent-color:var(--accent); flex:none;}
+  .opt label{cursor:pointer;}
+  .other-input{margin:6px 0 2px 24px; display:none;}
+  .other-input.show{display:block;}
+  .other-input input{width:80%;}
+
+  .country-tags{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;}
+  .country-tag{background:var(--accent-soft); color:var(--accent); font-weight:600; font-size:12px; padding:3px 8px; border-radius:12px; display:flex; align-items:center; gap:6px;}
+  .country-tag span{cursor:pointer; font-weight:bold;}
+
+  table.grid-table{border-collapse:collapse; width:100%; font-size:12px; margin-top:4px;}
+  .grid-scroll{overflow-x:auto; border:1px solid var(--line-soft); border-radius:6px;}
+  table.grid-table th, table.grid-table td{border:1px solid var(--line-soft); padding:6px 8px; text-align:center; vertical-align:middle;}
+  table.grid-table th{background:var(--paper); font-weight:600; font-size:11px;}
+  table.grid-table td:first-child, table.grid-table th:first-child{text-align:left; background:var(--paper); font-weight:500; min-width:210px; position:sticky; left:0;}
+  table.grid-table input{accent-color:var(--accent);}
+
+  .scale-row{display:flex; gap:8px; flex-wrap:wrap;}
+  .scale-opt{flex:1; min-width:150px; border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px; cursor:pointer; font-size:12.5px;}
+  .scale-opt input{margin-right:6px; accent-color:var(--accent);}
+  .scale-opt b{display:block; font-size:13px; margin-bottom:2px;}
+
+  .field-loc{margin-top:10px;}
+  .field-loc input{max-width:260px;}
+  .field-loc label{font-size:11.5px; color:var(--ink-faint); display:block; margin-bottom:3px;}
+
+  footer.foot {
+  max-width: 820px;
+  margin: 40px auto 0;
+  padding: 0 32px 80px;
+  color: var(--ink-faint);
+  font-size: 12px;
+  text-align: center;}
+
+  ::selection{background:var(--brass-soft);}
+
+  @media (max-width:960px){
+    nav.sidebar{display:none;}
+    select.section-jump{display:block;}
+    main{padding:20px 18px 100px; max-width:100%;}
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<select class="section-jump" id="sectionJump" aria-label="Saltar para seção"></select>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebarNav" aria-label="Navegação de seções">
+    <div class="sidebar-actions">
+      <div class="progress-wrap">
+        <span id="progressLabel">0% preenchido</span>
+        <div class="progress-bar"><i id="progressBar"></i></div>
+        <span id="recordCount" class="mono">Rascunho não iniciado</span>
+      </div>
+      <div class="sidebar-buttons">
+        <button class="btn-ghost-light" id="btnSalvar">Salvar</button>
+        <button class="btn-green" id="btnConcluir">Salvar e enviar</button>
+      </div>
+    </div>
+    <p class="nav-eyebrow">Seções</p>
+    <div id="navLinks"></div>
+  </nav>
+
+  <main id="mainContent">
+    <details class="instructions" open>
+      <summary>Descrição e instruções gerais aos avaliadores</summary>
+      <p>Este formulário destina-se à extração sistemática de dados dos artigos incluídos na revisão da literatura sobre Estado Aberto, Parlamento Aberto e Justiça Aberta. O objetivo é identificar como esses conceitos são definidos, delimitados, relacionados ao Governo Aberto e à Governança Aberta, operacionalizados e concretizados, bem como analisar o papel das instituições, do direito, das ferramentas digitais, da sociedade civil e da mídia.</p>
+      <ol>
+        <li>Responder exclusivamente com base no artigo analisado e nos seus materiais suplementares publicados.</li>
+        <li>Não utilizar conhecimento externo para completar, corrigir ou interpretar a informação do artigo.</li>
+        <li>Ler o artigo completo antes de finalizar a extração.</li>
+        <li>Preencher primeiro os campos descritivos e depois os campos interpretativos.</li>
+        <li>Registrar página, seção, tabela, figura ou outro local da evidência sempre que possível.</li>
+        <li>Não selecionar uma categoria apenas porque o termo aparece no texto; a categoria deve corresponder à função ou ao argumento atribuído pelos autores.</li>
+        <li>Nos campos textuais, preservar os termos do artigo e escrever de forma objetiva.</li>
+        <li>Usar as categorias de ausência de forma consistente (ver abaixo).</li>
+        <li>Em caso de dúvida, indicar a evidência, selecionar confiança média ou baixa e descrever a dúvida nas observações.</li>
+      </ol>
+      <div class="absence-grid">
+        <div class="absence-card"><b>Não aplicável</b><span>A variável não se aplica ao artigo ou ao objeto estudado.</span></div>
+        <div class="absence-card"><b>Não identificado no artigo</b><span>A variável seria aplicável, mas a informação não foi encontrada ou não pode ser determinada com segurança.</span></div>
+        <div class="absence-card"><b>Não analisado</b><span>O artigo poderia abordar a questão, mas não a examina.</span></div>
+        <div class="absence-card"><b>Não mencionado</b><span>O artigo não faz referência ao ator, conceito ou elemento.</span></div>
+      </div>
+    </details>
+
+    <div id="sectionsRoot"></div>
+  </main>
+</div>
+
+  <footer class="foot">
+  <b>Projeto Estado Aberto:</b> promovendo a cultura e as práticas de governo, parlamento e justiça aberta.
+  </footer>
+
+<script>
+/* ---------------------------------------------------------------------
+   Dados injetados pelo backend (Jinja2)
+--------------------------------------------------------------------- */
+const ARTIGO_ID = {{ artigo_id | tojson }};
+const NOME_ARQUIVO = {{ nome_arquivo | tojson }};
+const ARTIGO_LINK = {{ artigo_link | tojson }};
+const USUARIO_ID = {{ usuario_id | tojson }};
+const PAISES_LISTA = {{ paises_lista | tojson }};
+const RASCUNHO_INICIAL = {{ rascunho_json | safe }};
+
+// Mapa qN -> nome real da coluna no schema (só existe para single/long/scale;
+// multi, _loc e _outro já batem por nome, não precisam de tradução).
+const COLUNA_MAP = {{ coluna_map | tojson }};
+const REVERSE_COLUNA_MAP = Object.fromEntries(
+  Object.entries(COLUNA_MAP).map(([q, coluna]) => [coluna, q])
+);
+
+// Traduz um objeto {qN: valor, ...} para o formato esperado pelo backend
+// (ex.: {q7: "Empírico"} -> {q7_natureza_artigo: "Empírico"}).
+function traduzirParaPayload(changes){
+  const traduzido = {};
+  Object.entries(changes).forEach(([campo, valor])=>{
+    const nomeReal = COLUNA_MAP[campo] || campo;
+    traduzido[nomeReal] = valor;
+  });
+  return traduzido;
+}
+
+const AUTOSAVE_URL = '/estado/extracao/autosave';
+const CONCLUIR_URL = `/estado/extracao/concluir/${ARTIGO_ID}`;
+
+const PRINCIPIOS = ["Transparência","Participação","Accountability/prestação de contas","Colaboração","Integridade","Inclusão","Acessibilidade","Responsividade","Confiança","Legalidade","Equidade","Deliberação","Eficiência","Publicidade","Independência","Imparcialidade","Outro — especificar","Não identificado no artigo","Não aplicável"];
+
+const SECTIONS = [
+{id:"s1", title:"Identificação e acessibilidade", fields:[
+  {num:1, id:"q1", type:"readonly", label:"ID do estudo", required:true, help:"Preenchido automaticamente a partir do registro do artigo."},
+  {num:2, id:"q2", type:"readonly", label:"Nome do arquivo", required:true, help:"Preenchido automaticamente a partir do registro do artigo."},
+  {num:3, id:"q3", type:"long", label:"Referência bibliográfica", loc:false, help:"Registrar ou verificar a referência completa em APA 7.ª edição. Preservar DOI ou URL quando disponível. Exemplo: Figueras Zanabria, V. M. (2019). Gobierno abierto en México: Hacia una discusión realista de su factibilidad. Revista Mexicana de Ciencias Políticas y Sociales, 64(235), 523–554. https://doi.org/10.22201/fcpys.2448492xe.2019.235.59021"},
+  {num:4, id:"q4", type:"single", label:"Idioma da publicação", options:["Inglês","Português","Espanhol","Outro — especificar"], help:"Codificar o idioma principal do texto integral analisado, não o idioma do título, resumo, palavras-chave ou afiliação. Se houver versões integrais em mais de um idioma, registrar a versão efetivamente analisada e explicar nas observações."},
+  {num:5, id:"q5", type:"country_select", label:"País(es) ou abrangência territorial analisada", options:["Global/internacional","Países não especificados","Não aplicável","Não identificado no artigo"], help:"Selecione apenas os países efetivamente analisados no estudo, como objeto empírico, unidade de análise, local de coleta de dados ou contexto institucional.<br><ul><li><b>Países identificados:</b> selecione cada país mencionado como objeto do estudo.</li> <li><b>Vários países sem identificação:</b> selecione “Países não especificados”.</li> <li><b>Abrangência global/internacional:</b> selecionar quando não houver países específicos como unidades principais.</li> <li><b>Sem dimensão territorial:</b> selecione “Não aplicável”.</li><li><b>Dimensão territorial existente, mas não identificável:</b> selecione “Não identificado no artigo”.</li></ul>"},
+  {num:6, id:"q6", type:"long", label:"Objetivo principal do artigo", loc:true, help:"Resumir em uma ou duas frases o objetivo declarado pelos autores e indicar a página/seção."},
+]},
+{id:"s2", title:"Método, desenho e fase da política", fields:[
+  {num:7, id:"q7", type:"single", label:"Natureza principal do artigo", options:["Teórico/conceitual","Revisão de literatura","Empírico","Normativo/jurídico","Metodológico","Outro — especificar","Não identificado no artigo"], help:"<ul><li><b>Teórico/conceitual</b> — Selecionar quando o artigo desenvolve, propõe, discute ou refina conceitos, categorias ou modelos teóricos, sem realizar análise sistemática de dados empíricos.</li><li><b>Revisão de literatura</b> — Selecionar quando o objetivo principal é sintetizar, analisar ou sistematizar estudos existentes, por meio de revisão narrativa, revisão sistemática, scoping review, bibliometria ou abordagem semelhante.</li><li><b>Empírico</b> — Selecionar quando o artigo realiza análise sistemática de material empírico, como entrevistas, questionários, documentos, bases de dados, textos, discursos, estatísticas, legislação, decisões judiciais ou outros dados. Selecionar esta opção mesmo quando o artigo também apresenta discussão teórica, conceitual ou normativa.</li><li><b>Normativo/jurídico</b> — Selecionar quando o objetivo principal é discutir, interpretar, avaliar ou propor normas, princípios, regras ou questões jurídicas, sem que uma análise empírica sistemática constitua o componente principal do estudo.</li><li><b>Metodológico</b> — Selecionar quando o foco principal é desenvolver, testar, discutir ou propor métodos, técnicas, instrumentos ou procedimentos de pesquisa.</li><li><b>Outro — especificar</b> — Selecionar apenas quando o artigo não se enquadrar adequadamente nas categorias anteriores. Especificar a natureza identificada no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a natureza principal do artigo com base nas informações disponíveis.</li><li><b>Regra de desempate</b> — Quando o artigo combinar diferentes naturezas, classificar de acordo com o componente predominante na realização da pesquisa. Se houver análise sistemática de material empírico, priorizar <b>Empírico</b>.</li></ul>"},
+  {num:8, id:"q8", type:"single", label:"Abordagem metodológica", options:["Qualitativa","Quantitativa","Métodos mistos","Não aplicável","Não identificado no artigo"], help:"<ul><li><b>Qualitativa</b> — Selecionar quando a análise é predominantemente interpretativa, utilizando dados textuais, documentais, discursivos, entrevistas, observações ou outros materiais analisados de forma qualitativa.</li><li><b>Quantitativa</b> — Selecionar quando a análise é predominantemente numérica ou estatística, utilizando dados quantitativos, indicadores, bases de dados, estatísticas ou técnicas de análise quantitativa.</li><li><b>Métodos mistos</b> — Selecionar quando o artigo utiliza e integra de forma substantiva abordagens qualitativa e quantitativa na análise dos dados. Não selecionar apenas porque o artigo apresenta dados de natureza diferente; deve existir uma combinação metodológica efetiva entre as duas abordagens.</li><li><b>Não aplicável</b> — Selecionar quando a abordagem metodológica não se aplica à natureza do artigo, por exemplo, em artigos exclusivamente teóricos, conceituais ou normativos sem análise de dados.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a abordagem metodológica com base nas informações disponíveis.</li></ul>"},
+  {num:9, id:"q9", type:"multi", label:"Desenho ou estratégia de investigação/pesquisa", options:["Estudo de caso","Estudo comparativo","Estudo transversal/descritivo","Estudo longitudinal","Estudo experimental/quase-experimental","Questionário/survey","Estudo etnográfico","Estudo bibliométrico","Revisão sistemática ou de escopo","Análise de políticas","Outro — especificar","Não identificado no artigo"], help:"<ul><li><b>Estudo de caso</b> — Selecionar quando o artigo realiza uma análise aprofundada e contextualizada de um caso, organização, instituição, política, evento, território ou unidade específica.</li><li><b>Estudo comparativo</b> — Selecionar quando o artigo realiza comparação analítica sistemática entre duas ou mais unidades, casos, períodos, instituições, países, políticas ou contextos.</li><li><b>Estudo transversal/descritivo</b> — Selecionar quando os dados são analisados em um determinado momento ou período delimitado, com objetivo predominantemente descritivo, sem acompanhamento longitudinal ou intervenção experimental.</li><li><b>Estudo longitudinal</b> — Selecionar quando o artigo acompanha ou compara sistematicamente uma ou mais unidades ao longo de diferentes momentos ou períodos, permitindo analisar mudanças ou continuidades no tempo.</li><li><b>Estudo experimental/quase-experimental</b> — Selecionar quando o estudo envolve uma intervenção, tratamento ou condição experimental e utiliza desenho experimental ou quase-experimental para avaliar seus efeitos.</li><li><b>Questionário/survey</b> — Selecionar quando a principal estratégia de investigação consiste na aplicação sistemática de questionários ou surveys a uma população ou amostra.</li><li><b>Estudo etnográfico</b> — Selecionar quando a investigação utiliza abordagem etnográfica, incluindo observação participante, imersão no campo ou acompanhamento sistemático de práticas, grupos ou contextos sociais.</li><li><b>Estudo bibliométrico</b> — Selecionar quando o artigo utiliza técnicas bibliométricas ou análise quantitativa de produção, circulação, citação, coautoria ou outras características da literatura científica.</li><li><b>Revisão sistemática ou de escopo</b> — Selecionar quando o artigo realiza uma revisão estruturada da literatura seguindo procedimentos sistemáticos e explicitados de identificação, seleção e análise dos estudos.</li><li><b>Análise de políticas</b> — Selecionar quando o foco principal é analisar sistematicamente políticas públicas, programas, instrumentos, processos de formulação, implementação ou avaliação de políticas.</li><li><b>Outro — especificar</b> — Selecionar quando a estratégia de investigação não se enquadrar adequadamente nas categorias anteriores. Especificar a estratégia identificada no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar o desenho ou a estratégia de investigação com base nas informações disponíveis.</li></ul>"},
+  {num:10, id:"q10", type:"multi", label:"Fontes ou tipos de dados analisados. Selecione todas as categorias que descrevem as fontes ou os tipos de dados analisados no artigo. Quando o estudo utilizar mais de uma fonte ou tipo de dado, marque todas as opções correspondentes.", options:["Entrevistas ou grupos focais","Questionários ou inquéritos","Observação","Documentos oficiais ou legislação","Decisões judiciais","Debates ou atas parlamentares","Artigos científicos ou literatura publicada","Relatórios de organizações","Bases de dados estatísticas ou registros administrativos","Dados digitais ou redes sociais","Dados de imprensa/mídia","Dados experimentais","Outro — especificar","Não identificado no artigo","Não aplicável"], help:"<ul><li><b>Entrevistas ou grupos focais</b> — Selecionar quando os dados analisados são provenientes de entrevistas individuais, entrevistas em grupo ou grupos focais, realizados pelos pesquisadores ou disponibilizados por terceiros.</li><li><b>Questionários ou inquéritos</b> — Selecionar quando os dados analisados são provenientes de questionários, surveys ou outros instrumentos padronizados aplicados a participantes ou respondentes.</li><li><b>Observação</b> — Selecionar quando os dados são produzidos por meio de observação sistemática, participante ou não participante.</li><li><b>Documentos oficiais ou legislação</b> — Selecionar quando os dados são provenientes de leis, decretos, regulamentos, atos administrativos, relatórios oficiais, documentos institucionais ou outros documentos produzidos por órgãos públicos.</li><li><b>Decisões judiciais</b> — Selecionar quando os dados analisados são provenientes de decisões, acórdãos, sentenças ou outros documentos produzidos por tribunais ou órgãos judiciais.</li><li><b>Debates ou atas parlamentares</b> — Selecionar quando os dados são provenientes de debates, discursos, sessões, atas, proposições ou outros registros de atividades parlamentares.</li><li><b>Artigos científicos ou literatura publicada</b> — Selecionar quando os dados ou materiais analisados são provenientes de artigos científicos, livros, capítulos, teses, dissertações ou outras publicações acadêmicas.</li><li><b>Relatórios de organizações</b> — Selecionar quando os dados são provenientes de relatórios, estudos, documentos técnicos ou publicações produzidas por organizações públicas, privadas, internacionais ou da sociedade civil.</li><li><b>Bases de dados estatísticas ou registros administrativos</b> — Selecionar quando os dados são provenientes de bases estatísticas, indicadores, censos, conjuntos de dados quantitativos ou registros administrativos produzidos por instituições ou órgãos públicos.</li><li><b>Dados digitais ou redes sociais</b> — Selecionar quando os dados são provenientes de websites, plataformas digitais, redes sociais, aplicativos, fóruns ou outras fontes digitais.</li><li><b>Dados de imprensa/mídia</b> — Selecionar quando os dados são provenientes de jornais, revistas, televisão, rádio, portais de notícias ou outros meios de comunicação.</li><li><b>Dados experimentais</b> — Selecionar quando os dados são produzidos por meio de experimentos ou intervenções realizadas no âmbito da pesquisa.</li><li><b>Outro — especificar</b> — Selecionar quando a fonte ou o tipo de dados não se enquadrar adequadamente nas categorias anteriores. Especificar a fonte ou o tipo de dado no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a fonte ou o tipo de dados utilizados com base nas informações disponíveis.</li><li><b>Não aplicável</b> — Selecionar quando o artigo não utiliza dados empíricos ou fontes documentais para sua análise, por exemplo, em trabalhos exclusivamente teóricos, conceituais ou normativos.</li></ul>"},
+  {num:11, id:"q11", type:"multi", label:"Técnicas de análise", options:["Análise de conteúdo","Análise temática","Análise discursiva","Análise jurídica/doutrinária","Análise comparativa","Análise estatística","Análise bibliométrica","Análise de redes","Análise de políticas","Análise de coocorrências","Outra — especificar","Não identificado no artigo","Não aplicável"], help:"<ul><li><b>Análise de conteúdo</b> — Selecionar quando o artigo utiliza procedimentos sistemáticos para identificar, categorizar, quantificar ou interpretar conteúdos presentes em textos, documentos, discursos ou outros materiais.</li><li><b>Análise temática</b> — Selecionar quando o artigo identifica, organiza e interpreta temas ou padrões recorrentes nos dados, de forma sistemática.</li><li><b>Análise discursiva</b> — Selecionar quando o artigo analisa discursos, linguagem, narrativas ou práticas discursivas, considerando seus significados, contextos e formas de construção da realidade.</li><li><b>Análise jurídica/doutrinária</b> — Selecionar quando o artigo realiza interpretação e análise sistemática de normas, princípios, legislação, jurisprudência, doutrina ou outros materiais jurídicos.</li><li><b>Análise comparativa</b> — Selecionar quando o artigo realiza comparação sistemática entre casos, unidades, períodos, instituições, países, políticas ou outros contextos.</li><li><b>Análise estatística</b> — Selecionar quando o artigo utiliza técnicas estatísticas para descrever, testar relações, identificar padrões ou estimar efeitos a partir de dados quantitativos.</li><li><b>Análise bibliométrica</b> — Selecionar quando o artigo utiliza métodos bibliométricos para analisar a produção científica, incluindo citações, coautoria, produtividade, impacto ou evolução da literatura.</li><li><b>Análise de redes</b> — Selecionar quando o artigo analisa relações ou estruturas de conexão entre atores, organizações, documentos, conceitos ou outros elementos por meio de técnicas de análise de redes.</li><li><b>Análise de políticas</b> — Selecionar quando o artigo analisa sistematicamente políticas públicas, programas, instrumentos, processos de formulação, implementação ou avaliação de políticas.</li><li><b>Análise de coocorrências</b> — Selecionar quando o artigo analisa a ocorrência conjunta de palavras, conceitos, termos, categorias ou outros elementos para identificar relações, padrões ou estruturas de associação.</li><li><b>Outra — especificar</b> — Selecionar quando a técnica de análise não se enquadrar adequadamente nas categorias anteriores. Especificar a técnica utilizada no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar as técnicas de análise utilizadas com base nas informações disponíveis.</li><li><b>Não aplicável</b> — Selecionar quando o artigo não realiza análise sistemática de dados, por exemplo, em trabalhos exclusivamente teóricos, conceituais ou normativos.</li></ul>"},
+  {num:12, id:"q12", type:"multi", label:"Fase da política ou do processo analisada", options:["Formulação/construção do problema","Definição da agenda","Adoção","Desenho da política ou programa","Implementação","Monitoramento","Avaliação de resultados","Consolidação/institucionalização","Retrocesso/descontinuação","Mais de uma fase","Não aplicável","Não identificado no artigo"], help:"<ul><li><b>Formulação/construção do problema</b> — Selecionar quando o artigo analisa como um problema público é definido, enquadrado, interpretado ou construído, incluindo a definição de causas, consequências e possíveis soluções.</li><li><b>Definição da agenda</b> — Selecionar quando o artigo analisa o processo pelo qual um problema ou tema é incorporado à agenda pública ou política, tornando-se objeto de atenção dos tomadores de decisão.</li><li><b>Adoção</b> — Selecionar quando o artigo analisa a decisão formal de aprovar, adotar ou instituir uma política, programa, lei, regulamento ou instrumento de política pública.</li><li><b>Desenho da política ou programa</b> — Selecionar quando o artigo analisa a definição dos objetivos, instrumentos, regras, mecanismos, recursos ou demais componentes de uma política ou programa.</li><li><b>Implementação</b> — Selecionar quando o artigo analisa a execução, operacionalização ou funcionamento de uma política ou programa após sua adoção.</li><li><b>Monitoramento</b> — Selecionar quando o artigo analisa o acompanhamento sistemático da execução, dos indicadores, das atividades ou do desempenho de uma política ou programa.</li><li><b>Avaliação de resultados</b> — Selecionar quando o artigo analisa os efeitos, resultados ou impactos produzidos por uma política ou programa, incluindo a verificação do alcance de seus objetivos.</li><li><b>Consolidação/institucionalização</b> — Selecionar quando o artigo analisa a continuidade, estabilização, incorporação ou institucionalização de uma política, programa, prática ou instrumento ao longo do tempo.</li><li><b>Retrocesso/descontinuação</b> — Selecionar quando o artigo analisa redução, enfraquecimento, reversão, abandono ou encerramento de uma política, programa ou instrumento.</li><li><b>Mais de uma fase</b> — Selecionar quando o artigo analisa de forma substantiva duas ou mais fases do processo de política pública. Quando possível, selecionar também as fases específicas analisadas.</li><li><b>Não aplicável</b> — Selecionar quando a análise não se refere a uma política pública ou a um processo de política que possa ser situado nessas fases.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a fase da política ou do processo analisada com base nas informações disponíveis.</li></ul>"},
+  {num:13, id:"q13", type:"single", label:"Escala geográfica principal", options:["Local/municipal","Regional/estadual/provincial","Nacional","Internacional/transnacional","Global","Multinível/multiescalar","Não aplicável","Não identificado no artigo"], help:"<ul><li><b>Local/municipal</b> — Selecionar quando as unidades analisadas estão concentradas principalmente em um município, cidade ou território local.</li><li><b>Regional/estadual/provincial</b> — Selecionar quando as unidades analisadas estão concentradas principalmente em uma região subnacional, estado, província ou unidade territorial equivalente.</li><li><b>Nacional</b> — Selecionar quando a análise se concentra principalmente em um país ou em suas instituições, políticas, processos ou dados nacionais.</li><li><b>Internacional/transnacional</b> — Selecionar quando o artigo analisa relações, processos, instituições ou fenômenos que atravessam fronteiras nacionais, envolvendo dois ou mais países, sem que o foco principal seja uma perspectiva global.</li><li><b>Global</b> — Selecionar quando o objeto de análise é tratado em escala mundial ou envolve um conjunto amplo de países ou regiões com perspectiva explicitamente global.</li><li><b>Multinível/multiescalar</b> — Selecionar quando o artigo analisa de forma substantiva duas ou mais escalas territoriais ou níveis de governo, articulando-os na análise.</li><li><b>Não aplicável</b> — Selecionar quando a dimensão geográfica ou territorial não for relevante para o objeto do artigo.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a escala geográfica principal com base nas informações disponíveis.</li></ul>"},
+  {num:14, id:"q14", type:"multi", label:"Unidade(s) de análise", options:["Instituição","Política pública","Norma jurídica","Documento/relatório","Lei ou regulamento","Decisão judicial","Parlamento/órgão legislativo","Tribunal","Administração pública","País","Município/região","Plataforma digital","Processo/procedimento","Organização da sociedade civil","Meio de comunicação","Cidadão/indivíduo/utilizador","Relação Estado–sociedade","Outro — especificar","Não identificado no artigo","Não aplicável"], help:"<ul><li><b>Instituição</b> — Selecionar quando a unidade principal de análise é uma instituição, órgão ou entidade específica.</li><li><b>Política pública</b> — Selecionar quando a unidade de análise é uma política pública, programa, iniciativa ou instrumento de política.</li><li><b>Norma jurídica</b> — Selecionar quando a unidade de análise é uma norma, princípio, regra ou disposição jurídica.</li><li><b>Documento/relatório</b> — Selecionar quando a unidade de análise é um documento, relatório ou outro material textual que não se enquadra especificamente nas categorias jurídicas ou institucionais.</li><li><b>Lei ou regulamento</b> — Selecionar quando a unidade de análise é especificamente uma lei, decreto, regulamento ou outro ato normativo formal.</li><li><b>Decisão judicial</b> — Selecionar quando a unidade de análise é uma decisão, sentença, acórdão ou outro pronunciamento judicial.</li><li><b>Parlamento/órgão legislativo</b> — Selecionar quando a unidade de análise é um parlamento, assembleia, congresso ou outro órgão legislativo.</li><li><b>Tribunal</b> — Selecionar quando a unidade de análise é um tribunal ou órgão do Poder Judiciário considerado como instituição.</li><li><b>Administração pública</b> — Selecionar quando a unidade de análise é um órgão, entidade, estrutura ou conjunto de práticas da administração pública.</li><li><b>País</b> — Selecionar quando o país é a principal unidade de comparação ou análise.</li><li><b>Município/região</b> — Selecionar quando a principal unidade de análise é um município, cidade, região, estado, província ou outra unidade territorial subnacional.</li><li><b>Plataforma digital</b> — Selecionar quando a unidade de análise é uma plataforma digital, website, rede social, aplicativo ou outro ambiente digital.</li><li><b>Processo/procedimento</b> — Selecionar quando a unidade de análise é um processo, procedimento, fluxo de trabalho ou conjunto estruturado de atividades.</li><li><b>Organização da sociedade civil</b> — Selecionar quando a unidade de análise é uma organização da sociedade civil, associação, movimento social, ONG ou entidade equivalente.</li><li><b>Meio de comunicação</b> — Selecionar quando a unidade de análise é um jornal, revista, emissora, portal de notícias ou outro meio de comunicação.</li><li><b>Cidadão/indivíduo/utilizador</b> — Selecionar quando a unidade de análise é uma pessoa, grupo de cidadãos, usuário ou participante individual.</li><li><b>Relação Estado–sociedade</b> — Selecionar quando a unidade de análise é a relação, interação ou dinâmica entre instituições estatais e atores da sociedade.</li><li><b>Outro — especificar</b> — Selecionar quando a unidade de análise não se enquadrar adequadamente nas categorias anteriores. Especificar a unidade no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar a unidade de análise com base nas informações disponíveis.</li><li><b>Não aplicável</b> — Selecionar quando o artigo não possui uma unidade de análise identificável, por exemplo, em trabalhos exclusivamente teóricos ou conceituais.</li></ul>"},
+  {num:15, id:"q15", type:"long", label:"Descrição da unidade e evidência", loc:true, help:"<ul><li><b>Descrição da unidade principal</b> — Descrever de forma objetiva a principal unidade ou unidades analisadas no artigo, especificando, quando pertinente, a instituição, política, documento, país, município, organização, indivíduo ou outro objeto analisado.</li><li><b>Amostra ou conjunto de casos</b> — Informar, quando aplicável, o tamanho e as características da amostra, o número de casos, documentos, entrevistas, decisões judiciais, instituições ou outras unidades analisadas.</li><li><b>Delimitação</b> — Indicar os critérios utilizados para definir ou selecionar a unidade, a amostra ou os casos analisados, quando essa informação estiver disponível.</li><li><b>Evidência no artigo</b> — Indicar a página, seção, tabela, figura ou outro local do artigo que sustenta a informação registrada.</li><li><b>Regra de codificação</b> — Registrar apenas informações explicitamente apresentadas no artigo. Não inferir características da unidade, da amostra ou dos casos quando essas informações não estiverem disponíveis.</li></ul>"},
+]},
+{id:"s3", title:"Conceitos e definição", fields:[
+  {num:16, id:"q16", type:"multi", label:"Conceitos de abertura analisados", options:["Estado Aberto","Governo Aberto","Governança Aberta","Parlamento Aberto","Justiça Aberta","Outro conceito — especificar","Não identificado no artigo"], help:"<ul><li><b>Estado Aberto</b> — Selecionar quando o artigo aborda explicitamente o conceito de Open State / Estado Aberto.</li><li><b>Governo Aberto</b> — Selecionar quando o artigo aborda explicitamente Open Government / Governo Aberto.</li><li><b>Governança Aberta</b> — Selecionar quando o artigo aborda explicitamente Open Governance / Governança Aberta.</li><li><b>Parlamento Aberto</b> — Selecionar quando o artigo aborda explicitamente Open Parliament / Parlamento Aberto.</li><li><b>Justiça Aberta</b> — Selecionar quando o artigo aborda explicitamente Open Justice / Justiça Aberta.</li><li><b>Outro conceito — especificar</b> — Selecionar quando o artigo analisa outro conceito de abertura relevante para a investigação. Registrar o conceito no campo de especificação.</li><li><b>Não identificado no artigo</b> — Selecionar apenas quando nenhum dos conceitos de abertura acima é analisado de forma substantiva.</li></ul>"},
+  {num:17, id:"q17", type:"multi", label:"Conceitos relacionados ou dimensões explicitamente analisados", options:["Transparência","Abertura legislativa","Acesso à justiça","Abertura dos tribunais","Participação","Acesso à informação","Accountability/prestação de contas","Dados abertos","Colaboração","Coprodução","Outro — especificar","Não identificado no artigo","Não aplicável"], help:"Selecionar uma dimensão ou conceito apenas quando este é explicitamente analisado, discutido, definido, operacionalizado ou utilizado como dimensão relevante para compreender os conceitos de abertura estudados.<ul><li><b>Transparência</b> — Quando a transparência é analisada como princípio, dimensão ou mecanismo de abertura.</li><li><b>Abertura legislativa</b> — Quando é explicitamente analisada como conceito ou dimensão relacionada com a abertura do processo legislativo.</li><li><b>Acesso à justiça</b> — Quando o acesso à justiça é analisado como dimensão, princípio ou condição relacionada com a Justiça Aberta.</li><li><b>Abertura dos tribunais</b> — Quando a abertura ou acessibilidade dos tribunais é explicitamente analisada.</li><li><b>Participação</b> — Quando a participação de cidadãos, sociedade civil ou outros atores é analisada como dimensão de abertura.</li><li><b>Acesso à informação</b> — Quando o direito, mecanismo ou prática de acesso à informação é analisado.</li><li><b>Accountability/prestação de contas</b> — Quando a responsabilização, prestação de contas ou accountability é explicitamente analisada.</li><li><b>Dados abertos</b> — Quando os dados abertos são analisados como instrumento, mecanismo ou dimensão de abertura.</li><li><b>Colaboração</b> — Quando a colaboração entre Estado e sociedade ou entre diferentes atores é analisada.</li><li><b>Coprodução</b> — Quando a coprodução de políticas, serviços, decisões ou conhecimento é explicitamente analisada.</li><li><b>Outro — especificar</b> — Quando é analisado outro conceito ou dimensão relevante não contemplado nas opções anteriores. Especificar qual.</li><li><b>Não identificado no artigo</b> — Quando nenhuma das dimensões listadas é explicitamente analisada.</li><li><b>Não aplicável</b> — Utilizar quando a questão não se aplica ao artigo, por exemplo, quando o artigo não analisa conceitos de abertura ou quando a natureza do estudo não permite identificar dimensões relacionadas.</li></ul>"},
+  {num:18, id:"q18", type:"single", label:"Conceito principal ou dominante", options:["Estado Aberto","Governo Aberto","Governança Aberta","Parlamento Aberto","Justiça Aberta","Outro — especificar","Há dois ou mais conceitos igualmente centrais","Não há conceito dominante","Não identificado no artigo"], help:"Identificar o conceito de abertura que apresenta maior centralidade analítica no artigo.<ul><li><b>Estado Aberto</b> — O Estado Aberto constitui o principal objeto conceptual ou empírico do artigo.</li><li><b>Governo Aberto</b> — O Governo Aberto constitui o principal objeto conceptual ou empírico.</li><li><b>Governança Aberta</b> — A Governança Aberta constitui o principal objeto conceptual ou empírico.</li><li><b>Parlamento Aberto</b> — O Parlamento Aberto constitui o principal objeto conceptual ou empírico.</li><li><b>Justiça Aberta</b> — A Justiça Aberta constitui o principal objeto conceptual ou empírico.</li><li><b>Outro — especificar</b> — Outro conceito de abertura é claramente dominante. Especificar qual.</li><li><b>Há dois ou mais conceitos igualmente centrais</b> — Utilizar quando dois ou mais conceitos recebem peso analítico equivalente e não é possível identificar um conceito dominante.</li><li><b>Não há conceito dominante</b> — Utilizar quando vários conceitos são mencionados ou analisados, mas nenhum assume centralidade suficiente para ser considerado dominante.</li><li><b>Não identificado no artigo</b> — Utilizar quando não é possível identificar nenhum conceito de abertura como objeto de análise.</li></ul>"},
+  {num:19, id:"q19", type:"long", label:"Definição textual ou paráfrase fiel", loc:true, help:"<ul><li><b>Correspondência com a Q18</b> — A resposta deve corresponder ao conceito selecionado na Questão 18.</li><li><b>Conceito principal/dominante</b> — Se foi identificado um conceito principal ou dominante, transcreva uma passagem curta ou faça uma paráfrase fiel da definição apresentada pelo artigo.</li><li><b>Dois ou mais conceitos igualmente centrais</b> — Se foram identificados dois ou mais conceitos igualmente centrais, registre a definição de cada conceito separadamente.</li><li><b>Outro</b> — Se foi selecionado <b>Outro</b>, informe a definição do conceito indicado.</li><li><b>Não há conceito dominante</b> — Se foi selecionado <b>Não há conceito dominante</b>, registre, quando pertinente, como o artigo apresenta ou define os principais conceitos utilizados.</li><li><b>Não identificado no artigo</b> — Se foi selecionado <b>Não identificado no artigo</b>, escreva exatamente: <b>“Não identificado no artigo”</b>.</li></ul>"},
+  {num:20, id:"q20", type:"single", label:"Tipo de definição apresentada", options:["Definição explícita e completa","Definição explícita, mas parcial","Definição apenas implícita","Não apresenta definição","Não identificado no artigo","Não aplicável"], help:"<ul><li><b>Definição explícita e completa</b> — Selecionar quando o artigo apresenta diretamente o que o conceito significa, fornecendo elementos suficientes para caracterizá-lo e diferenciá-lo de outros conceitos.</li><li><b>Definição explícita, mas parcial</b> — Selecionar quando o artigo apresenta diretamente uma definição, mas ela é incompleta, limitada ou aborda apenas alguns dos elementos que caracterizam o conceito.</li><li><b>Definição apenas implícita</b> — Selecionar quando não há uma definição direta, mas o significado do conceito pode ser inferido a partir de sua descrição, uso, aplicação ou operacionalização no artigo.</li><li><b>Não apresenta definição</b> — Selecionar quando o conceito é utilizado no artigo, mas não há definição explícita nem elementos suficientes para inferir uma definição implícita.</li><li><b>Não identificado no artigo / Não aplicável</b> — Selecionar quando o conceito não é identificado no artigo ou quando a classificação da definição não se aplica ao conteúdo analisado.</li></ul>"},
+  {num:21, id:"q21", type:"multi", label:"Delimitação em relação a conceitos próximos", options:["Diferencia explicitamente","Trata como equivalente","Apresenta como conceito mais amplo","Apresenta como subconceito/componente","Apresenta como condição","Apresenta como consequência","Apresenta como conceito complementar","Apresenta como conceito concorrente","Relação ambígua","Não discute a relação","Não identificado no artigo"], help:"Identifique como o artigo relaciona o conceito principal com conceitos próximos ou relacionados. Considere apenas relações explicitamente apresentadas ou claramente estabelecidas pelo artigo. É possível selecionar mais de uma opção quando o artigo estabelecer relações diferentes com conceitos distintos.<ul><li><b>Diferencia explicitamente:</b> o artigo estabelece uma distinção clara entre os conceitos.</li><li><b>Trata como equivalente:</b> o artigo utiliza os conceitos como sinônimos ou com significado equivalente.</li><li><b>Apresenta como conceito mais amplo:</b> o conceito analisado é apresentado como abrangendo outro conceito.</li><li><b>Apresenta como subconceito/componente:</b> o conceito analisado é apresentado como parte ou dimensão de outro conceito.</li><li><b>Apresenta como condição:</b> um conceito é apresentado como condição necessária ou facilitadora para o outro.</li><li><b>Apresenta como consequência:</b> um conceito é apresentado como resultado ou consequência do outro.</li><li><b>Apresenta como conceito complementar:</b> os conceitos são apresentados como distintos, mas complementares.</li><li><b>Apresenta como conceito concorrente:</b> os conceitos são apresentados como abordagens alternativas ou concorrentes.</li><li><b>Relação ambígua:</b> o artigo estabelece alguma relação entre os conceitos, mas não permite determinar claramente qual é a natureza dessa relação.</li><li><b>Não discute a relação:</b> o artigo utiliza ou menciona conceitos próximos, mas não estabelece qualquer relação entre eles.</li><li><b>Não identificado no artigo:</b> não é possível identificar, no artigo, como o conceito se relaciona com conceitos próximos.</li></ul>"},
+  {num:22, id:"q22", type:"long", label:"Explicação da delimitação conceitual", loc:true, help:"Explicar a relação entre os conceitos e indicar a evidência."},
+  {num:23, id:"q23", type:"single", label:"Relação do conceito principal com Governo Aberto", options:["O conceito principal é mais amplo","Governo Aberto é mais amplo","Governo Aberto é componente do conceito principal","Governo Aberto é dimensão do conceito principal","O conceito principal é componente de Governo Aberto","O conceito principal é dimensão de Governo Aberto","São tratados como equivalentes","São distintos, mas complementares","Relação ambígua","O artigo não estabelece relação","Não aplicável","Não identificado no artigo"], help:"Classifique como o artigo relaciona o conceito principal com o conceito de Governo Aberto. Considere apenas a relação apresentada ou claramente estabelecida pelo próprio artigo. Não faça inferências com base em literatura externa ou no seu conhecimento prévio.<ul><li><b>O conceito principal é mais amplo:</b> o artigo apresenta Governo Aberto como parte de um conceito principal mais abrangente.</li><li><b>Governo Aberto é mais amplo:</b> o artigo apresenta o conceito principal como abrangido por Governo Aberto.</li><li><b>Governo Aberto é componente do conceito principal:</b> Governo Aberto é apresentado como um elemento constitutivo do conceito principal.</li><li><b>Governo Aberto é dimensão do conceito principal:</b> Governo Aberto é apresentado como uma dimensão ou aspecto específico do conceito principal.</li><li><b>O conceito principal é componente de Governo Aberto:</b> o conceito principal é apresentado como um elemento constitutivo de Governo Aberto.</li><li><b>O conceito principal é dimensão de Governo Aberto:</b> o conceito principal é apresentado como uma dimensão ou aspecto específico de Governo Aberto.</li><li><b>São tratados como equivalentes:</b> os dois conceitos são utilizados como sinônimos ou apresentados como tendo o mesmo significado.</li><li><b>São distintos, mas complementares:</b> o artigo diferencia os conceitos, mas estabelece que eles se complementam.</li><li><b>Relação ambígua:</b> o artigo relaciona os conceitos, mas não permite determinar claramente a natureza ou direção dessa relação.</li><li><b>O artigo não estabelece relação:</b> ambos os conceitos aparecem no artigo, mas não há uma relação conceitual estabelecida entre eles.</li><li><b>Não aplicável:</b> utilizar quando a relação com Governo Aberto não existir no estudo.</li><li><b>Não identificado no artigo:</b> utilizar quando o artigo não fornecer informação suficiente para determinar se ou como estabelece uma relação entre os conceitos.</li></ul>"},
+  {num:24, id:"q24", type:"single", label:"Relação do conceito principal com Governança Aberta", options:["O conceito principal é mais amplo","Governança Aberta é mais amplo","Governança Aberta é componente do conceito principal","Governança Aberta é dimensão do conceito principal","O conceito principal é componente de Governança Aberta","O conceito principal é dimensão de Governança Aberta","São tratados como equivalentes","São distintos, mas complementares","Relação ambígua","O artigo não estabelece relação","Não aplicável","Não identificado no artigo"], help:"Classifique como o artigo relaciona o conceito principal com o conceito de Governança Aberta. Considere exclusivamente a relação apresentada ou claramente estabelecida pelo próprio artigo. Não faça inferências com base em literatura externa ou no conhecimento prévio do avaliador.<ul><li><b>O conceito principal é mais amplo:</b> o artigo apresenta Governança Aberta como parte de um conceito principal mais abrangente.</li><li><b>Governança Aberta é mais amplo:</b> o artigo apresenta o conceito principal como abrangido por Governança Aberta.</li><li><b>Governança Aberta é componente do conceito principal:</b> Governança Aberta é apresentada como elemento constitutivo do conceito principal.</li><li><b>Governança Aberta é dimensão do conceito principal:</b> Governança Aberta é apresentada como uma dimensão ou aspecto específico do conceito principal.</li><li><b>O conceito principal é componente de Governança Aberta:</b> o conceito principal é apresentado como elemento constitutivo de Governança Aberta.</li><li><b>O conceito principal é dimensão de Governança Aberta:</b> o conceito principal é apresentado como uma dimensão ou aspecto específico de Governança Aberta.</li><li><b>São tratados como equivalentes:</b> os dois conceitos são utilizados como sinônimos ou apresentados com significado equivalente.</li><li><b>São distintos, mas complementares:</b> o artigo diferencia os conceitos, mas estabelece que eles se complementam.</li><li><b>Relação ambígua:</b> o artigo estabelece alguma relação entre os conceitos, mas não permite determinar claramente sua natureza ou direção.</li><li><b>O artigo não estabelece relação:</b> os conceitos aparecem no artigo, mas não é estabelecida uma relação conceitual entre eles.</li><li><b>Não aplicável:</b> utilizar quando a relação com Governança Aberta não existir no estudo.</li><li><b>Não identificado no artigo:</b> utilizar quando não houver informação suficiente no artigo para determinar se ou como os conceitos se relacionam.</li></ul>"},
+  {num:25, id:"q25", type:"long", label:"Relações entre pares conceituais específicos. Caso o artigo não trate desta relação conceitual, deixar a questão em branco.<br>Pares conceituais a analisar:<br><ul><li>Parlamento Aberto / Transparência Parlamentar</li><li>Parlamento Aberto / Abertura Legislativa</li><li>Justiça Aberta / Transparência Judicial</li><li>Justiça Aberta / Acesso à Justiça</li><li>Justiça Aberta / Abertura dos Tribunais</li></ul>", loc:true, help:"<ul><li><b>Orientação geral</b> — Para cada par conceitual indicado abaixo, identificar se e como o artigo estabelece uma relação entre os dois conceitos. Registrar a relação explicitamente apresentada no artigo e a respectiva evidência textual.</li><li><b>Pares conceituais a analisar</b> — <ul><li>Parlamento Aberto / Transparência Parlamentar</li><li>Parlamento Aberto / Abertura Legislativa</li><li>Justiça Aberta / Transparência Judicial</li><li>Justiça Aberta / Acesso à Justiça</li><li>Justiça Aberta / Abertura dos Tribunais</li></ul></li><li><b>Relação conceitual</b> — Para cada par, a relação pode ser classificada como: um conceito é mais amplo que o outro; um conceito é parte do outro; um conceito é condição do outro; um conceito resulta do outro; os conceitos são equivalentes; os conceitos são distintos, mas relacionados; relação ambígua; relação não discutida; não aplicável; ou relação não identificada.</li><li><b>Evidência textual</b> — Para cada relação identificada, transcrever uma passagem curta ou fazer uma paráfrase fiel do artigo que justifique a classificação. Indicar a página, seção ou outra localização da evidência.</li><li><b>Relação não discutida</b> — Indicar quando os dois conceitos são relevantes ou mencionados no artigo, mas o artigo não estabelece ou explica explicitamente a relação entre eles.</li><li><b>Relação não identificada</b> — Indicar quando os conceitos são mencionados, mas a informação apresentada no artigo não permite determinar a relação existente entre eles.</li><li><b>Relação ambígua</b> — Indicar quando o artigo apresenta uma relação, mas sua natureza ou interpretação não é suficientemente clara para permitir uma classificação inequívoca.</li><li><b>Não fazer inferências</b> — Considerar apenas as relações explicitamente apresentadas ou sustentadas pelo artigo. Não fazer inferências com base em conhecimento externo, interpretações pessoais ou pressupostos sobre os conceitos.</li></ul>"},
+]},
+{id:"s4", title:"Princípios e dimensões normativas", fields:[
+  {num:26, id:"q26", type:"multi", label:"Princípios associados ao conceito", options:PRINCIPIOS, help:"<ul><li><b>Orientação geral</b> — Selecionar apenas os princípios explicitamente associados pelo artigo ao conceito principal ou apresentados como elementos normativos de seu modelo.</li><li><b>Mais de um princípio</b> — Pode selecionar mais de uma opção quando o artigo associa explicitamente vários princípios ao conceito.</li><li><b>Associação direta</b> — Codificar apenas princípios que o artigo relacione diretamente ao conceito. Não fazer inferências com base em conhecimento externo, interpretações pessoais ou características que não estejam explicitamente apresentadas no artigo.</li><li><b>Menções genéricas ou ocasionais</b> — Não codificar como princípios associados quando o princípio é apenas mencionado de forma genérica, incidental ou sem relação direta com o conceito analisado.</li><li><b>Outro — especificar</b> — Selecionar quando o artigo apresentar explicitamente um princípio associado ao conceito que não esteja incluído nas opções disponíveis. Especificar o princípio no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar, com base no artigo, quais princípios estão associados ao conceito.</li><li><b>Não aplicável</b> — Selecionar quando a identificação de princípios associados não se aplicar ao estudo ou ao conceito analisado.</li></ul>"},
+  {num:27, id:"q27", type:"single", label:"O artigo apresenta dimensões, componentes ou pilares?", options:["Sim","Parcialmente","Não","Não identificado no artigo","Não aplicável"], help:"Avalie se o artigo estrutura o conceito principal em dimensões, componentes, elementos ou pilares, de forma explícita ou claramente identificável no texto.<ul><li><b>Sim:</b> o artigo apresenta uma estrutura clara, com duas ou mais dimensões, componentes, elementos ou pilares que integram o conceito.</li><li><b>Parcialmente:</b> o artigo apresenta alguns elementos ou dimensões do conceito, mas sem uma estrutura completa, sistemática ou claramente delimitada.</li><li><b>Não:</b> o artigo trata o conceito como uma unidade, sem apresentar dimensões, componentes ou pilares.</li><li><b>Não identificado no artigo:</b> o artigo aborda o conceito, mas não fornece informação suficiente para determinar se possui dimensões, componentes ou pilares.</li><li><b>Não aplicável:</b> utilizar quando a questão não se aplica ao estudo ou quando não há um conceito pertinente a ser analisado.</li></ul><b>Regra de codificação:</b> considere apenas dimensões ou componentes efetivamente apresentados pelo artigo. Não crie dimensões a partir da interpretação do avaliador nem utilize modelos externos para completar a estrutura conceitual."},
+  {num:28, id:"q28", type:"long", label:"Dimensões, componentes ou pilares", loc:true, help:"Registre as dimensões, componentes ou pilares apresentados no artigo, utilizando, sempre que possível, os termos empregados pelos próprios autores. Para cada item, informe brevemente sua definição ou descrição conforme apresentada no artigo e indique a página ou seção em que aparece.<br><br>Regra de codificação: não criar, agrupar ou renomear dimensões com base na interpretação do avaliador. Se houver várias dimensões, componentes ou pilares, registre cada um."},
+]},
+{id:"s5", title:"Operacionalização", fields:[
+  {num:29, id:"q29", type:"single", label:"O conceito é operacionalizado?", options:["Sim, explicitamente","Sim, implicitamente","Não","Não aplicável","Não identificado no artigo"], help:"Explicitamente: apresenta indicadores, variáveis, categorias ou procedimentos de observação. Implicitamente: orienta a análise sem tradução clara em elementos observáveis."},
+  {num:30, id:"q30", type:"multi", label:"Forma da operacionalização", options:["Indicadores","Variáveis","Dimensões analíticas","Princípios ou critérios normativos","Procedimentos de observação","Resultados/efeitos usados no modelo","Escala ou índice","Outro — especificar","Não identificado no artigo","Não aplicável"], help:"<ul><li><b>Indicadores:</b> o conceito é representado por indicadores específicos utilizados para observá-lo ou mensurá-lo.</li><li><b>Variáveis:</b> o conceito é transformado em uma ou mais variáveis utilizadas na análise.</li><li><b>Dimensões analíticas:</b> o conceito é operacionalizado por meio de dimensões ou componentes utilizados para orientar a análise empírica.</li><li><b>Princípios ou critérios normativos:</b> o conceito é observado ou avaliado a partir de princípios, critérios ou parâmetros normativos.</li><li><b>Procedimentos de observação:</b> o artigo define procedimentos específicos para identificar ou observar empiricamente o conceito.</li><li><b>Resultados/efeitos usados no modelo:</b> o conceito é operacionalizado por meio de resultados, efeitos ou consequências associados a ele e utilizados na análise.</li><li><b>Escala ou índice:</b> o conceito é medido por uma escala, índice ou medida composta.</li><li><b>Outro — especificar:</b> há outra forma de operacionalização não contemplada nas opções anteriores. Especificar qual.</li><li><b>Não identificado no artigo:</b> o artigo indica que o conceito é operacionalizado, mas não permite identificar de que forma.</li><li><b>Não aplicável:</b> não há operacionalização do conceito que possa ser classificada.</li></ul>"},
+  {num:31, id:"q31", type:"multi", label:"Objeto de aplicação do conceito", options:["Práticas institucionais","Instrumentos jurídicos","Políticas públicas","Plataformas digitais","Procedimentos","Comportamentos institucionais","Relações Estado–sociedade","Documentos ou textos","Decisões judiciais","Outro — especificar","Não identificado no artigo","Não aplicável"], help:"Selecione onde ou sobre o que o conceito principal é aplicado, observado ou analisado no artigo. Pode selecionar mais de uma opção quando o conceito for applied a diferentes objetos.<ul><li><b>Práticas institucionais:</b> práticas, ações ou atividades realizadas por instituições.</li><li><b>Instrumentos jurídicos:</b> leis, regulamentos, normas, tratados ou outros instrumentos legais.</li><li><b>Políticas públicas:</b> políticas, programas ou iniciativas governamentais.</li><li><b>Plataformas digitais:</b> websites, portais, sistemas ou outras plataformas digitais.</li><li><b>Procedimentos:</b> processos, rotinas ou procedimentos institucionais.</li><li><b>Comportamentos institucionais:</b> condutas ou formas de atuação de instituições ou agentes institucionais.</li><li><b>Relações Estado–sociedade:</b> interações, relações ou formas de articulação entre instituições públicas e sociedade.</li><li><b>Documentos ou textos:</b> documentos, discursos, relatórios, legislação, publicações ou outros materiais textuais analisados.</li><li><b>Decisões judiciais:</b> decisões, acórdãos, sentenças ou outros atos decisórios judiciais.</li><li><b>Outro — especificar:</b> objeto não contemplado nas opções anteriores. Especificar qual.</li><li><b>Não identificado no artigo:</b> não é possível determinar sobre o que o conceito é aplicado ou analisado.</li><li><b>Não aplicável:</b> o conceito não é aplicado, observado ou analisado empiricamente no artigo.</li></ul>"},
+  {num:32, id:"q32", type:"long", label:"Descrição da operacionalização", loc:true, help:"Explicar como o conceito foi convertido em elementos observáveis, indicadores, práticas, mecanismos ou variáveis. Incluir página/seção."},
+]},
+{id:"s6", title:"Instituições, direito e tecnologia", fields:[
+  {num:33, id:"q33", type:"multi", label:"Instituições ou atores incluídos", options:["Poder Executivo","Poder Legislativo","Poder Judiciário","Administração pública","Parlamento/órgão legislativo","Tribunais","Órgãos de controle","Ministério Público","Sociedade civil","Organizações privadas","Arranjos multissetoriais","Organizações internacionais","Cidadãos/utilizadores","Mídia","Outro — especificar","Não aplicável","Não identificado no artigo"], help:"Selecione as instituições ou atores que constituem objeto de análise ou que são diretamente envolvidos no fenómeno estudado. Pode selecionar mais de uma opção.<ul><li><b>Poder Executivo:</b> órgãos e instituições que integram o Executivo.</li><li><b>Poder Legislativo:</b> instituições ou órgãos pertencentes ao Legislativo.</li><li><b>Poder Judiciário:</b> órgãos e instituições que integram o Judiciário.</li><li><b>Administração pública:</b> órgãos, serviços ou entidades da administração pública, quando não for possível ou necessário classificá-los como integrantes de um dos Poderes. É comum em arranjos institucionais diferentes do Brasil.</li><li><b>Parlamento/órgão legislativo:</b> parlamentos, assembleias ou órgãos legislativos analisados especificamente como instituições. É comum em arranjos institucionais diferentes do Brasil.</li><li><b>Tribunais:</b> tribunais ou órgãos jurisdicionais analisados especificamente. É comum em arranjos institucionais diferentes do Brasil.</li><li><b>Órgãos de controle:</b> instituições de fiscalização, auditoria, supervisão ou controlo.</li><li><b>Ministério Público:</b> Ministério Público ou instituições equivalentes.</li><li><b>Sociedade civil:</b> organizações, movimentos, associações ou outros atores da sociedade civil.</li><li><b>Organizações privadas:</b> empresas ou outras organizações do setor privado.</li><li><b>Arranjos multissetoriais:</b> iniciativas, redes ou estruturas que reúnem atores de diferentes setores.</li><li><b>Organizações internacionais:</b> organizações ou instituições de âmbito internacional.</li><li><b>Cidadãos/utilizadores:</b> indivíduos enquanto cidadãos, utilizadores de serviços ou participantes.</li><li><b>Mídia:</b> meios de comunicação, jornalistas ou organizações de mídia.</li><li><b>Outro — especificar:</b> instituição ou ator não contemplado nas opções anteriores.</li><li><b>Não aplicável:</b> o artigo não envolve instituições ou atores como objeto, unidade de análise ou participantes.</li><li><b>Não identificado no artigo:</b> o artigo apresenta uma análise envolvendo instituições ou atores, mas não permite identificar claramente quais.</li></ul><b>Regra de especificidade:</b> quando o artigo analisar uma instituição específica, selecione preferencialmente a categoria institucional mais específica (por exemplo, Parlamento/órgão legislativo ou Tribunais). Utilize Poder Legislativo ou Poder Judiciário quando o estudo tratar do Poder como um todo ou quando não houver uma instituição específica claramente identificada."},
+  {num:34, id:"q34", type:"multi", label:"Nível institucional/governamental", options:["Municipal/local","Regional/estadual/provincial","Nacional","Supranacional","Internacional","Multinível","Não aplicável","Não identificado no artigo"], help:"Selecione os níveis institucionais ou governamentais efetivamente analisados no artigo. Pode selecionar mais de uma opção quando o estudo abranger ou articular diferentes níveis.<ul><li><b>Municipal/local:</b> municípios, governos locais ou instituições de âmbito local.</li><li><b>Regional/estadual/provincial:</b> estados, províncias, regiões ou instituições de âmbito subnacional.</li><li><b>Nacional:</b> governo, instituições ou políticas de âmbito nacional.</li><li><b>Supranacional:</b> instituições com autoridade ou competências exercidas acima do Estado, como estruturas de integração regional.</li><li><b>Internacional:</b> organizações, acordos ou arranjos que envolvem dois ou mais Estados, sem que haja necessariamente autoridade supranacional.</li><li><b>Multinível:</b> o artigo analisa explicitamente dois ou mais níveis institucionais/governamentais e a relação ou articulação entre eles.</li><li><b>Não aplicável:</b> o artigo não possui uma dimensão institucional ou governamental pertinente à questão.</li><li><b>Não identificado no artigo:</b> há uma dimensão institucional ou governamental, mas não é possível determinar o nível.</li></ul>"},
+  {num:35, id:"q35", type:"multi", label:"Instrumentos normativos, jurídicos ou de política pública", options:["Constituição","Lei","Decreto","Regulamento","Regimento parlamentar","Resolução","Norma processual","Decisão judicial","Tratado/acordo internacional","Política pública","Plano ou estratégia governamental","Código de conduta","Outro — especificar","Nenhum instrumento identificado","Não aplicável","Não identificado no artigo"], help:"Selecione os instrumentos normativos, jurídicos ou de política pública efetivamente analisados, utilizados ou diretamente relacionados ao conceito principal no artigo. Pode selecionar mais de uma opção.<ul><li><b>Constituição:</b> constituição nacional ou documento constitucional equivalente.</li><li><b>Lei:</b> leis ou atos legislativos com força de lei.</li><li><b>Decreto:</b> decretos ou atos normativos de natureza equivalente.</li><li><b>Regulamento:</b> regulamentos ou normas que detalham a aplicação de leis ou políticas.</li><li><b>Regimento parlamentar:</b> regimentos internos ou normas que disciplinam o funcionamento de parlamentos ou órgãos legislativos.</li><li><b>Resolução:</b> resoluções ou atos normativos equivalentes emitidos por instituições públicas.</li><li><b>Norma processual:</b> regras que disciplinam procedimentos administrativos, judiciais ou institucionais.</li><li><b>Decisão judicial:</b> decisões, sentenças, acórdãos ou outros atos decisórios judiciais analisados pelo artigo.</li><li><b>Tratado/acordo internacional:</b> tratados, convenções ou acordos celebrados entre Estados ou organizações internacionais.</li><li><b>Política pública:</b> políticas, programas ou iniciativas governamentais formalmente identificáveis.</li><li><b>Plano ou estratégia governamental:</b> planos, estratégias, agendas ou documentos de planejamento governamental.</li><li><b>Código de conduta:</b> códigos ou normas que estabelecem princípios e regras de comportamento institucional ou profissional.</li><li><b>Outro — especificar:</b> instrumento não contemplado nas opções anteriores.</li><li><b>Nenhum instrumento identificado:</b> o artigo analisa o conceito, mas não identifica nem utiliza instrumentos normativos, jurídicos ou de política pública.</li><li><b>Não aplicável:</b> a questão não se aplica ao objeto ou à abordagem do artigo.</li><li><b>Não identificado no artigo:</b> o artigo indica a existência ou relevância de instrumentos, mas não permite determinar quais são.</li></ul>"},
+  {num:36, id:"q36", type:"long", label:"Especificação dos instrumentos", loc:true, help:"Registrar nome, jurisdição, ano e dispositivo/seção, quando disponível."},
+  {num:37, id:"q37", type:"single", label:"O artigo analisa ferramentas ou plataformas digitais?", options:["Sim","Parcialmente","Não","Não aplicável","Não identificado no artigo"], help:"\"Mencionada\" sem análise substantiva deve ser codificada como \"Não\"."},
+  {num:38, id:"q38", type:"multi", label:"Ferramentas ou plataformas digitais analisadas", options:["Portal institucional","Portal de transparência","Sistema de dados abertos","Ferramenta de visualização de dados","Plataforma de participação","Consulta pública digital","E-democracia","Sistema judicial eletrônico","Repositório de decisões/documentos","Plataforma de acesso a decisões","Transmissão/audiovisual","Redes sociais","Aplicativo","Inteligência artificial","Chatbot/assistente virtual","Tecnologia de acessibilidade","Outra — especificar","Não identificado no artigo","Não aplicável"],help:"<ul><li><b>Portal institucional</b> — Selecionar quando o artigo analisa um website ou portal oficial utilizado por uma instituição pública para disponibilizar informações, serviços ou conteúdos institucionais.</li><li><b>Portal de transparência</b> — Selecionar quando o artigo analisa uma plataforma específica destinada à divulgação de informações públicas, dados orçamentários, gastos, contratos, receitas ou outros conteúdos de transparência.</li><li><b>Sistema de dados abertos</b> — Selecionar quando o artigo analisa uma plataforma ou sistema destinado à disponibilização de dados públicos em formato aberto para acesso, reutilização ou processamento.</li><li><b>Ferramenta de visualização de dados</b> — Selecionar quando o artigo analisa ferramentas, painéis, dashboards, mapas, gráficos ou outras interfaces destinadas à visualização e exploração de dados.</li><li><b>Plataforma de participação</b> — Selecionar quando o artigo analisa uma plataforma digital criada para possibilitar participação, interação, colaboração ou deliberação entre cidadãos e instituições.</li><li><b>Consulta pública digital</b> — Selecionar quando o artigo analisa ferramentas ou plataformas utilizadas especificamente para realizar consultas públicas, receber contribuições ou coletar opiniões da sociedade por meios digitais.</li><li><b>E-democracia</b> — Selecionar quando o artigo analisa ferramentas ou plataformas digitais destinadas a ampliar a participação democrática, a deliberação, a interação entre cidadãos e governo ou outros processos democráticos mediados por tecnologia.</li><li><b>Sistema judicial eletrônico</b> — Selecionar quando o artigo analisa sistemas digitais utilizados por tribunais ou órgãos judiciais para tramitação, consulta, gestão ou acompanhamento de processos judiciais.</li><li><b>Repositório de decisões/documentos</b> — Selecionar quando o artigo analisa plataformas ou sistemas destinados ao armazenamento, organização e disponibilização de decisões judiciais ou outros documentos públicos.</li><li><b>Plataforma de acesso a decisões</b> — Selecionar quando o artigo analisa especificamente uma plataforma ou ferramenta destinada a facilitar a consulta, pesquisa ou acesso público a decisões judiciais.</li><li><b>Transmissão/audiovisual</b> — Selecionar quando o artigo analisa ferramentas de transmissão ao vivo, gravação ou disponibilização de sessões, audiências, debates ou outros conteúdos audiovisuais institucionais.</li><li><b>Redes sociais</b> — Selecionar quando o artigo analisa o uso de redes sociais por instituições, órgãos públicos, tribunais, parlamentos ou outros atores relacionados ao objeto do estudo.</li><li><b>Aplicativo</b> — Selecionar quando o artigo analisa um aplicativo ou aplicação móvel utilizado para disponibilizar informações, serviços, participação, acesso a processos ou outras funcionalidades relacionadas ao estudo.</li><li><b>Inteligência artificial</b> — Selecionar quando o artigo analisa o uso de sistemas ou aplicações de inteligência artificial no contexto do objeto investigado.</li><li><b>Chatbot/assistente virtual</b> — Selecionar quando o artigo analisa especificamente chatbots, assistentes virtuais ou sistemas conversacionais automatizados utilizados para interação, atendimento, acesso à informação ou prestação de serviços.</li><li><b>Tecnologia de acessibilidade</b> — Selecionar quando o artigo analisa tecnologias ou funcionalidades digitais destinadas a ampliar a acessibilidade de informações, serviços ou participação para pessoas com deficiência ou outras necessidades de acesso.</li><li><b>Outra — especificar</b> — Selecionar quando a ferramenta ou plataforma digital analisada não se enquadrar adequadamente nas categorias anteriores. Especificar a ferramenta ou plataforma no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando o artigo aborda ferramentas ou plataformas digitais, mas não fornece informações suficientes para identificar sua natureza ou categoria.</li><li><b>Não aplicável</b> — Selecionar quando o artigo não analisa ferramentas ou plataformas digitais.</li></ul>"},
+  {num:39, id:"q39", type:"multi", label:"Funções atribuídas às ferramentas digitais", options:["Transparência","Acesso à informação","Participação","Deliberação","Colaboração","Coprodução","Accountability/controle","Comunicação","Acesso à justiça","Eficiência","Monitoramento","Aproximação Estado–sociedade","Inclusão/acessibilidade","Redistribuição de poder","Vigilância/controle","Outra — especificar","Não identificado no artigo","Não aplicável"],help:"<ul><li><b>Transparência</b> — Selecionar quando a ferramenta é apresentada como mecanismo para tornar informações, processos, decisões ou ações institucionais mais visíveis e acessíveis ao público.</li><li><b>Acesso à informação</b> — Selecionar quando a ferramenta é apresentada como meio de facilitar a obtenção, consulta ou disponibilização de informações públicas.</li><li><b>Participação</b> — Selecionar quando a ferramenta é utilizada para permitir ou ampliar a participação de cidadãos ou outros atores em processos institucionais ou decisórios.</li><li><b>Deliberação</b> — Selecionar quando a ferramenta é utilizada para promover discussão, debate, troca de argumentos ou formação coletiva de opiniões antes ou durante processos decisórios.</li><li><b>Colaboração</b> — Selecionar quando a ferramenta é apresentada como meio de facilitar a cooperação entre cidadãos, organizações públicas, instituições ou outros atores na realização de atividades ou na resolução de problemas.</li><li><b>Coprodução</b> — Selecionar quando a ferramenta permite ou apoia a produção conjunta de políticas, serviços, conteúdos, decisões ou soluções entre instituições públicas e outros atores.</li><li><b>Accountability/controle</b> — Selecionar quando a ferramenta é apresentada como mecanismo de prestação de contas, fiscalização, responsabilização ou controle das ações de instituições ou agentes públicos.</li><li><b>Comunicação</b> — Selecionar quando a principal função atribuída à ferramenta é facilitar a comunicação, divulgação ou interação entre instituições e seus públicos.</li><li><b>Acesso à justiça</b> — Selecionar quando a ferramenta é apresentada como meio de facilitar o acesso a serviços, informações, procedimentos ou mecanismos relacionados à justiça.</li><li><b>Eficiência</b> — Selecionar quando a ferramenta é associada à melhoria da eficiência, agilidade, redução de custos ou otimização de processos e serviços institucionais.</li><li><b>Monitoramento</b> — Selecionar quando a ferramenta permite acompanhar, fiscalizar ou monitorar políticas, serviços, atividades, processos ou resultados.</li><li><b>Aproximação Estado–sociedade</b> — Selecionar quando a ferramenta é apresentada como mecanismo para fortalecer a interação, o diálogo ou a aproximação entre instituições estatais e sociedade.</li><li><b>Inclusão/acessibilidade</b> — Selecionar quando a ferramenta é associada à ampliação do acesso, inclusão ou participação de grupos com barreiras de acesso, incluindo pessoas com deficiência.</li><li><b>Redistribuição de poder</b> — Selecionar quando o artigo relaciona explicitamente a ferramenta à transferência, compartilhamento ou redistribuição de poder decisório entre instituições e cidadãos ou outros atores.</li><li><b>Vigilância/controle</b> — Selecionar quando a ferramenta é apresentada como mecanismo de vigilância, supervisão ou controle sobre indivíduos, grupos ou comportamentos.</li><li><b>Outra — especificar</b> — Selecionar quando a função atribuída à ferramenta não se enquadrar adequadamente nas categorias anteriores. Especificar a função no campo correspondente.</li><li><b>Não identificado no artigo</b> — Selecionar quando o artigo analisa uma ferramenta digital, mas não permite identificar claramente as funções que lhe são atribuídas.</li><li><b>Não aplicável</b> — Selecionar quando a questão não se aplicar ao estudo ou quando não houver ferramenta digital analisada.</li></ul>"},
+  {num:40, id:"q40", type:"multi", label:"Enquadramento teórico das tecnologias digitais", options:["Instrumento neutro","Instrumento de transparência","Instrumento de participação","Instrumento de inclusão/acessibilidade","Infraestrutura de governança","Mecanismo de mediação","Mecanismo de transformação institucional","Mecanismo de redistribuição de poder","Fator ambivalente","Fonte de riscos/novas assimetrias","Fator de exclusão digital","Instrumento de vigilância/controle","Não há enquadramento teórico","Não identificado no artigo","Não aplicável"],help:"<ul><li><b>Instrumento neutro</b> — Selecionar quando o artigo apresenta a tecnologia principalmente como ferramenta ou meio técnico, sem atribuir-lhe efeitos políticos, institucionais ou sociais próprios.</li><li><b>Instrumento de transparência</b> — Selecionar quando a tecnologia é enquadrada teoricamente como instrumento para ampliar a transparência, a visibilidade ou a disponibilização de informações.</li><li><b>Instrumento de participação</b> — Selecionar quando a tecnologia é enquadrada como instrumento para ampliar, facilitar ou viabilizar a participação de cidadãos ou outros atores nos processos públicos ou decisórios.</li><li><b>Instrumento de inclusão/acessibilidade</b> — Selecionar quando a tecnologia é enquadrada como mecanismo para ampliar a inclusão, reduzir barreiras de acesso ou melhorar a acessibilidade a informações, serviços ou processos.</li><li><b>Infraestrutura de governança</b> — Selecionar quando a tecnologia é apresentada como parte da infraestrutura que sustenta, organiza ou viabiliza processos de governança, coordenação, interação ou prestação de serviços.</li><li><b>Mecanismo de mediação</b> — Selecionar quando a tecnologia é apresentada como mediadora das relações, interações, fluxos de informação ou processos entre diferentes atores.</li><li><b>Mecanismo de transformação institucional</b> — Selecionar quando o artigo atribui à tecnologia potencial ou capacidade de modificar estruturas, práticas, processos, relações ou formas de funcionamento das instituições.</li><li><b>Mecanismo de redistribuição de poder</b> — Selecionar quando a tecnologia é teoricamente relacionada à transferência, compartilhamento ou redistribuição de poder, influência ou capacidade decisória entre diferentes atores.</li><li><b>Fator ambivalente</b> — Selecionar quando o artigo apresenta a tecnologia como capaz de produzir simultaneamente efeitos positivos e negativos, ou quando seus efeitos dependem das condições de uso, contexto ou atores envolvidos.</li><li><b>Fonte de riscos/novas assimetrias</b> — Selecionar quando a tecnologia é enquadrada como fonte de riscos, desigualdades, assimetrias de informação, poder ou capacidade de ação.</li><li><b>Fator de exclusão digital</b> — Selecionar quando o artigo destaca que a tecnologia pode produzir ou aprofundar exclusão em razão de desigualdades de acesso, competências, recursos ou condições de uso.</li><li><b>Instrumento de vigilância/controle</b> — Selecionar quando a tecnologia é enquadrada como mecanismo de vigilância, monitoramento, supervisão ou controle de indivíduos, grupos ou comportamentos.</li><li><b>Não há enquadramento teórico</b> — Selecionar quando o artigo utiliza ou analisa tecnologias digitais, mas não apresenta um enquadramento teórico sobre seu papel, natureza ou efeitos.</li><li><b>Não identificado no artigo</b> — Selecionar quando não for possível determinar, com base nas informações disponíveis, como as tecnologias digitais são enquadradas teoricamente.</li><li><b>Não aplicável</b> — Selecionar quando o artigo não analisa tecnologias digitais ou quando a questão não se aplica ao objeto do estudo.</li></ul>"},
+]},
+{id:"s7", title:"Implementação, obstáculos e efeitos", fields:[
+  {num:41, id:"q41", type:"single", label:"Estágio de implementação", options:["Conceitual","Experimental/piloto","Inicial","Parcial","Institucionalizado","Consolidado","Em retrocesso","O artigo não avalia implementação","Não aplicável","Não identificado no artigo"], help:"Classifique o estágio de implementação do conceito, política, prática ou instrumento analisado, com base nas evidências apresentadas pelo artigo. Considere a implementação efetiva, e não apenas sua adoção formal.<ul><li><b>Conceitual:</b> o conceito ou proposta está em fase de formulação, discussão ou desenvolvimento, sem implementação prática identificada.</li><li><b>Experimental/piloto:</b> está sendo testado em escala limitada, experimental ou como projeto-piloto.</li><li><b>Inicial:</b> há implementação prática, mas ainda incipiente, limitada ou recente.</li><li><b>Parcial:</b> há implementação efetiva, mas ela é incompleta, limitada a determinados contextos ou ainda apresenta lacunas relevantes.</li><li><b>Institucionalizado:</b> o conceito, política ou prática foi incorporado a normas, estruturas, procedimentos ou rotinas institucionais regulares.</li><li><b>Consolidado:</b> há evidências de aplicação estável, abrangente e rotineira, com continuidade ao longo do tempo.</li><li><b>Em retrocesso:</b> o artigo apresenta evidências de redução, enfraquecimento, descontinuidade ou reversão de uma implementação anteriormente existente.</li><li><b>O artigo não avalia implementação:</b> o artigo trata de adoção, formulação, agenda ou discussão do conceito, mas não avalia sua implementação efetiva.</li><li><b>Não aplicável:</b> a questão não se aplica ao objeto ou à abordagem do artigo.</li><li><b>Não identificado no artigo:</b> o artigo aborda implementação, mas não fornece evidências suficientes para determinar seu estágio.</li></ul>"},
+  {num:42, id:"q42", type:"multi", label:"Princípios com manifestação concreta", options:PRINCIPIOS, help:"Selecione apenas os princípios para os quais o artigo apresenta evidência ou manifestação concreta na prática."},
+  {num:43, id:"q43", type:"multi", label:"Princípios frágeis, limitados ou ausentes", options:PRINCIPIOS, help:"Selecione apenas os princípios cuja insuficiência, limitação ou ausência é explicitamente indicada ou demonstrada pelo artigo."},
+  {num:44, id:"q44", type:"multi", label:"Obstáculos à abertura", options:["Institucionais","Jurídicos","Políticos","Culturais","Tecnológicos","Económicos","Organizacionais","Informacionais","Assimetrias de poder","Resistência burocrática","Desigualdades sociais","Falta de participação","Falta de capacidade institucional","Outro — especificar","Nenhum identificado","Não aplicável","Não identificado no artigo"], help:"Selecione os obstáculos à abertura que o artigo identifica, analisa ou demonstra. Pode selecionar mais de uma opção."},
+  {num:45, id:"q45", type:"multi", label:"Condições para uma abertura efetiva", options:["Vontade política","Capacidade institucional","Marco jurídico adequado","Recursos financeiros","Recursos tecnológicos","Cultura institucional","Participação social","Sociedade civil organizada","Mecanismos de accountability","Educação/capacitação","Acessibilidade","Inclusão","Independência institucional","Proteção de direitos","Continuidade institucional","Outro — especificar","Não aplicável","Não identificado no artigo"], help:"Selecione as condições que o artigo identifica como necessárias, favoráveis ou facilitadoras para uma abertura efetiva. Pode selecionar mais de uma opção."},
+  {num:46, id:"q46", type:"single", label:"Extensão da mudança", options:["Nenhuma ou mínima","Incremental","Substantiva","Transformadora","Ambivalente","Não é possível determinar","Não aplicável","Não identificado no artigo"], help:"Classifique a extensão da mudança associada à abertura, com base nas evidências apresentadas no artigo.<ul><li><b>Nenhuma ou mínima:</b> não há mudança relevante ou ela é muito limitada.</li><li><b>Incremental:</b> há mudanças pontuais ou graduais, sem alterar significativamente as estruturas existentes.</li><li><b>Substantiva:</b> há mudanças relevantes nas práticas, processos ou instituições, mas sem transformação estrutural.</li><li><b>Transformadora:</b> a mudança altera de forma profunda estruturas, relações, práticas ou formas de funcionamento.</li><li><b>Ambivalente:</b> o artigo apresenta efeitos de mudança contraditórios, com avanços e limitações relevantes.</li><li><b>Não é possível determinar:</b> o artigo aborda mudanças, mas não fornece evidências suficientes para classificá-las.</li><li><b>Não aplicável:</b> não há mudança ou processo de mudança pertinente ao estudo.</li><li><b>Não identificado no artigo:</b> não há informação suficiente no artigo sobre a extensão da mudança.</li></ul>"},
+  {num:47, id:"q47", type:"single", label:"Evidência de mudança nas relações de poder", options:["Sim, claramente","Sim, parcialmente","Sim, mas com efeitos contraditórios","Não","O artigo não analisa","Não aplicável","Não identificado no artigo"], help:"Classifique se o artigo apresenta evidências de mudança nas relações de poder decorrentes da abertura.<ul><li><b>Sim, claramente:</b> há evidências explícitas de mudança na autoridade, influência, voz, controle, capacidade decisória ou distribuição de recursos.</li><li><b>Sim, parcialmente:</b> há indícios de mudança, mas limitados ou incompletos.</li><li><b>Sim, mas com efeitos contraditórios:</b> o artigo identifica mudanças de poder, mas com efeitos simultaneamente positivos e negativos ou em direções distintas.</li><li><b>Não:</b> o artigo analisa as relações de poder, mas não identifica mudanças.</li><li><b>O artigo não analisa:</b> o artigo não aborda relações de poder.</li><li><b>Não aplicável:</b> a questão não se aplica ao estudo.</li><li><b>Não identificado no artigo:</b> não há informação suficiente para determinar se houve mudança.</li></ul>"},
+]},
+{id:"s8", title:"Sociedade civil e mídia", fields:[
+  {num:48, id:"q48", type:"multi", label:"Papel da sociedade civil", options:["Não mencionada","Mencionada, mas sem papel especificado","Participante","Fiscalizadora","Mobilizadora","Coprodutora","Mediadora","Contestadora","Beneficiária","Pressionadora institucional","Outro — especificar","Não identificado no artigo"], help:"Selecione o(s) papel(is) atribuído(s) à sociedade civil no artigo, com base no que é explicitamente descrito ou demonstrado. Pode selecionar mais de uma opção.<ul><li><b>Não mencionada:</b> a sociedade civil não aparece no artigo.</li><li><b>Mencionada, mas sem papel especificado:</b> é mencionada, mas o artigo não define sua função.</li><li><b>Participante:</b> participa de processos, consultas, decisões ou atividades institucionais.</li><li><b>Fiscalizadora:</b> exerce monitoramento, controle ou acompanhamento das instituições.</li><li><b>Mobilizadora:</b> promove mobilização social, campanhas ou ações coletivas.</li><li><b>Coprodutora:</b> participa da produção conjunta de políticas, serviços, decisões ou soluções.</li><li><b>Mediadora:</b> atua como intermediária entre instituições, Estado e/ou outros atores.</li><li><b>Contestadora:</b> questiona, critica ou contesta decisões, políticas ou práticas institucionais.</li><li><b>Beneficiária:</b> é apresentada como destinatária ou beneficiária das ações ou resultados.</li><li><b>Pressionadora institucional:</b> exerce pressão sobre instituições para promover mudanças ou respostas.</li><li><b>Outro — especificar:</b> papel não contemplado nas opções anteriores.</li><li><b>Não identificado no artigo:</b> o artigo aborda a sociedade civil, mas não fornece informação suficiente para determinar seu papel.</li></ul>"},
+  {num:49, id:"q49", type:"multi", label:"Papel da mídia ou cobertura mediática", options:["Não mencionada","Mencionada, mas sem função especificada","Divulgação","Mediação","Fiscalização","Enquadramento","Mobilização","Amplificação","Pressão institucional","Crítica","Outro — especificar","Não identificado no artigo"], help:"Selecione o(s) papel(is) atribuído(s) à mídia ou à cobertura mediática no artigo, com base no que é explicitamente descrito ou demonstrado. Pode selecionar mais de uma opção.<ul><li><b>Não mencionada:</b> a mídia não é mencionada no artigo.</li><li><b>Mencionada, mas sem função especificada:</b> a mídia é mencionada, mas não lhe é atribuído um papel específico.</li><li><b>Divulgação:</b> dissemina informações, decisões, políticas ou iniciativas.</li><li><b>Mediação:</b> atua como intermediária entre instituições, atores públicos e sociedade.</li><li><b>Fiscalização:</b> exerce ou contribui para o acompanhamento e controle das instituições.</li><li><b>Enquadramento:</b> influencia a forma como questões, atores ou acontecimentos são apresentados e interpretados.</li><li><b>Mobilização:</b> contribui para mobilizar a sociedade ou estimular participação e ação coletiva.</li><li><b>Amplificação:</b> amplia a visibilidade ou alcance de determinadas questões, discursos ou demandas.</li><li><b>Pressão institucional:</b> contribui para pressionar instituições ou autoridades a responderem ou mudarem suas práticas.</li><li><b>Crítica:</b> questiona, critica ou problematiza ações, decisões ou práticas institucionais.</li><li><b>Outro — especificar:</b> papel não contemplado nas opções anteriores.</li><li><b>Não identificado no artigo:</b> a mídia é relevante para o estudo, mas não há informação suficiente para determinar seu papel.</li></ul>"},
+]},
+{id:"s9", title:"Síntese analítica", fields:[
+  {num:50, id:"q50", type:"long", label:"Principal contribuição conceitual", loc:true, help:"Registrar a contribuição para definir, distinguir, relacionar ou reformular os conceitos."},
+  {num:51, id:"q51", type:"long", label:"Principal contribuição empírica", loc:true, help:"Registrar o que o artigo acrescenta com base em dados, casos, documentos, entrevistas ou análises sistemáticas. Para artigos não empíricos: \"Não aplicável\"."},
+  {num:52, id:"q52", type:"long", label:"Principal tese ou conclusão", loc:true, help:"Resumir a conclusão dos autores."},
+  {num:53, id:"q53", type:"long", label:"Contributo para o quadro conceitual da revisão", loc:true, help:"Interpretar, com base nos campos anteriores, o que o artigo acrescenta ao quadro conceitual."},
+  {num:54, id:"q54", type:"long", label:"Limitações e lacunas", help:"Separar limitações reconhecidas pelos autores e lacunas identificadas pela equipa."},
+]},
+{id:"s10", title:"Qualidade e auditoria", fields:[
+  {num:55, id:"q55", type:"scale", label:"Clareza do artigo para a extração", help:"Avalie quão fácil é extrair e codificar as informações do artigo, e não a qualidade ou o rigor metodológico do estudo.<br><br><b>Regra de codificação:</b> atribua uma nota de 1 a 5 conforme o grau de clareza das informações necessárias para o preenchimento do formulário. Considere a clareza, consistência e explicitação das informações no artigo. Quanto maior a clareza e menor a necessidade de inferência, maior a pontuação.", scale:[
+    {v:"1", t:"1 — Muito difícil", d:"Informação ausente, contraditória ou impossível de interpretar."},
+    {v:"2", t:"2 — Difícil", d:"Várias variáveis exigem inferência ou permanecem ambíguas."},
+    {v:"3", t:"3 — Moderada", d:"Parte da informação é clara, mas existem ambiguidades relevantes."},
+    {v:"4", t:"4 — Clara", d:"A maioria das informações é explícita, com poucas ambiguidades."},
+    {v:"5", t:"5 — Muito clara", d:"Objetivos, conceitos, método, dados e conclusões estão claramente apresentados."},
+  ]},
+  {num:56, id:"q56", type:"single", label:"Confiança global na codificação", options:["Alta","Média","Baixa"], help:"Alta: explícita e inequívoca. Média: parcialmente explícita. Baixa: incompleta ou ambígua."},
+  {num:57, id:"q57", type:"long", label:"Observações do avaliador", help:"Registrar dúvidas, decisões interpretativas ou pontos para consenso."},
+  {num:58, id:"q58", type:"single", label:"Uso de inteligência artificial na extração", options:["Não","Sim, para localizar informação","Sim, para resumir ou parafrasear","Sim, para sugerir codificações","Sim, para preencher campos preliminares","Sim, para verificar consistência","Outro — especificar"]},
+  {num:59, id:"q59", type:"long", label:"Ferramenta, finalidade e prompt", help:"Indicar ferramenta, finalidade, prompt completo e validação humana."},
+]},
+];
+
+const CAMPOS_NAO_OBRIGATORIOS = new Set([
+  "q3","q6","q15","q19","q22","q25","q28","q32","q36",
+  "q50","q51","q52","q53","q54","q57","q59"
+]);
+
+/* ---------------------------------------------------------------------
+   Estado local + autosave incremental (flush ao trocar de seção)
+--------------------------------------------------------------------- */
+const answers = {};
+let pendingChanges = {};   // delta acumulado desde o último flush
+let extracaoId = RASCUNHO_INICIAL ? RASCUNHO_INICIAL.id : null;
+let salvando = false;
+
+let totalFields = 0;
+SECTIONS.forEach(s=>totalFields+=s.fields.length);
+
+const root = document.getElementById("sectionsRoot");
+const navLinks = document.getElementById("navLinks");
+const sectionJump = document.getElementById("sectionJump");
+
+function setAnswer(campo, valor){
+  answers[campo] = valor;
+  pendingChanges[campo] = valor;
+}
+
+function setSalvoIndicator(status){
+  const el = document.getElementById('recordCount');
+  if (!el) return;
+  if (status === 'ok'){
+    el.textContent = 'Rascunho salvo';
+    el.style.color = '';
+  } else if (status === 'salvando'){
+    el.textContent = 'Salvando…';
+    el.style.color = '';
+  } else if (status === 'erro'){
+    el.textContent = 'Falha ao salvar — tentando novamente';
+    el.style.color = '#E4B36A';
+  }
+}
+
+function mostrarToast(mensagem, tipo){
+  let toast = document.getElementById('toastMsg');
+  if(!toast){
+    toast = document.createElement('div');
+    toast.id = 'toastMsg';
+    toast.className = 'toast-msg';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = mensagem;
+  toast.className = 'toast-msg ' + (tipo === 'erro' ? 'toast-erro' : '') + ' show';
+  clearTimeout(toast._timeout);
+  toast._timeout = setTimeout(()=>{ toast.classList.remove('show'); }, 3000);
+}
+
+async function flushAutosave(motivo){
+  if (Object.keys(pendingChanges).length === 0) return;
+  if (salvando) return;
+
+  const changesToSend = pendingChanges;
+  pendingChanges = {};
+  salvando = true;
+  setSalvoIndicator('salvando');
+
+  const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(changesToSend) };
+  if (extracaoId) payload.extracao_id = extracaoId;
+
+  try{
+    const resp = await fetch(AUTOSAVE_URL, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      credentials: 'same-origin',
+      body: JSON.stringify(payload)
+    });
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    extracaoId = data.id;
+    setSalvoIndicator('ok');
+  }catch(err){
+    console.warn('Autosave falhou ('+motivo+'):', err);
+    pendingChanges = { ...changesToSend, ...pendingChanges };
+    setSalvoIndicator('erro');
+  }finally{
+    salvando = false;
+  }
+}
+
+SECTIONS.forEach((sec, si)=>{
+  const a = document.createElement("a");
+  a.href = "#"+sec.id;
+  a.innerHTML = `<span class="n">${String(si+1).padStart(2,"0")}</span><span>${sec.title}</span>`;
+  navLinks.appendChild(a);
+
+  const opt = document.createElement("option");
+  opt.value = "#"+sec.id;
+  opt.textContent = `${si+1}. ${sec.title}`;
+  sectionJump.appendChild(opt);
+
+  const secEl = document.createElement("section");
+  secEl.className = "qsection";
+  secEl.id = sec.id;
+  secEl.innerHTML = `<div class="section-head"><span class="s-num">Seção ${si+1}</span><h2>${sec.title}</h2></div>`;
+
+  if(sec.id === "s1" && ARTIGO_LINK){
+    const linkBox = document.createElement("div");
+    linkBox.className = "link-artigo-box";
+    linkBox.innerHTML = `<b>Link do artigo</b><a href="${ARTIGO_LINK}" target="_blank" rel="noopener noreferrer">${ARTIGO_LINK}</a>`;
+    secEl.appendChild(linkBox);
+  }
+
+  sec.fields.forEach(f=>{
+    secEl.appendChild(renderField(f));
+  });
+  root.appendChild(secEl);
+});
+
+sectionJump.addEventListener("change", ()=>{ location.hash = sectionJump.value; });
+
+function isFieldRequired(f){
+  if(f.type === "readonly") return false; // já vem preenchido automaticamente
+  return !CAMPOS_NAO_OBRIGATORIOS.has(f.id);
+}
+
+function fieldWrap(f){
+  const div = document.createElement("div");
+  div.className = "field";
+  div.id = "field_"+f.id;
+  const typeLabel = {short:"Resposta curta", long:"Resposta longa", single:"Escolha única", multi:"Caixas de seleção", grid:"Grelha", scale:"Escala 1–5", country_select:"Seleção de Lista / Múltipla", readonly:"Preenchido automaticamente"}[f.type];
+  div.innerHTML = `
+    <div class="field-label">
+      <span class="qnum mono">Q${f.num}</span>
+      <label>${f.label}${isFieldRequired(f)?'<span class="required-dot" title="Obrigatório"></span>':''}</label>
+    </div>
+    <div class="field-meta">
+      <span class="type-tag">${typeLabel}</span>
+      ${f.help?'<button type="button" class="help-toggle">Ver regra de codificação</button>':''}
+    </div>
+    ${f.help?`<div class="help-text">${f.help}</div>`:''}
+    <div class="field-body"></div>
+  `;
+  if(f.type === "readonly") div.classList.add("readonly-field");
+  if(f.help){
+    const btn = div.querySelector(".help-toggle");
+    const ht = div.querySelector(".help-text");
+    btn.addEventListener("click", ()=>{
+      ht.classList.toggle("open");
+      btn.textContent = ht.classList.contains("open") ? "Ocultar regra de codificação" : "Ver regra de codificação";
+    });
+  }
+  return div;
+}
+
+function markAnswered(div, isAnswered){
+  div.classList.toggle("answered", !!isAnswered);
+}
+
+function renderField(f){
+  const div = fieldWrap(f);
+  const body = div.querySelector(".field-body");
+
+  if(f.type==="readonly"){
+    const valor = f.id === "q1" ? ARTIGO_ID : NOME_ARQUIVO;
+    const span = document.createElement("span");
+    span.className = "readonly-value";
+    span.textContent = valor != null && valor !== "" ? valor : "—";
+    body.appendChild(span);
+    markAnswered(div, true);
+  }
+
+  else if(f.type==="short"){
+    const input = document.createElement("input");
+    input.type="text"; input.placeholder="Escreva aqui…";
+    input.addEventListener("input", ()=>{ setAnswer(f.id, input.value); markAnswered(div, input.value.trim()); updateProgress(); });
+    body.appendChild(input);
+  }
+
+  else if(f.type==="long"){
+    const ta = document.createElement("textarea");
+    ta.placeholder="Escreva aqui…";
+    ta.addEventListener("input", ()=>{ setAnswer(f.id, ta.value); markAnswered(div, ta.value.trim()); updateProgress(); });
+    body.appendChild(ta);
+    if(f.loc){
+      const locWrap = document.createElement("div");
+      locWrap.className="field-loc";
+      locWrap.innerHTML = `<label>Página / seção / evidência (opcional)</label>`;
+      const locInput = document.createElement("input");
+      locInput.type="text"; locInput.placeholder="ex.: p. 12, Tabela 2";
+      locInput.addEventListener("input", ()=>{ setAnswer(f.id+"_loc", locInput.value); });
+      locWrap.appendChild(locInput);
+      body.appendChild(locWrap);
+    }
+  }
+
+  else if(f.type==="country_select"){
+    answers[f.id+"_countries"] = [];
+    const selectEl = document.createElement("select");
+    selectEl.innerHTML = `<option value="">Comece a digitar/selecionar o país...</option>` + PAISES_LISTA.map(p=>`<option value="${p}">${p}</option>`).join("");
+
+    const tagsDiv = document.createElement("div");
+    tagsDiv.className = "country-tags";
+
+    const updateTags = ()=>{
+      tagsDiv.innerHTML = answers[f.id+"_countries"].map((c, idx)=>`<span class="country-tag">${c}<span data-idx="${idx}">&times;</span></span>`).join("");
+      tagsDiv.querySelectorAll("span span").forEach(el=>{
+        el.addEventListener("click", (e)=>{
+          const idx = parseInt(e.target.dataset.idx, 10);
+          answers[f.id+"_countries"].splice(idx, 1);
+          setAnswer(f.id+"_paises", [...answers[f.id+"_countries"]]);
+          updateTags();
+          markAnswered(div, (answers[f.id] && answers[f.id].length > 0) || answers[f.id+"_countries"].length > 0);
+          updateProgress();
+        });
+      });
+    };
+
+    selectEl.addEventListener("change", ()=>{
+      const val = selectEl.value;
+      if(val && !answers[f.id+"_countries"].includes(val)){
+        answers[f.id+"_countries"].push(val);
+        setAnswer(f.id+"_paises", [...answers[f.id+"_countries"]]);
+        updateTags();
+        selectEl.value = "";
+        markAnswered(div, true);
+        updateProgress();
+      }
+    });
+
+    body.appendChild(selectEl);
+    body.appendChild(tagsDiv);
+
+    const grid = document.createElement("div");
+    grid.className="opt-grid";
+    grid.style.marginTop = "10px";
+    f.options.forEach((optText, oi)=>{
+      const wrap = document.createElement("div");
+      wrap.className="opt";
+      const cid = f.id+"_o"+oi;
+      wrap.innerHTML = `<input type="checkbox" name="${f.id}" id="${cid}" value="${optText}"><label for="${cid}">${optText}</label>`;
+      const input = wrap.querySelector("input");
+      input.addEventListener("change", ()=>{
+        const set = new Set(answers[f.id]||[]);
+        if(input.checked) set.add(optText); else set.delete(optText);
+        setAnswer(f.id, Array.from(set));
+        markAnswered(div, (answers[f.id] && answers[f.id].length > 0) || answers[f.id+"_countries"].length > 0);
+        updateProgress();
+      });
+      grid.appendChild(wrap);
+    });
+    body.appendChild(grid);
+  }
+
+  else if(f.type==="single" || f.type==="multi"){
+    const grid = document.createElement("div");
+    grid.className="opt-grid";
+    const inputType = f.type==="single" ? "radio" : "checkbox";
+    let otherInputEl = null;
+    f.options.forEach((optText, oi)=>{
+      const wrap = document.createElement("div");
+      wrap.className="opt";
+      const cid = f.id+"_o"+oi;
+      const isOther = /especificar/i.test(optText);
+      wrap.innerHTML = `<input type="${inputType}" name="${f.id}" id="${cid}" value="${optText.replace(/"/g,'&quot;')}"><label for="${cid}">${optText}</label>`;
+      const input = wrap.querySelector("input");
+      input.addEventListener("change", ()=>{
+        if(f.type==="single"){
+          setAnswer(f.id, optText);
+        } else {
+          const set = new Set(answers[f.id]||[]);
+          if(input.checked) set.add(optText); else set.delete(optText);
+          setAnswer(f.id, Array.from(set));
+        }
+        if(otherInputEl){
+          if(f.type==="single"){
+            // radio: qualquer opção marcada decide se "Outro" fica visível
+            otherInputEl.classList.toggle("show", isOther && input.checked);
+          } else if(isOther){
+            // checkbox: só a própria opção "Outro" controla a visibilidade
+            otherInputEl.classList.toggle("show", input.checked);
+          }
+        }
+        markAnswered(div, f.type==="single" ? true : (answers[f.id]&&answers[f.id].length>0));
+        updateProgress();
+      });
+      grid.appendChild(wrap);
+    });
+    body.appendChild(grid);
+
+    if(f.options.some(o=>/especificar/i.test(o))){
+      const ow = document.createElement("div");
+      ow.className="other-input";
+      ow.innerHTML = `<input type="text" placeholder="Especifique…">`;
+      const oInput = ow.querySelector("input");
+      oInput.addEventListener("input", ()=>{ setAnswer(f.id+"_outro", oInput.value); });
+      body.appendChild(ow);
+      otherInputEl = ow;
+    }
+  }
+
+  else if(f.type==="grid"){
+    const scrollWrap = document.createElement("div");
+    scrollWrap.className="grid-scroll";
+    const table = document.createElement("table");
+    table.className="grid-table";
+    let thead = "<tr><th>Par conceptual</th>"+f.cols.map(c=>`<th>${c}</th>`).join("")+"</tr>";
+    let tbody = "";
+    f.rows.forEach((row, ri)=>{
+      tbody += `<tr><td>${row}</td>`;
+      f.cols.forEach((col, ci)=>{
+        tbody += `<td><input type="radio" name="${f.id}_r${ri}" aria-label="${row} — ${col}" value="${ci}"></td>`;
+      });
+      tbody += `</tr>`;
+    });
+    table.innerHTML = thead+tbody;
+    scrollWrap.appendChild(table);
+    body.appendChild(scrollWrap);
+
+    table.addEventListener("change", (e)=>{
+      if(e.target.type!=="radio") return;
+      const rowMatch = e.target.name.match(/_r(\d+)$/);
+      const ri = parseInt(rowMatch[1],10);
+      const ci = parseInt(e.target.value,10);
+      const obj = answers[f.id] || {};
+      obj[f.rows[ri]] = f.cols[ci];
+      setAnswer(f.id, obj);
+      markAnswered(div, Object.keys(answers[f.id]).length>0);
+      updateProgress();
+    });
+  }
+
+  else if(f.type==="scale"){
+    const wrap = document.createElement("div");
+    wrap.className="scale-row";
+    f.scale.forEach(s=>{
+      const label = document.createElement("label");
+      label.className="scale-opt";
+      label.innerHTML = `<input type="radio" name="${f.id}" value="${s.v}"><b>${s.t}</b>${s.d}`;
+      label.querySelector("input").addEventListener("change", ()=>{
+        setAnswer(f.id, s.v); markAnswered(div, true); updateProgress();
+      });
+      wrap.appendChild(label);
+    });
+    body.appendChild(wrap);
+  }
+
+  return div;
+}
+
+function isFieldFilled(f){
+  if(f.type==="readonly") return true;
+  const v = answers[f.id];
+  if(f.type==="multi") return Array.isArray(v) && v.length>0;
+  if(f.type==="country_select") return (Array.isArray(v) && v.length>0) || (Array.isArray(answers[f.id+"_countries"]) && answers[f.id+"_countries"].length>0);
+  if(f.type==="grid") return v && Object.keys(v).length>0;
+  if(typeof v === "string") return v.trim().length>0;
+  return !!v;
+}
+
+function getCamposObrigatoriosNaoPreenchidos(){
+  const faltando = [];
+  SECTIONS.forEach(sec=>{
+    sec.fields.forEach(f=>{
+      if(isFieldRequired(f) && !isFieldFilled(f)){
+        faltando.push(f);
+      }
+    });
+  });
+  return faltando;
+}
+
+function updateProgress(){
+  let filled=0;
+  SECTIONS.forEach(s=>s.fields.forEach(f=>{ if(isFieldFilled(f)) filled++; }));
+  const pct = Math.round((filled/totalFields)*100);
+  document.getElementById("progressBar").style.width = pct+"%";
+  document.getElementById("progressLabel").textContent = pct+"% preenchido";
+  const aperture = document.getElementById("apertureGroup");
+  if (aperture) aperture.style.opacity = 0.4 + (pct/100)*0.6;
+}
+
+/* ---------------------------------------------------------------------
+   Navegação lateral + gatilho de autosave ao trocar de seção
+--------------------------------------------------------------------- */
+const linkEls = Array.from(navLinks.querySelectorAll("a"));
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      linkEls.forEach(l=>l.classList.remove("active"));
+      const match = linkEls.find(l=>l.getAttribute("href")==="#"+e.target.id);
+      if(match) match.classList.add("active");
+    } else {
+      // a seção deixou de estar visível -> salva o que foi respondido nela
+      flushAutosave('saiu-da-secao:' + e.target.id);
+    }
+  });
+}, {rootMargin:"-15% 0px -70% 0px"});
+SECTIONS.forEach(s=>io.observe(document.getElementById(s.id)));
+
+/* Rede de segurança: garante flush ao trocar de aba ou fechar a página */
+window.addEventListener('beforeunload', ()=>{
+  if (Object.keys(pendingChanges).length > 0){
+    const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(pendingChanges) };
+    if (extracaoId) payload.extracao_id = extracaoId;
+    navigator.sendBeacon(AUTOSAVE_URL, new Blob([JSON.stringify(payload)], {type:'application/json'}));
+  }
+});
+document.addEventListener('visibilitychange', ()=>{
+  if (document.visibilityState === 'hidden') flushAutosave('aba-oculta');
+});
+
+/* ---------------------------------------------------------------------
+   Pré-preenchimento a partir de um rascunho já existente
+--------------------------------------------------------------------- */
+function preencherFormularioComRascunho(){
+  if (!RASCUNHO_INICIAL) return;
+
+  // RASCUNHO_INICIAL.campos vem com nomes de COLUNA (ex: q7_natureza_artigo).
+  // Campos "_loc" já têm o mesmo nome nos dois lados; só os campos com
+  // coluna própria (single/long/scale) precisam da tradução reversa.
+  Object.entries(RASCUNHO_INICIAL.campos || {}).forEach(([coluna, valor])=>{
+    if (valor === null || valor === undefined) return;
+    const q = REVERSE_COLUNA_MAP[coluna] || coluna; // loc/demais já batem, ficam como estão
+    answers[q] = valor;
+  });
+  Object.entries(RASCUNHO_INICIAL.multivalores || {}).forEach(([campo, valores])=>{
+    if(campo.endsWith('_paises')) answers[campo] = valores;
+    else answers[campo] = valores;
+  });
+  Object.entries(RASCUNHO_INICIAL.outros || {}).forEach(([campo, texto])=>{
+    answers[campo+"_outro"] = texto;
+  });
+
+  SECTIONS.forEach(sec=>{
+    sec.fields.forEach(f=>{
+      const div = document.getElementById('field_'+f.id);
+      if (!div) return;
+
+      if (f.type === 'short' || f.type === 'long'){
+        const input = div.querySelector('input[type=text], textarea');
+        if (input && answers[f.id] != null && answers[f.id] !== ""){
+          input.value = answers[f.id];
+          markAnswered(div, String(answers[f.id]).trim());
+        }
+        if (f.loc){
+          const locInput = div.querySelector('.field-loc input');
+          const locVal = answers[f.id+'_loc'];
+          if (locInput && locVal != null) locInput.value = locVal;
+        }
+      }
+
+      else if (f.type === 'single'){
+        const valor = answers[f.id];
+        if (valor){
+          const input = div.querySelector(`input[value="${CSS.escape(valor)}"]`);
+          if (input){
+            input.checked = true;
+            markAnswered(div, true);
+            if (/especificar/i.test(valor)){
+              const outroWrap = div.querySelector('.other-input');
+              if (outroWrap) outroWrap.classList.add('show');
+            }
+          }
+        }
+        const outroTexto = answers[f.id+'_outro'];
+        if (outroTexto){
+          const outroInput = div.querySelector('.other-input input');
+          if (outroInput) outroInput.value = outroTexto;
+        }
+      }
+
+      else if (f.type === 'multi'){
+        const valores = answers[f.id] || [];
+        valores.forEach(v=>{
+          const input = div.querySelector(`input[value="${CSS.escape(v)}"]`);
+          if (input) input.checked = true;
+        });
+        if (valores.length){
+          markAnswered(div, true);
+          if (valores.some(v=>/especificar/i.test(v))){
+            const outroWrap = div.querySelector('.other-input');
+            if (outroWrap) outroWrap.classList.add('show');
+          }
+        }
+        const outroTexto = answers[f.id+'_outro'];
+        if (outroTexto){
+          const outroInput = div.querySelector('.other-input input');
+          if (outroInput) outroInput.value = outroTexto;
+        }
+      }
+
+      else if (f.type === 'scale'){
+        const valor = answers[f.id];
+        if (valor){
+          const input = div.querySelector(`input[value="${CSS.escape(valor)}"]`);
+          if (input){ input.checked = true; markAnswered(div, true); }
+        }
+      }
+
+      else if (f.type === 'country_select'){
+        const valoresOpcoes = answers[f.id] || [];
+        valoresOpcoes.forEach(v=>{
+          const input = div.querySelector(`input[value="${CSS.escape(v)}"]`);
+          if (input) input.checked = true;
+        });
+
+        const paises = answers[f.id+'_paises'] || [];
+        if (paises.length){
+          answers[f.id+'_countries'] = [...paises];
+          const tagsDiv = div.querySelector('.country-tags');
+          if (tagsDiv){
+            tagsDiv.innerHTML = paises.map((c, idx)=>
+              `<span class="country-tag">${c}<span data-idx="${idx}">&times;</span></span>`
+            ).join('');
+            tagsDiv.querySelectorAll('span span').forEach(el=>{
+              el.addEventListener('click', (e)=>{
+                const idx = parseInt(e.target.dataset.idx, 10);
+                answers[f.id+'_countries'].splice(idx, 1);
+                setAnswer(f.id+'_paises', [...answers[f.id+'_countries']]);
+                el.parentElement.remove();
+                updateProgress();
+              });
+            });
+          }
+        }
+
+        if (valoresOpcoes.length || paises.length) markAnswered(div, true);
+      }
+    });
+  });
+
+  if (RASCUNHO_INICIAL.id) setSalvoIndicator('ok');
+  updateProgress();
+}
+
+/* ---------------------------------------------------------------------
+   Concluir extração
+--------------------------------------------------------------------- */
+document.getElementById('btnSalvar').addEventListener('click', async ()=>{
+  const btn = document.getElementById('btnSalvar');
+  btn.disabled = true;
+  await flushAutosave('manual');
+  if (Object.keys(pendingChanges).length === 0){
+    mostrarToast('Dados salvos com sucesso.');
+  } else {
+    mostrarToast('Não foi possível salvar. Tente novamente.', 'erro');
+  }
+  btn.disabled = false;
+});
+
+document.getElementById('btnConcluir').addEventListener('click', async ()=>{
+  const faltando = getCamposObrigatoriosNaoPreenchidos();
+  console.log('Campos faltando:', faltando.map(f=>f.id));
+  if(faltando.length > 0){
+    const primeiro = faltando[0];
+    document.getElementById('field_'+primeiro.id).scrollIntoView({behavior:'smooth', block:'center'});
+    mostrarToast(`Faltam ${faltando.length} campo(s) obrigatório(s). Ex.: Q${primeiro.num}.`, 'erro');
+    return;
+  }
+
+  const btn = document.getElementById('btnConcluir');
+  btn.disabled = true;
+  await flushAutosave('antes-de-concluir');
+
+  try{
+    const resp = await fetch(CONCLUIR_URL, {
+      method: 'POST',
+      credentials: 'same-origin'
+    });
+    if (!resp.ok){
+      const detalhe = await resp.json().catch(()=>null);
+      throw new Error(detalhe?.detail || `HTTP ${resp.status}`);
+    }
+    alert('Extração concluída com sucesso.');
+    window.location.href = '/estado/artigos/';
+  }catch(err){
+    alert('Não foi possível concluir a extração: ' + err.message);
+  }finally{
+    btn.disabled = false;
+  }
+});
+
+
+/* ---------------------------------------------------------------------
+   Inicialização
+--------------------------------------------------------------------- */
+preencherFormularioComRascunho();
+updateProgress();
+</script>
+
+{% endblock %}

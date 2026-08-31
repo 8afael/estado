@@ -47,7 +47,7 @@ async def login(
         )
 
     request.session["user"] = user.username
-    return RedirectResponse("/estado/artigos/", status_code=302)
+    return RedirectResponse("/estado/extracao/artigos-pendentes", status_code=302)
 
 
 # --- Logout ---

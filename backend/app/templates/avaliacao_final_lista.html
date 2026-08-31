@@ -1,0 +1,211 @@
+{% extends "base.html" %}
+{% block title %}Artigos Pendentes de Decisão{% endblock %}
+
+{% block content %}
+
+
+{# Captura dos parâmetros da URL para manter o estado nos links #}
+{% set q_id = request.query_params.id or '' %}
+{% set q_codigo = request.query_params.codigo or '' %}
+{% set q_idioma = request.query_params.idioma or '' %}
+{% set q_status = request.query_params.status or '' %}
+
+{% set filtros_url = "&id=" ~ q_id ~ "&codigo=" ~ q_codigo ~ "&idioma=" ~ q_idioma ~ "&status=" ~ q_status %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="fw-bold mb-0">Artigos</h3>
+        <span class="text-muted">Usuário: <strong>{{ current_user.username }}</strong></span>
+    </div>
+    <div>
+        <a href="/estado/logout" class="btn btn-sm btn-outline-danger">
+            <i class="bi bi-box-arrow-left"></i> Logout
+        </a>
+    </div>
+</div>
+
+<div class="card mb-4 shadow-sm card-filtros">
+    <div class="card-body">
+        <form method="GET" action="/estado/extracao/artigos-pendentes/" class="row g-3 align-items-end" id="formFiltros3">
+            <input type="hidden" name="size" value="{{ size }}">
+
+            <div class="col-md-1">
+                <label class="form-label fw-semibold">ID</label>
+                <input type="number" name="id" class="form-control form-control-sm" value="{{ q_id }}">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label fw-semibold">DOI/ISBN/ISSN</label>
+                <input type="text" name="codigo" class="form-control form-control-sm" value="{{ q_codigo }}" placeholder="DOI/ISBN/ISSN">
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label fw-semibold">Status</label>
+                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                    <option value="">Todos</option>
+                    <option value="em_andamento" {% if q_status == 'em_andamento' %}selected{% endif %}>Em Andamento</option>
+                    <option value="concluido" {% if q_status == 'concluido' %}selected{% endif %}>Concluído</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 text-end ms-auto">
+                <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtrar</button>
+                <a href="/estado/extracao/artigos-pendentes/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <label class="fw-semibold">Registros:</label>
+        <select class="form-select form-select-sm d-inline-block w-auto" onchange="alterarTamanho3(this.value)">
+            <option value="20" {% if size == 20 %}selected{% endif %}>20</option>
+            <option value="50" {% if size == 50 %}selected{% endif %}>50</option>
+            <option value="100" {% if size == 100 %}selected{% endif %}>100</option>
+        </select>
+    </div>
+    <span class="text-muted">Total: <strong>{{ total_registros }}</strong> artigos localizados</span>
+</div>
+
+<div class="table-responsive shadow-sm rounded">
+    <table class="table table-hover table-bordered table-sm mb-0">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-center" style="width: 5%;">ID</th>
+                <th style="width: 15%;">DOI/ISBN/ISSN</th>
+                <th>Título</th>
+                <th class="text-center" style="width: 10%;">Ano</th>
+                <th class="text-center" style="width: 10%;">Idioma</th>
+                <th class="text-center" style="width: 10%;">Status</th>
+                {% if not bloquear_edicao_3 %}
+                <th class="text-center" style="width: 15%;">Ações</th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody class="bg-white">
+            {% for av in artigos %}
+            <tr>
+                <td class="text-center fw-bold">{{ av.id }}</td>
+
+                <td>
+                    <code>{{ av.codigo or '' }}</code>
+                </td>
+
+                <td>
+                    <div class="fw-semibold text-truncate" style="max-width: 450px;" title="{{ av.titulo or '' }}">
+                        {{ av.titulo or '' }}
+                    </div>
+                </td>
+
+                {# Ano ainda não preenchido pelo 3º avaliador -> '-'; 0/'0' = "Outro" #}
+                <td class="text-center">
+                    {% if av.ano_publicacao == 0 or av.ano_publicacao == '0' %}
+                        Outro
+                    {% elif av.ano_publicacao %}
+                        {{ av.ano_publicacao }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+
+                <td class="text-center">
+                    <span class="badge bg-secondary">
+                        {{ av.idioma if av.idioma else 'Pendente' }}
+                    </span>
+                </td>
+
+                <td class="text-center">
+                    {% set st = extracoes_por_artigo.get(av.id) %}
+                    {% if st == 'concluido' %}
+                        <span class="badge bg-success">Concluído</span>
+                    {% elif st == 'em_andamento' %}
+                        <span class="badge bg-warning text-dark">Em andamento</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Não iniciado</span>
+                    {% endif %}                    
+                </td>
+
+               <td class="text-center">
+                {# Captura o status da extração no dicionário mapeado no backend #}
+                {% set st = extracoes_por_artigo.get(av.id) %}
+
+                {# Se existir um status e ele for 'em_andamento' ou 'concluido' #}
+                {% if st and st != 'nao_iniciado' %}
+                    <a href="/estado/extracao/formulario?artigo_id={{ av.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil-square"></i> Editar Avaliação
+                    </a>
+                {% else %}
+                    <a href="/estado/extracao/formulario?artigo_id={{ av.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-play-fill"></i> Avaliar
+                    </a>
+                {% endif %}
+            </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="{{ 6 if bloquear_edicao_3 else 7 }}" class="text-center text-muted py-3">Nenhum artigo pendente de decisão atribuído a você.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+
+    </table>
+</div>
+
+{% set query_params = "&size=" ~ size ~ filtros_url %}
+<nav aria-label="Page navigation" class="mt-4">
+  <ul class="pagination pagination-sm justify-content-center">
+    <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+      <a class="page-link" href="/estado/extracao/artigos-pendentes/?page={{ page - 1 }}{{ query_params }}">Prev</a>
+    </li>
+
+    {% set janela = 10 %}
+    {% set inicio = page - (janela // 2) %}
+    {% set fim = page + (janela // 2) %}
+    {% if inicio < 1 %}{% set fim = fim + (1 - inicio) %}{% set inicio = 1 %}{% endif %}
+    {% if fim > total_paginas %}{% set inicio = inicio - (fim - total_paginas) %}{% set fim = total_paginas %}{% endif %}
+    {% if inicio < 1 %}{% set inicio = 1 %}{% endif %}
+
+    {% for p in range(inicio, fim + 1) %}
+    <li class="page-item {% if p == page %}active{% endif %}">
+      <a class="page-link" href="/estado/extracao/artigos-pendentes/?page={{ p }}{{ query_params }}">{{ p }}</a>
+    </li>
+    {% endfor %}
+
+    <li class="page-item {% if page >= total_paginas %}disabled{% endif %}">
+      <a class="page-link" href="/estado/extracao/artigos-pendentes/?page={{ page + 1 }}{{ query_params }}">Next</a>
+    </li>
+  </ul>
+</nav>
+
+<style>
+    body {
+        background-color: #ffffff;
+    }
+    .card-filtros {
+        background-color: #e0e7ff;
+        border: none;
+    }
+    .text-cost {
+        color: #666666;
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+    .table th:nth-child(4),
+    .table td:nth-child(4),
+    .table th:nth-child(5),
+    .table td:nth-child(5) {
+        display: none;}
+</style>
+
+<script>
+function alterarTamanho3(valor) {
+    const urlParams = new URLSearchParams(window.location.search);
+    urlParams.set('size', valor);
+    urlParams.set('page', '1');
+    window.location.href = '/estado/extracao/artigos-pendentes/?' + urlParams.toString();
+}
+</script>
+{% endblock %}

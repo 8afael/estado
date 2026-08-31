@@ -13,10 +13,13 @@ RUN apt-get update \
 RUN pip3 install --no-cache-dir traits==6.3.2
 
 COPY requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/app ./app
 
-EXPOSE 8500
+COPY .env .
+
+EXPOSE 9000
 
 CMD ["uvicorn", "app.api.main:app", "--host", "0.0.0.0", "--port", "9000"]

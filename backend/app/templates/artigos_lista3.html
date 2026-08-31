@@ -42,7 +42,7 @@
 
 <div class="card mb-4 shadow-sm card-filtros">
     <div class="card-body">
-        <form method="GET" action="/estado/avaliacoes/artigos-3/" class="row g-3 align-items-end" id="formFiltros3">
+        <form method="GET" action="/estado/avaliacoes3/artigos-3/" class="row g-3 align-items-end" id="formFiltros3">
             <input type="hidden" name="size" value="{{ size }}">
 
             <div class="col-md-1">
@@ -76,7 +76,7 @@
 
             <div class="col-md-3 text-end">
                 <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtrar</button>
-                <a href="/estado/avaliacoes/artigos-3/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
+                <a href="/estado/avaliacoes3/artigos-3/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
             </div>
         </form>
     </div>
@@ -104,9 +104,12 @@
                 <th class="text-center" style="width: 10%;">Ano</th>
                 <th class="text-center" style="width: 10%;">Idioma</th>
                 <th class="text-center" style="width: 10%;">Status</th>
+                {% if not bloquear_edicao_3 %}
                 <th class="text-center" style="width: 15%;">Ações</th>
+                {% endif %}
             </tr>
         </thead>
+
         <tbody class="bg-white">
             {% for av in avaliacoes %}
             <tr>
@@ -148,24 +151,27 @@
                     {% endif %}
                 </td>
 
+               {% if not bloquear_edicao_3 %}
                 <td class="text-center">
                     {% if av.t4_analise_direta %}
-                        <a href="/estado/avaliacoes/avaliacao-3?artigo_id={{ av.artigo_id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
+                        <a href="/estado/avaliacoes3/avaliacao-3?artigo_id={{ av.artigo_id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil-square"></i> Editar Avaliação
                         </a>
                     {% else %}
-                        <a href="/estado/avaliacoes/avaliacao-3?artigo_id={{ av.artigo_id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
+                        <a href="/estado/avaliacoes3/avaliacao-3?artigo_id={{ av.artigo_id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-play-fill"></i> Avaliar
                         </a>
                     {% endif %}
                 </td>
+                {% endif %}
             </tr>
             {% else %}
             <tr>
-                <td colspan="7" class="text-center text-muted py-3">Nenhum artigo pendente de decisão atribuído a você.</td>
+                <td colspan="{{ 6 if bloquear_edicao_3 else 7 }}" class="text-center text-muted py-3">Nenhum artigo pendente de decisão atribuído a você.</td>
             </tr>
             {% endfor %}
         </tbody>
+
     </table>
 </div>
 
@@ -173,7 +179,7 @@
 <nav aria-label="Page navigation" class="mt-4">
   <ul class="pagination pagination-sm justify-content-center">
     <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-      <a class="page-link" href="/estado/avaliacoes/artigos-3/?page={{ page - 1 }}{{ query_params }}">Prev</a>
+      <a class="page-link" href="/estado/avaliacoes3/artigos-3/?page={{ page - 1 }}{{ query_params }}">Prev</a>
     </li>
 
     {% set janela = 10 %}
@@ -185,12 +191,12 @@
 
     {% for p in range(inicio, fim + 1) %}
     <li class="page-item {% if p == page %}active{% endif %}">
-      <a class="page-link" href="/estado/avaliacoes/artigos-3/?page={{ p }}{{ query_params }}">{{ p }}</a>
+      <a class="page-link" href="/estado/avaliacoes3/artigos-3/?page={{ p }}{{ query_params }}">{{ p }}</a>
     </li>
     {% endfor %}
 
     <li class="page-item {% if page >= total_paginas %}disabled{% endif %}">
-      <a class="page-link" href="/estado/avaliacoes/artigos-3/?page={{ page + 1 }}{{ query_params }}">Next</a>
+      <a class="page-link" href="/estado/avaliacoes3/artigos-3/?page={{ page + 1 }}{{ query_params }}">Next</a>
     </li>
   </ul>
 </nav>
@@ -200,7 +206,7 @@ function alterarTamanho3(valor) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('size', valor);
     urlParams.set('page', '1');
-    window.location.href = '/estado/avaliacoes/artigos-3/?' + urlParams.toString();
+    window.location.href = '/estado/avaliacoes3/artigos-3/?' + urlParams.toString();
 }
 </script>
 {% endblock %}
