@@ -83,6 +83,17 @@ class ArtigoAvaliacaoModel(Base):
     artigo = relationship("ArtigoModel", backref="distribuicoes")
 
 
+class ArtigoAvaliacaoFinalModel(Base):
+    __tablename__ = "artigo_avaliacoes_final"
+    id = Column(Integer, primary_key=True, index=True)
+    artigo_id = Column(Integer, ForeignKey("artigo.id"))
+    username = Column(String)
+    status = Column(String, default="pendente")
+    etapa = Column(Integer, nullable=False, default=2)
+
+    artigo = relationship("ArtigoModel", backref="distribuicao_final")
+
+
 class Avaliacao3Model(Base):
     __tablename__ = "avaliacoes_3"
  

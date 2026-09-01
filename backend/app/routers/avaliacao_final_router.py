@@ -16,7 +16,7 @@ templates = Jinja2Templates(directory="app/templates")
 # users não tem coluna de papel/role, então o controle é por username.
 # Ajuste esta lista conforme necessário.
 EXTRATORES_USERNAMES = {
-    "av01", "av02", "av03", "admin"
+    "av01", "av02", "av03", "av04", "av05", "av06", "av07", "av08", "av09", "av10", "av11", "av12", "av13", "av14", "av15", "av16", "admin", 
 }
 
 def get_db():
@@ -61,17 +61,50 @@ async def listar_artigos_para_extracao(
     db: Session = Depends(get_db),
 ):
     """
-    Lista os artigos com decisão final de inclusão (ArtigoModel.resultado_final
-    == 'incluir'), restrito ao pool fixo de EXTRATORES_USERNAMES. Cobre tanto
-    os artigos incluídos direto por A1=A2 quanto os que passaram pelo 3º
-    avaliador -- qualquer caminho que resulte em 'incluir' aparece aqui.
+    Lista os artigos atribuídos ao usuário logado na tabela de distribuição final
+    (artigo_avaliacoes_final) que possuem decisão de inclusão (resultado_final == 'incluir').
     """
+    # 1. Obtém e valida o usuário logado (padrão de autorização/sessão)
     usuario = _get_usuario_autorizado(request, db)
 
+    # 2. Subquery para buscar os IDs dos artigos atribuídos ao usuário logado na tabela final
+    # Obs: Se no seu model SQLAlchemy a tabela artigo_avaliacoes_final for chamada de ArtigoAvaliacaoFinalModel,
+    # ajuste o nome da classe do model abaixo conforme o seu projeto.
+    artigos_do_usuario_ids = [
+        row[0]
+        for row in db.query(models.ArtigoAvaliacaoFinalModel.artigo_id)
+        .filter(models.ArtigoAvaliacaoFinalModel.username == usuario.username)
+        .all()
+    ]
+
+    # Se o usuário não tiver nenhum artigo distribuído para ele, retorna vazio diretamente
+    if not artigos_do_usuario_ids:
+        class UsuarioSessao:
+            def __init__(self, username):
+                self.username = username
+
+        return templates.TemplateResponse(
+            "avaliacao_final_lista.html",
+            {
+                "request": request,
+                "current_user": UsuarioSessao(usuario.username),
+                "artigos": [],
+                "extracoes_por_artigo": {},
+                "page": 1,
+                "size": size,
+                "total_registros": 0,
+                "total_paginas": 1,
+                "idiomas_lista": [],
+            },
+        )
+
+    # 3. Filtra a tabela de Artigo garantindo que o artigo seja 'incluir' E pertença ao usuário
     query = db.query(models.ArtigoModel).filter(
-        models.ArtigoModel.resultado_final == "incluir"
+        models.ArtigoModel.resultado_final == "incluir",
+        models.ArtigoModel.id.in_(artigos_do_usuario_ids)
     )
 
+    # 4. Filtros de pesquisa (ID, Código, Idioma)
     if id and id.strip():
         try:
             query = query.filter(models.ArtigoModel.id == int(id))
@@ -82,6 +115,7 @@ async def listar_artigos_para_extracao(
     if idioma:
         query = query.filter(models.ArtigoModel.idioma == idioma)
 
+    # 5. Tratamento dos status de extração
     artigo_ids_visiveis = [row.id for row in query.all()]
     extracoes_por_artigo = {
         e.artigo_id: e.status
@@ -100,6 +134,7 @@ async def listar_artigos_para_extracao(
         ids = [aid for aid, st in extracoes_por_artigo.items() if st == "concluido"]
         query = query.filter(models.ArtigoModel.id.in_(ids or [-1]))
 
+    # 6. Paginação
     total_registros = query.count()
     total_paginas = max(1, -(-total_registros // size))
     page = max(1, min(page, total_paginas))
@@ -124,7 +159,7 @@ async def listar_artigos_para_extracao(
         {
             "request": request,
             "current_user": UsuarioSessao(usuario.username),
-            "artigos": artigos,  # 🆕 renomeado de "avaliacoes"
+            "artigos": artigos,
             "extracoes_por_artigo": extracoes_por_artigo,
             "page": page,
             "size": size,
@@ -133,3 +168,89 @@ async def listar_artigos_para_extracao(
             "idiomas_lista": idiomas_lista,
         },
     )
+
+# @router.get("/artigos-pendentes/", response_class=HTMLResponse)
+# @require_login
+# async def listar_artigos_para_extracao(
+#     request: Request,
+#     page: int = 1,
+#     size: int = 20,
+#     id: Optional[str] = None,
+#     codigo: Optional[str] = None,
+#     idioma: Optional[str] = None,
+#     status: Optional[str] = None,
+#     db: Session = Depends(get_db),
+# ):
+#     """
+#     Lista os artigos com decisão final de inclusão (ArtigoModel.resultado_final
+#     == 'incluir'), restrito ao pool fixo de EXTRATORES_USERNAMES. Cobre tanto
+#     os artigos incluídos direto por A1=A2 quanto os que passaram pelo 3º
+#     avaliador -- qualquer caminho que resulte em 'incluir' aparece aqui.
+#     """
+#     usuario = _get_usuario_autorizado(request, db)
+
+#     query = db.query(models.ArtigoModel).filter(
+#         models.ArtigoModel.resultado_final == "incluir"
+#     )
+
+#     if id and id.strip():
+#         try:
+#             query = query.filter(models.ArtigoModel.id == int(id))
+#         except ValueError:
+#             pass
+#     if codigo:
+#         query = query.filter(models.ArtigoModel.codigo.ilike(f"%{codigo}%"))
+#     if idioma:
+#         query = query.filter(models.ArtigoModel.idioma == idioma)
+
+#     artigo_ids_visiveis = [row.id for row in query.all()]
+#     extracoes_por_artigo = {
+#         e.artigo_id: e.status
+#         for e in db.query(models.ExtracaoDadosModel)
+#         .filter(models.ExtracaoDadosModel.artigo_id.in_(artigo_ids_visiveis))
+#         .all()
+#     } if artigo_ids_visiveis else {}
+
+#     if status == "nao_iniciado":
+#         ids_pendentes = [aid for aid in artigo_ids_visiveis if aid not in extracoes_por_artigo]
+#         query = query.filter(models.ArtigoModel.id.in_(ids_pendentes or [-1]))
+#     elif status == "em_andamento":
+#         ids = [aid for aid, st in extracoes_por_artigo.items() if st == "em_andamento"]
+#         query = query.filter(models.ArtigoModel.id.in_(ids or [-1]))
+#     elif status == "concluido":
+#         ids = [aid for aid, st in extracoes_por_artigo.items() if st == "concluido"]
+#         query = query.filter(models.ArtigoModel.id.in_(ids or [-1]))
+
+#     total_registros = query.count()
+#     total_paginas = max(1, -(-total_registros // size))
+#     page = max(1, min(page, total_paginas))
+
+#     artigos = (
+#         query.order_by(models.ArtigoModel.id)
+#         .offset((page - 1) * size)
+#         .limit(size)
+#         .all()
+#     )
+
+#     idiomas_lista = sorted({
+#         row[0] for row in db.query(models.ArtigoModel.idioma).distinct().all() if row[0]
+#     })
+
+#     class UsuarioSessao:
+#         def __init__(self, username):
+#             self.username = username
+
+#     return templates.TemplateResponse(
+#         "avaliacao_final_lista.html",
+#         {
+#             "request": request,
+#             "current_user": UsuarioSessao(usuario.username),
+#             "artigos": artigos,  # 🆕 renomeado de "avaliacoes"
+#             "extracoes_por_artigo": extracoes_por_artigo,
+#             "page": page,
+#             "size": size,
+#             "total_registros": total_registros,
+#             "total_paginas": total_paginas,
+#             "idiomas_lista": idiomas_lista,
+#         },
+#     )
