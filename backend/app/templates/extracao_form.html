@@ -286,7 +286,7 @@ function traduzirParaPayload(changes){
   return traduzido;
 }
 
-const AUTOSAVE_URL = '/estado/extracao/autosave';
+const SALVAR_URL = '/estado/extracao/salvar'; 
 const CONCLUIR_URL = `/estado/extracao/concluir/${ARTIGO_ID}`;
 
 const PRINCIPIOS = ["Transparência","Participação","Accountability/prestação de contas","Colaboração","Integridade","Inclusão","Acessibilidade","Responsividade","Confiança","Legalidade","Equidade","Deliberação","Eficiência","Publicidade","Independência","Imparcialidade","Outro — especificar","Não identificado no artigo","Não aplicável"];
@@ -362,7 +362,7 @@ const SECTIONS = [
   {num:51, id:"q51", type:"long", label:"Principal contribuição empírica", loc:true, help:"Registrar o que o artigo acrescenta com base em dados, casos, documentos, entrevistas ou análises sistemáticas. Para artigos não empíricos: \"Não aplicável\"."},
   {num:52, id:"q52", type:"long", label:"Principal tese ou conclusão", loc:true, help:"Resumir a conclusão dos autores."},
   {num:53, id:"q53", type:"long", label:"Contributo para o quadro conceitual da revisão", loc:true, help:"Interpretar, com base nos campos anteriores, o que o artigo acrescenta ao quadro conceitual."},
-  {num:54, id:"q54", type:"long", label:"Limitações e lacunas", help:"Separar limitações reconhecidas pelos autores e lacunas identificadas pela equipa."},
+  {num:54, id:"q54", type:"long", label:"Limitações e lacunas", help:"Separar limitações reconhecidas pelos autores e lacunas identificadas pelo avaliador."},
 ]},
 {id:"s10", title:"Qualidade e auditoria", fields:[
   {num:55, id:"q55", type:"scale", label:"Clareza do artigo para a extração", help:"Avalie quão fácil é extrair e codificar as informações do artigo, e não a qualidade ou o rigor metodológico do estudo.<br><br><b>Regra de codificação:</b> atribua uma nota de 1 a 5 conforme o grau de clareza das informações necessárias para o preenchimento do formulário. Considere a clareza, consistência e explicitação das informações no artigo. Quanto maior a clareza e menor a necessidade de inferência, maior a pontuação.", scale:[
@@ -433,37 +433,84 @@ function mostrarToast(mensagem, tipo){
   toast._timeout = setTimeout(()=>{ toast.classList.remove('show'); }, 3000);
 }
 
-async function flushAutosave(motivo){
-  if (Object.keys(pendingChanges).length === 0) return;
+async function salvarManualmente(btnElement = null) {
+  // Se já estiver salvando, ignora novos cliques no botão
   if (salvando) return;
 
-  const changesToSend = pendingChanges;
-  pendingChanges = {};
   salvando = true;
   setSalvoIndicator('salvando');
+  
 
-  const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(changesToSend) };
+  // Em vez de enviar só as pendências, coletamos o estado atual completo ou a fila inteira
+  const changesToSend = { ...pendingChanges };
+  pendingChanges = {};
+
+  const payload = { 
+    artigo_id: ARTIGO_ID, 
+    usuario_id: USUARIO_ID, 
+    ...traduzirParaPayload(changesToSend) 
+  };
+  
   if (extracaoId) payload.extracao_id = extracaoId;
 
-  try{
-    const resp = await fetch(AUTOSAVE_URL, {
+  try {
+    const resp = await fetch(SALVAR_URL, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'Content-Type': 'application/json' },
       credentials: 'same-origin',
       body: JSON.stringify(payload)
     });
+
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    
     const data = await resp.json();
     extracaoId = data.id;
+    
     setSalvoIndicator('ok');
-  }catch(err){
-    console.warn('Autosave falhou ('+motivo+'):', err);
+    alert('Rascunho salvo com sucesso!');
+  } catch (err) {
+    console.error('Falha ao salvar manualmente:', err);
+    
+    // Restaura as alterações pendentes caso ocorra algum erro na rede/servidor
     pendingChanges = { ...changesToSend, ...pendingChanges };
     setSalvoIndicator('erro');
-  }finally{
+    alert('Não foi possível salvar o formulário. Tente novamente.');
+  } finally {
     salvando = false;
   }
 }
+
+// async function flushAutosave(motivo){
+//   if (Object.keys(pendingChanges).length === 0) return;
+//   if (salvando) return;
+
+//   const changesToSend = pendingChanges;
+//   pendingChanges = {};
+//   salvando = true;
+//   setSalvoIndicator('salvando');
+
+//   const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(changesToSend) };
+//   if (extracaoId) payload.extracao_id = extracaoId;
+
+//   try{
+//     const resp = await fetch(AUTOSAVE_URL, {
+//       method: 'POST',
+//       headers: {'Content-Type':'application/json'},
+//       credentials: 'same-origin',
+//       body: JSON.stringify(payload)
+//     });
+//     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+//     const data = await resp.json();
+//     extracaoId = data.id;
+//     setSalvoIndicator('ok');
+//   }catch(err){
+//     console.warn('Autosave falhou ('+motivo+'):', err);
+//     pendingChanges = { ...changesToSend, ...pendingChanges };
+//     setSalvoIndicator('erro');
+//   }finally{
+//     salvando = false;
+//   }
+// }
 
 SECTIONS.forEach((sec, si)=>{
   const a = document.createElement("a");
@@ -767,25 +814,22 @@ const io = new IntersectionObserver((entries)=>{
       linkEls.forEach(l=>l.classList.remove("active"));
       const match = linkEls.find(l=>l.getAttribute("href")==="#"+e.target.id);
       if(match) match.classList.add("active");
-    } else {
-      // a seção deixou de estar visível -> salva o que foi respondido nela
-      flushAutosave('saiu-da-secao:' + e.target.id);
     }
   });
 }, {rootMargin:"-15% 0px -70% 0px"});
 SECTIONS.forEach(s=>io.observe(document.getElementById(s.id)));
 
 /* Rede de segurança: garante flush ao trocar de aba ou fechar a página */
-window.addEventListener('beforeunload', ()=>{
-  if (Object.keys(pendingChanges).length > 0){
-    const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(pendingChanges) };
-    if (extracaoId) payload.extracao_id = extracaoId;
-    navigator.sendBeacon(AUTOSAVE_URL, new Blob([JSON.stringify(payload)], {type:'application/json'}));
-  }
-});
-document.addEventListener('visibilitychange', ()=>{
-  if (document.visibilityState === 'hidden') flushAutosave('aba-oculta');
-});
+// window.addEventListener('beforeunload', ()=>{
+//   if (Object.keys(pendingChanges).length > 0){
+//     const payload = { artigo_id: ARTIGO_ID, usuario_id: USUARIO_ID, ...traduzirParaPayload(pendingChanges) };
+//     if (extracaoId) payload.extracao_id = extracaoId;
+//     navigator.sendBeacon(AUTOSAVE_URL, new Blob([JSON.stringify(payload)], {type:'application/json'}));
+//   }
+// });
+// document.addEventListener('visibilitychange', ()=>{
+//   if (document.visibilityState === 'hidden') flushAutosave('aba-oculta');
+// });
 
 /* ---------------------------------------------------------------------
    Pré-preenchimento a partir de um rascunho já existente
@@ -914,10 +958,10 @@ function preencherFormularioComRascunho(){
 /* ---------------------------------------------------------------------
    Concluir extração
 --------------------------------------------------------------------- */
-document.getElementById('btnSalvar').addEventListener('click', async ()=>{
-  const btn = document.getElementById('btnSalvar');
+document.getElementById('btnSalvar').addEventListener('click', async (e)=>{   // 🆕 (e) adicionado
+  const btn = e.currentTarget;   // 🆕 usa o parâmetro em vez de getElementById redundante
   btn.disabled = true;
-  await flushAutosave('manual');
+  await salvarManualmente(btn);
   if (Object.keys(pendingChanges).length === 0){
     mostrarToast('Dados salvos com sucesso.');
   } else {
@@ -926,9 +970,8 @@ document.getElementById('btnSalvar').addEventListener('click', async ()=>{
   btn.disabled = false;
 });
 
-document.getElementById('btnConcluir').addEventListener('click', async ()=>{
+document.getElementById('btnConcluir').addEventListener('click', async (e)=>{   // 🆕 (e) adicionado
   const faltando = getCamposObrigatoriosNaoPreenchidos();
-  console.log('Campos faltando:', faltando.map(f=>f.id));
   if(faltando.length > 0){
     const primeiro = faltando[0];
     document.getElementById('field_'+primeiro.id).scrollIntoView({behavior:'smooth', block:'center'});
@@ -936,9 +979,9 @@ document.getElementById('btnConcluir').addEventListener('click', async ()=>{
     return;
   }
 
-  const btn = document.getElementById('btnConcluir');
+  const btn = e.currentTarget;   // 🆕
   btn.disabled = true;
-  await flushAutosave('antes-de-concluir');
+  await salvarManualmente(btn);
 
   try{
     const resp = await fetch(CONCLUIR_URL, {
@@ -950,7 +993,7 @@ document.getElementById('btnConcluir').addEventListener('click', async ()=>{
       throw new Error(detalhe?.detail || `HTTP ${resp.status}`);
     }
     alert('Extração concluída com sucesso.');
-    window.location.href = '/estado/artigos/';
+    window.location.href = '/estado/extracao/artigos-pendentes/';
   }catch(err){
     alert('Não foi possível concluir a extração: ' + err.message);
   }finally{

@@ -90,30 +90,22 @@ def obter_dados_extracao(artigo_id: int, db: Session = Depends(get_db)):
     return montar_response(db, registro)
 
 
-# ---------------------------------------------------------------------------
-# AUTOSAVE — recebe só o delta (campos alterados desde o último save)
-# ---------------------------------------------------------------------------
-
-@router.post("/autosave", response_model=ExtracaoDadosResponse)
-async def autosave_extracao(
+@router.post("/salvar", response_model=ExtracaoDadosResponse)
+async def salvar_extracao_endpoint(
     request: Request,
     payload: ExtracaoDadosUpdate,
     db: Session = Depends(get_db),
 ):
     """
-    Salva incrementalmente. Espera receber SÓ os campos que mudaram desde o
-    último autosave (Pydantic diferencia isso via model_fields_set — campos
-    não enviados no JSON não entram nesse conjunto, mesmo tendo default).
-
-    Primeira chamada para um artigo: cria a linha (precisa vir com
-    artigo_id no payload). Chamadas seguintes: envie também o campo
-    'extracao_id' seguinte para localizar o registro certo, OU deixe o
-    endpoint localizar por artigo_id (mais simples pro front, ver abaixo).
+    Salva o rascunho via clique manual nos botões "Salvar" ou "Salvar e
+    enviar" (este último chama /concluir logo em seguida). Recebe só os
+    campos alterados desde o último salvamento — o template já traduz
+    qN -> nome de coluna antes de enviar (traduzirParaPayload()).
     """
     usuario = _get_usuario_logado(request, db)
 
     if payload.artigo_id is None:
-        raise HTTPException(status_code=400, detail="artigo_id é obrigatório no autosave.")
+        raise HTTPException(status_code=400, detail="artigo_id é obrigatório.")
 
     artigo = db.query(models.ArtigoModel).filter(models.ArtigoModel.id == payload.artigo_id).first()
     if not artigo:
@@ -122,7 +114,6 @@ async def autosave_extracao(
     registro_existente = buscar_extracao_por_artigo(db, payload.artigo_id)
 
     if registro_existente is None:
-        # primeira vez: precisa criar. usuario_id vem do payload ou da sessão.
         payload.usuario_id = payload.usuario_id or usuario.id
         registro = salvar_extracao(db, payload, extracao_id=None, somente_enviados=True)
     else:
