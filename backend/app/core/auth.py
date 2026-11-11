@@ -53,7 +53,7 @@ def require_login(func: Callable[..., Any]) -> Callable[..., Any]:
         print(f"DEBUG LOOP: Usuario na sessao é: {user}") # Adicione este print
 
         if not user:
-            return RedirectResponse(url="/estado/login/", status_code=302)
+            return RedirectResponse(url="/plataforma/estado/login/", status_code=302)
         
 
         # Executa função (async ou sync)

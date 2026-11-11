@@ -13,7 +13,7 @@ from app.core import database
 from app.core.auth import require_login
 from app.models import models
 
-# Roteador com prefixo /avaliacoes (combinado com o root_path="/estado", a rota HTML final será /estado/avaliacoes/resultados/)
+# Roteador com prefixo /avaliacoes (combinado com o root_path="/plataforma/estado", a rota HTML final será /estado/avaliacoes/resultados/)
 router = APIRouter(prefix="/avaliacoes", tags=["avaliacoes"])
 
 # Configuração do Jinja2 apontando para a pasta de templates

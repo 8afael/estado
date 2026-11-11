@@ -49,11 +49,11 @@
             <span class="text-xs bg-slate-700 px-2 py-0.5 rounded-full text-slate-300">Painel do Avaliador</span>
         </div>
         <div class="flex items-center gap-6 text-sm">
-            <a href="/estado/artigos/" class="hover:underline font-medium text-slate-300">Lista de Artigos</a>
+            <a href="/plataforma/estado/artigos/" class="hover:underline font-medium text-slate-300">Lista de Artigos</a>
             <button id="toggleDataSource" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs px-3 py-1.5 rounded transition">
                 <i class="fa-solid fa-server mr-1"></i> Fonte: <span id="sourceLabel">API Real (/avaliacoes)</span>
             </button>
-            <a href="/estado/logout/" class="hover:underline text-slate-300">Logout</a>
+            <a href="/plataforma/estado/logout/" class="hover:underline text-slate-300">Logout</a>
         </div>
     </header>
 
@@ -366,7 +366,7 @@
             try {
                 // Etapa 1: Busca triagens
                 atualizarBarraProgresso(10, "Buscando lista de avaliações...");
-                const resProcessar = await fetch('/estado/avaliacoes/processar');
+                const resProcessar = await fetch('/plataforma/estado/avaliacoes/processar');
                 if (!resProcessar.ok) throw new Error("Falha ao buscar /estado/avaliacoes/processar");
                 const listaTriagens = await resProcessar.json();
 
@@ -388,7 +388,7 @@
                 let processados = 0;
                 for (const artigoId of idsUnicos) {
                     try {
-                        const resDecisao = await fetch(`/estado/avaliacoes/artigos/${artigoId}/decisao-final`);
+                        const resDecisao = await fetch(`/plataforma/estado/avaliacoes/artigos/${artigoId}/decisao-final`);
                         if (resDecisao.ok) {
                             const dados = await resDecisao.json();
                             listaConsolidada.push(dados);
@@ -436,7 +436,7 @@
             atualizarBarraProgresso(20, "Redistribuindo artigos para o 3º avaliador...");
 
             try {
-                const res = await fetch('/estado/avaliacoes/distribuir-avaliacao-3', {
+                const res = await fetch('/plataforma/estado/avaliacoes/distribuir-avaliacao-3', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({}) // usa o pool padrão de avaliadores (ver docstring do endpoint)

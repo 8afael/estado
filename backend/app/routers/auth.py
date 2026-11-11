@@ -47,12 +47,12 @@ async def login(
         )
 
     request.session["user"] = user.username
-    return RedirectResponse("/estado/extracao/artigos-pendentes", status_code=302)
+    return RedirectResponse("/plataforma/estado/extracao/artigos-pendentes", status_code=302)
 
 
 # --- Logout ---
 @router.get("/logout")
 async def logout(request: Request):
     request.session.clear()
-    return RedirectResponse("/estado/login/", status_code=302)
+    return RedirectResponse("/plataforma/estado/login/", status_code=302)
 

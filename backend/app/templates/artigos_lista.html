@@ -38,10 +38,10 @@
         <span class="text-muted">Usuário: <strong>{{ current_user.username }}</strong></span>
     </div>
     <div>
-        <a href="/estado/avaliacoes3/artigos-3/" class="btn btn-sm btn-outline-primary me-2">
+        <a href="/plataforma/estado/avaliacoes3/artigos-3/" class="btn btn-sm btn-outline-primary me-2">
             <i class="bi bi-hourglass-split"></i> Artigos Pendentes de Decisão
         </a>
-        <a href="/estado/logout" class="btn btn-sm btn-outline-danger">
+        <a href="/plataforma/estado/logout" class="btn btn-sm btn-outline-danger">
             <i class="bi bi-box-arrow-left"></i> Logout
         </a>
     </div>
@@ -49,7 +49,7 @@
 
 <div class="card mb-4 shadow-sm card-filtros">
     <div class="card-body">
-        <form method="POST" action="/estado/artigos/" class="row g-3 align-items-end" id="formFiltros">
+        <form method="POST" action="/plataforma/estado/artigos/" class="row g-3 align-items-end" id="formFiltros">
             <input type="hidden" name="size" value="{{ size }}">
             
             <div class="col-md-1">
@@ -92,7 +92,7 @@
 
             <div class="col-md-3 text-end">
                 <button type="submit" class="btn btn-sm btn-success w-100 mb-1">Filtrar</button>
-                <a href="/estado/artigos/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
+                <a href="/plataforma/estado/artigos/?size={{ size }}" class="btn btn-sm btn-secondary w-100">Limpar</a>
             </div>
         </form>
     </div>
@@ -185,11 +185,11 @@
                     {% if is_admin %}
                         <span class="text-muted">—</span>
                     {% elif minha_avaliacao %}
-                        <a href="/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
+                        <a href="/plataforma/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-outline-primary">
                             <i class="bi bi-pencil-square"></i> Editar Avaliação
                         </a>
                     {% else %}
-                        <a href="/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
+                        <a href="/plataforma/estado/avaliacao?artigo_id={{ artigo.id }}&page={{ page }}{{ filtros_url }}" class="btn btn-sm btn-primary">
                             <i class="bi bi-play-fill"></i> Avaliar
                         </a>
                     {% endif %}
@@ -210,7 +210,7 @@
 <nav aria-label="Page navigation" class="mt-4">
   <ul class="pagination pagination-sm justify-content-center">
     <li class="page-item {% if page <= 1 %}disabled{% endif %}">
-      <a class="page-link" href="/estado/artigos/?page={{ page - 1 }}{{ query_params }}">Prev</a>
+      <a class="page-link" href="/plataforma/estado/artigos/?page={{ page - 1 }}{{ query_params }}">Prev</a>
     </li>
 
     {% set janela = 10 %}
@@ -222,12 +222,12 @@
 
     {% for p in range(inicio, fim + 1) %}
     <li class="page-item {% if p == page %}active{% endif %}">
-      <a class="page-link" href="/estado/artigos/?page={{ p }}{{ query_params }}">{{ p }}</a>
+      <a class="page-link" href="/plataforma/estado/artigos/?page={{ p }}{{ query_params }}">{{ p }}</a>
     </li>
     {% endfor %}
 
     <li class="page-item {% if page >= total_paginas %}disabled{% endif %}">
-      <a class="page-link" href="/estado/artigos/?page={{ page + 1 }}{{ query_params }}">Next</a>
+      <a class="page-link" href="/plataforma/estado/artigos/?page={{ page + 1 }}{{ query_params }}">Next</a>
     </li>
   </ul>
 </nav>
@@ -237,7 +237,7 @@ function alterarTamanho(valor) {
     const urlParams = new URLSearchParams(window.location.search);
     urlParams.set('size', valor);
     urlParams.set('page', '1');
-    window.location.href = '/estado/artigos/?' + urlParams.toString();
+    window.location.href = '/plataforma/estado/artigos/?' + urlParams.toString();
 }
 </script>
 {% endblock %}

@@ -1,0 +1,20 @@
+# sistema / editor
+.DS_Store
+.vscode/
+*.code-workspace
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# banco de dados (fica só no servidor e nos backups)
+data/*.db
+data/*.db-wal
+data/*.db-shm
+
+# backups e pacotes
+*.tgz
+*.tar.gz
+*.bak

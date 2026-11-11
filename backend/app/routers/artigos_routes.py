@@ -54,7 +54,7 @@ async def listar_artigos_avaliador(
         v_idioma = form_data.get("idioma", "")
         v_status = form_data.get("status", "")
         
-        url_redirecionamento = f"/estado/artigos/?page=1&size={size}&id={v_id}&codigo={v_codigo}&idioma={v_idioma}&status={v_status}"
+        url_redirecionamento = f"/plataforma/estado/artigos/?page=1&size={size}&id={v_id}&codigo={v_codigo}&idioma={v_idioma}&status={v_status}"
         return RedirectResponse(url=url_redirecionamento, status_code=303)
 
     # --- FLUXO DO GET ---

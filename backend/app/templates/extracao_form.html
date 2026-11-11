@@ -286,8 +286,8 @@ function traduzirParaPayload(changes){
   return traduzido;
 }
 
-const SALVAR_URL = '/estado/extracao/salvar'; 
-const CONCLUIR_URL = `/estado/extracao/concluir/${ARTIGO_ID}`;
+const SALVAR_URL = '/plataforma/estado/extracao/salvar'; 
+const CONCLUIR_URL = `/plataforma/estado/extracao/concluir/${ARTIGO_ID}`;
 
 const PRINCIPIOS = ["Transparência","Participação","Accountability/prestação de contas","Colaboração","Integridade","Inclusão","Acessibilidade","Responsividade","Confiança","Legalidade","Equidade","Deliberação","Eficiência","Publicidade","Independência","Imparcialidade","Outro — especificar","Não identificado no artigo","Não aplicável"];
 
@@ -993,7 +993,7 @@ document.getElementById('btnConcluir').addEventListener('click', async (e)=>{   
       throw new Error(detalhe?.detail || `HTTP ${resp.status}`);
     }
     alert('Extração concluída com sucesso.');
-    window.location.href = '/estado/extracao/artigos-pendentes/';
+    window.location.href = '/plataforma/estado/extracao/artigos-pendentes/';
   }catch(err){
     alert('Não foi possível concluir a extração: ' + err.message);
   }finally{

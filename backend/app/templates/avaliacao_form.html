@@ -24,12 +24,12 @@
         <h3 class="fw-bold mb-0">Avaliação de Artigo</h3>
         <span class="text-muted">Preencha os critérios metodológicos e analíticos</span>
     </div>
-    <a href="/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-sm btn-outline-secondary">
+    <a href="/plataforma/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-sm btn-outline-secondary">
         <i class="bi bi-arrow-left"></i> Voltar para a Lista
     </a>
 </div>
 
-<form method="POST" action="/estado/salvar-avaliacao/" id="formAvaliacao">
+<form method="POST" action="/plataforma/estado/salvar-avaliacao/" id="formAvaliacao">
     <input type="hidden" name="artigo_id_real" id="artigo_id_real" value="{{ artigo_id }}">
     <input type="hidden" name="page" value="{{ request.query_params.page or 1 }}">
 
@@ -231,7 +231,7 @@
     </div>
 
     <div class="d-flex justify-content-end gap-2 mb-5">
-        <a href="/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
+        <a href="/plataforma/estado/artigos/?page={{ request.query_params.page or 1 }}" class="btn btn-secondary px-4">Cancelar</a>
         <button type="submit" id="btnSalvar" class="btn btn-success px-5 fw-bold">Concluir Avaliação</button>
     </div>
 </form>
@@ -300,7 +300,7 @@ async function validarCodigo() {
 
     try {
         // Faz a chamada assíncrona ao FastAPI passando o código e o ID do artigo atual
-        const response = await fetch(`/estado/verificar-codigo/?codigo=${encodeURIComponent(valor)}&artigo_id=${artigoId}`);
+        const response = await fetch(`/plataforma/estado/verificar-codigo/?codigo=${encodeURIComponent(valor)}&artigo_id=${artigoId}`);
         const data = await response.json();
 
         if (data.existe) {

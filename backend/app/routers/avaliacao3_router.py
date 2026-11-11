@@ -15,7 +15,7 @@ from app.core.auth import require_login
 from app.core.dicionarios import DICIONARIOS_AVALIACAO
 from app.models import models
 
-# Roteador com prefixo /avaliacoes (combinado com o root_path="/estado", a rota HTML final será /estado/avaliacoes/resultados/)
+# Roteador com prefixo /avaliacoes (combinado com o root_path="/plataforma/estado", a rota HTML final será /estado/avaliacoes/resultados/)
 router = APIRouter(prefix="/avaliacoes3", tags=["avaliacoes3"])
 
 # Configuração do Jinja2 apontando para a pasta de templates
@@ -384,7 +384,7 @@ async def salvar_avaliacao_3(
     db.commit()
 
     return RedirectResponse(
-        url=f"/estado/avaliacoes/artigos-3/?page={page}",
+        url=f"/plataforma/estado/avaliacoes/artigos-3/?page={page}",
         status_code=303,
     )
 

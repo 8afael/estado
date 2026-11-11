@@ -108,7 +108,7 @@ async def salvar_formulario(
     user_db = db.query(models.User).filter(models.User.username == username_logado).first()
     
     if not user_db:
-        return RedirectResponse(url="/estado/login/", status_code=303)
+        return RedirectResponse(url="/plataforma/estado/login/", status_code=303)
 
     # [OPCIONAL] Mantido caso queira manter a tabela global 'artigo' atualizada em paralelo
     artigo = db.query(models.ArtigoModel).filter(models.ArtigoModel.id == artigo_id_real).first()
@@ -201,7 +201,7 @@ async def salvar_formulario(
 
     # Força a gravação síncrona no banco
     db.commit()
-    return RedirectResponse(url=f"/estado/artigos/?page={page}", status_code=303)
+    return RedirectResponse(url=f"/plataforma/estado/artigos/?page={page}", status_code=303)
 
 
 @router.get("/editar-avaliacao/{artigo_id}/{etapa}")

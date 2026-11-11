@@ -19,7 +19,7 @@ from app.routers import (
 
 app = FastAPI(
     title="Estado API",
-    root_path="/estado",
+    root_path="/plataforma/estado",
     docs_url="/docs",          
     openapi_url="/openapi.json"
 )
@@ -40,7 +40,7 @@ database.Base.metadata.create_all(bind=database.engine)
 @app.get("/")
 async def raiz_para_login():
     # Usamos o caminho completo que o navegador deve seguir
-    return RedirectResponse(url="/estado/login/", status_code=302)
+    return RedirectResponse(url="/plataforma/estado/login/", status_code=302)
 
 
 # --- Rotas de autenticação ---
