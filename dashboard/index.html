@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Estado Aberto: resultados</title>
+<meta name="description" content="Resultados da revisão sistemática sobre Estado Aberto, Parlamento Aberto e Justiça Aberta: procedimento PRISMA, acervo de 282 artigos analisados e painel interativo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&family=Sora:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="assets/logo-estado-aberto.svg" type="image/svg+xml">
+</head>
+<body>
+<nav class="topnav" aria-label="Seções">
+  <div class="wrap">
+    <a class="brand" href="#/inicio">
+      <svg class="mark" viewBox="196 316 320 314" aria-hidden="true"><g fill="none" stroke-width="30" stroke-linecap="round"><path d="M221 614V480a135 135 0 0 1 270 0v134" stroke="#0b2545"/><path d="M265 614V480a91 91 0 0 1 182 0v134" stroke="#13a89e"/><path d="M310 614V480a46 46 0 0 1 92 0v134" stroke="#f1c40f"/></g><circle cx="356" cy="606" r="18" fill="#0b2545"/></svg>
+      <span>Estado Aberto<small>Estado, Parlamento e Justiça Aberta</small></span>
+    </a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <div class="nav-links" id="nav-links">
+      <a href="#/inicio" data-r="inicio">Início</a>
+      <a href="#/prisma" data-r="prisma">Procedimento PRISMA</a>
+      <a href="#/artigos" data-r="artigos">Artigos analisados</a>
+      <a href="#/resultados" data-r="resultados">Resultados</a>
+      <a href="#/equipe" data-r="equipe">Equipe</a>
+      <a href="#/codebook" data-r="codebook">Codebook e dados</a>
+    </div>
+  </div>
+</nav>
+<main id="app"><div class="loading">Carregando os dados da revisão…</div></main>
+<footer class="site"><div class="wrap"><b style="color:#fff;font-family:var(--f-head)">Projeto: Estado Aberto: promovendo a cultura e as práticas de governo, parlamento e justiça aberta</b><br>Ação 2 – Ciência Aberta · Grupo de Pesquisa Politeia · Udesc/ESAG</div></footer>
+<script src="config.js"></script>
+<script src="assets/vendor/chart.umd.js"></script>
+<script src="assets/vendor/d3.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

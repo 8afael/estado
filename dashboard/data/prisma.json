@@ -1,0 +1,249 @@
+{
+ "identificacao": {
+  "total": 700,
+  "bases": [
+   {
+    "nome": "Scopus",
+    "n": 193,
+    "data": "25/05/2026"
+   },
+   {
+    "nome": "Web of Science Core Collection",
+    "n": 352,
+    "data": "25/05/2026"
+   },
+   {
+    "nome": "SciELO",
+    "n": 155,
+    "data": "30/05/2026"
+   }
+  ],
+  "duplicatas": 99,
+  "automacao": 0,
+  "outros": 0
+ },
+ "triagem": {
+  "triados": 601,
+  "incluidos": 291,
+  "excluidos": 310,
+  "convergencia": {
+   "incluidos": 149,
+   "excluidos": 179,
+   "total": 328
+  },
+  "terceiro": {
+   "incluidos": 142,
+   "excluidos": 131,
+   "total": 273
+  },
+  "encerramento_rodada": "09/08/2026",
+  "consolidacao": "31/08/2026"
+ },
+ "recuperacao": {
+  "buscados": 291,
+  "nao_recuperados": 0
+ },
+ "elegibilidade": {
+  "avaliados": 291,
+  "excluidos": 9,
+  "motivo": "Duplicatas identificadas na extração (registros não detectados na desduplicação inicial)",
+  "ids_excluidos": [
+   77,
+   97,
+   332,
+   333,
+   379,
+   434,
+   492,
+   495,
+   600
+  ]
+ },
+ "incluidos": 282,
+ "extracao": {
+  "avaliadores": 12,
+  "variaveis": 59,
+  "secoes": 10,
+  "periodo": "setembro a outubro de 2026",
+  "uso_ia": 258
+ },
+ "regras": {
+  "perguntas": [
+   {
+    "id": "T1",
+    "texto": "O título, o resumo ou as palavras-chave mencionam explicitamente pelo menos um dos seguintes termos, ou suas traduções claras em português ou espanhol?",
+    "termos": [
+     "open state / Estado aberto",
+     "open parliament / parlamento aberto",
+     "open justice / justiça aberta",
+     "open government / governo aberto",
+     "open governance / governança aberta"
+    ]
+   },
+   {
+    "id": "T2",
+    "texto": "O termo “open” é utilizado no contexto de Estado, governo, parlamento, justiça ou governança pública?"
+   },
+   {
+    "id": "T3",
+    "texto": "Com base no título e no resumo, o artigo trata a abertura como tema institucional, político, jurídico, organizacional ou relacional no setor público — e não apenas como tema técnico, instrumental ou operacional de tecnologia, sistemas, portais, interoperabilidade, arquitetura da informação, proteção de dados ou gestão de TI?"
+   },
+   {
+    "id": "T4",
+    "texto": "O artigo analisa diretamente instituições, políticas ou práticas do setor público relacionadas à abertura?"
+   }
+  ],
+  "por_avaliador": [
+   {
+    "decisao": "Excluir",
+    "selo": "prioridade máxima",
+    "texto": "O artigo é classificado como Excluir se qualquer uma das condições abaixo ocorrer — basta uma única ocorrência para excluir.",
+    "condicoes": [
+     "Ano = Outro",
+     "Idioma = Outro",
+     "T1 = Não",
+     "T2 = Não",
+     "T3 = Não",
+     "T4 = Não"
+    ]
+   },
+   {
+    "decisao": "Incerto",
+    "selo": "avaliado somente se não houver exclusão",
+    "texto": "Caso nenhuma condição de exclusão tenha ocorrido, o artigo é classificado como Incerto se houver pelo menos uma resposta “Não sei” em T1, T2, T3 ou T4.",
+    "condicoes": [
+     "T1 = Não sei",
+     "T2 = Não sei",
+     "T3 = Não sei",
+     "T4 = Não sei"
+    ]
+   },
+   {
+    "decisao": "Incluir",
+    "selo": "todas as condições simultaneamente",
+    "texto": "O artigo é classificado como Incluir somente quando todas as condições abaixo forem atendidas ao mesmo tempo.",
+    "condicoes": [
+     "Ano entre 2009 e 2026",
+     "Idioma: Inglês, Português ou Espanhol",
+     "T1 = Sim",
+     "T2 = Sim",
+     "T3 = Sim",
+     "T4 = Sim"
+    ]
+   }
+  ],
+  "final": [
+   {
+    "decisao": "Inclusão final",
+    "tipo": "incluir",
+    "condicoes": [
+     "A1 = Incluir",
+     "A2 = Incluir"
+    ]
+   },
+   {
+    "decisao": "Exclusão final",
+    "tipo": "excluir",
+    "condicoes": [
+     "A1 = Excluir",
+     "A2 = Excluir"
+    ]
+   },
+   {
+    "decisao": "Encaminhar para 3º avaliador",
+    "tipo": "incerto",
+    "condicoes": [
+     "Discordância entre os avaliadores (A1 ≠ A2)",
+     "Qualquer avaliador classificar como Incerto"
+    ]
+   }
+  ],
+  "matriz": [
+   [
+    "Incluir",
+    "Incluir",
+    "",
+    "Inclusão"
+   ],
+   [
+    "Excluir",
+    "Excluir",
+    "",
+    "Exclusão"
+   ],
+   [
+    "Incluir",
+    "Excluir",
+    "Incluir",
+    "Inclusão"
+   ],
+   [
+    "Incluir",
+    "Excluir",
+    "Excluir",
+    "Exclusão"
+   ],
+   [
+    "Incluir",
+    "Excluir",
+    "Incerto",
+    "Exclusão"
+   ],
+   [
+    "Incluir",
+    "Incerto",
+    "Incluir",
+    "Inclusão"
+   ],
+   [
+    "Incluir",
+    "Incerto",
+    "Excluir",
+    "Exclusão"
+   ],
+   [
+    "Incluir",
+    "Incerto",
+    "Incerto",
+    "Exclusão"
+   ],
+   [
+    "Excluir",
+    "Incerto",
+    "Incluir",
+    "Exclusão"
+   ],
+   [
+    "Excluir",
+    "Incerto",
+    "Excluir",
+    "Exclusão"
+   ],
+   [
+    "Excluir",
+    "Incerto",
+    "Incerto",
+    "Exclusão"
+   ],
+   [
+    "Incerto",
+    "Incerto",
+    "Incluir",
+    "Exclusão"
+   ],
+   [
+    "Incerto",
+    "Incerto",
+    "Excluir",
+    "Exclusão"
+   ],
+   [
+    "Incerto",
+    "Incerto",
+    "Incerto",
+    "Exclusão"
+   ]
+  ],
+  "nota_matriz": "Modelo conservador: qualquer combinação envolvendo “Incerto” no 3º avaliador — ou divergência não resolvida positivamente — resulta em exclusão final, exceto no caso específico A1 Incluir, A2 Incerto, A3 Incluir."
+ }
+}

@@ -257,3 +257,18 @@ class ExtracaoOutrosModel(Base):
     __table_args__ = (
         UniqueConstraint("extracao_id", "campo", name="uq_extracao_outros_campo"),
     )
+
+class ExtracaoDerivadaModel(Base):
+    """Codificações derivadas (d_*) da aba 5_Codificacao_derivada da Matriz de
+    sistematização analítica. Uma linha por (artigo, variável). São produzidas
+    na análise, fora do formulário de extração, e alimentam o site de resultados."""
+    __tablename__ = "extracao_derivada"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    artigo_id = Column(Integer, ForeignKey("artigo.id", ondelete="CASCADE"), nullable=False, index=True)
+    campo = Column(String, nullable=False)   # ex: 'd_nucleo_sentido'
+    valor = Column(Text, nullable=False)     # vários valores separados por "; ", como na Matriz
+
+    __table_args__ = (
+        UniqueConstraint("artigo_id", "campo", name="uq_extracao_derivada_campo"),
+    )

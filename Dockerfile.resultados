@@ -1,0 +1,15 @@
+# Site de resultados da revisão (HTML/CSS/JS estático da pasta dashboard/)
+FROM nginx:1.27-alpine
+
+COPY dashboard/nginx.conf /etc/nginx/conf.d/default.conf
+COPY dashboard/ /usr/share/nginx/html/
+
+# Remove arquivos de trabalho que não precisam ser publicados e garante que o
+# nginx (usuário "nginx") consiga ler tudo: arquivos vindos do Mac com
+# permissão 600 (só o dono lê) causariam erro 403.
+RUN rm -rf /usr/share/nginx/html/ferramentas \
+           /usr/share/nginx/html/nginx.conf \
+           /usr/share/nginx/html/LEIAME.md \
+ && chmod -R a+rX /usr/share/nginx/html
+
+EXPOSE 80

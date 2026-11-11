@@ -1,0 +1,3045 @@
+{
+ "titulo": "Codebook do formulário de extração de dados",
+ "versao": "Outubro de 2026",
+ "secoes": [
+  {
+   "n": 1,
+   "titulo": "Identificação e acessibilidade",
+   "questoes": [
+    {
+     "q": 1,
+     "titulo": "ID do estudo",
+     "var": "q01_id_estudo",
+     "tipo": "Preenchido automaticamente",
+     "orientacao": [],
+     "opcoes": [],
+     "kind": "auto"
+    },
+    {
+     "q": 2,
+     "titulo": "Nome do arquivo",
+     "var": "q02_arquivo",
+     "tipo": "Preenchido automaticamente",
+     "orientacao": [],
+     "opcoes": [],
+     "kind": "auto"
+    },
+    {
+     "q": 3,
+     "titulo": "Referência bibliográfica",
+     "var": "q03_referencia",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registrar ou verificar a referência completa em APA 7.ª edição. Preservar DOI ou URL quando disponível. Exemplo: Figueras Zanabria, V. M. (2019). Gobierno abierto en México: Hacia una discusión realista de su factibilidad. Revista Mexicana de Ciencias Políticas y Sociales, 64(235), 523–554. https://doi.org/10.22201/fcpys.2448492xe.2019.235.59021"
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 4,
+     "titulo": "Idioma da publicação",
+     "var": "q04_idioma",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Codificar o idioma principal do texto integral analisado, não o idioma do título, resumo, palavras-chave ou afiliação. Se houver versões integrais em mais de um idioma, registrar a versão efetivamente analisada e explicar nas observações."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Inglês",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Português",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Espanhol",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 5,
+     "titulo": "País(es) ou abrangência territorial analisada",
+     "var": "q05_pais",
+     "tipo": "Seleção de lista (múltipla)",
+     "orientacao": [
+      "Selecione apenas os países efetivamente analisados no estudo, como objeto empírico, unidade de análise, local de coleta de dados ou contexto institucional."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Países identificados (lista de países)",
+       "criterio": "Países identificados como objeto do estudo: selecionar cada país e registrá-lo na lista."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Global/internacional",
+       "criterio": "Abrangência global/internacional, sem países específicos como unidades principais."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Países não especificados",
+       "criterio": "Vários países analisados, sem identificação de quais."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "O estudo não tem dimensão territorial."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Há dimensão territorial, mas ela não é identificável no artigo."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 6,
+     "titulo": "Objetivo principal do artigo",
+     "var": "q06_objetivo",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Resumir em uma ou duas frases o objetivo declarado pelos autores e indicar a página/seção."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  },
+  {
+   "n": 2,
+   "titulo": "Método, desenho e fase da política",
+   "questoes": [
+    {
+     "q": 7,
+     "titulo": "Natureza principal do artigo",
+     "var": "q07_natureza",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Regra de desempate — Quando o artigo combinar diferentes naturezas, classificar de acordo com o componente predominante na realização da pesquisa. Se houver análise sistemática de material empírico, priorizar Empírico."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Teórico/conceitual",
+       "criterio": "Selecionar quando o artigo desenvolve, propõe, discute ou refina conceitos, categorias ou modelos teóricos, sem realizar análise sistemática de dados empíricos."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Revisão de literatura",
+       "criterio": "Selecionar quando o objetivo principal é sintetizar, analisar ou sistematizar estudos existentes, por meio de revisão narrativa, revisão sistemática, scoping review, bibliometria ou abordagem semelhante."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Empírico",
+       "criterio": "Selecionar quando o artigo realiza análise sistemática de material empírico, como entrevistas, questionários, documentos, bases de dados, textos, discursos, estatísticas, legislação, decisões judiciais ou outros dados. Selecionar esta opção mesmo quando o artigo também apresenta discussão teórica, conceitual ou normativa."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Normativo/jurídico",
+       "criterio": "Selecionar quando o objetivo principal é discutir, interpretar, avaliar ou propor normas, princípios, regras ou questões jurídicas, sem que uma análise empírica sistemática constitua o componente principal do estudo."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Metodológico",
+       "criterio": "Selecionar quando o foco principal é desenvolver, testar, discutir ou propor métodos, técnicas, instrumentos ou procedimentos de pesquisa."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Selecionar apenas quando o artigo não se enquadrar adequadamente nas categorias anteriores. Especificar a natureza identificada no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a natureza principal do artigo com base nas informações disponíveis."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 8,
+     "titulo": "Abordagem metodológica",
+     "var": "q08_abordagem",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Qualitativa",
+       "criterio": "Selecionar quando a análise é predominantemente interpretativa, utilizando dados textuais, documentais, discursivos, entrevistas, observações ou outros materiais analisados de forma qualitativa."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Quantitativa",
+       "criterio": "Selecionar quando a análise é predominantemente numérica ou estatística, utilizando dados quantitativos, indicadores, bases de dados, estatísticas ou técnicas de análise quantitativa."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Métodos mistos",
+       "criterio": "Selecionar quando o artigo utiliza e integra de forma substantiva abordagens qualitativa e quantitativa na análise dos dados. Não selecionar apenas porque o artigo apresenta dados de natureza diferente; deve existir uma combinação metodológica efetiva entre as duas abordagens."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a abordagem metodológica não se aplica à natureza do artigo, por exemplo, em artigos exclusivamente teóricos, conceituais ou normativos sem análise de dados."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a abordagem metodológica com base nas informações disponíveis."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 9,
+     "titulo": "Desenho ou estratégia de investigação/pesquisa",
+     "var": "q09_desenho",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Estudo de caso",
+       "criterio": "Selecionar quando o artigo realiza uma análise aprofundada e contextualizada de um caso, organização, instituição, política, evento, território ou unidade específica."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Estudo comparativo",
+       "criterio": "Selecionar quando o artigo realiza comparação analítica sistemática entre duas ou mais unidades, casos, períodos, instituições, países, políticas ou contextos."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Estudo transversal/descritivo",
+       "criterio": "Selecionar quando os dados são analisados em um determinado momento ou período delimitado, com objetivo predominantemente descritivo, sem acompanhamento longitudinal ou intervenção experimental."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Estudo longitudinal",
+       "criterio": "Selecionar quando o artigo acompanha ou compara sistematicamente uma ou mais unidades ao longo de diferentes momentos ou períodos, permitindo analisar mudanças ou continuidades no tempo."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Estudo experimental/quase-experimental",
+       "criterio": "Selecionar quando o estudo envolve uma intervenção, tratamento ou condição experimental e utiliza desenho experimental ou quase-experimental para avaliar seus efeitos."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Questionário/survey",
+       "criterio": "Selecionar quando a principal estratégia de investigação consiste na aplicação sistemática de questionários ou surveys a uma população ou amostra."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Estudo etnográfico",
+       "criterio": "Selecionar quando a investigação utiliza abordagem etnográfica, incluindo observação participante, imersão no campo ou acompanhamento sistemático de práticas, grupos ou contextos sociais."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Estudo bibliométrico",
+       "criterio": "Selecionar quando o artigo utiliza técnicas bibliométricas ou análise quantitativa de produção, circulação, citação, coautoria ou outras características da literatura científica."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Revisão sistemática ou de escopo",
+       "criterio": "Selecionar quando o artigo realiza uma revisão estruturada da literatura seguindo procedimentos sistemáticos e explicitados de identificação, seleção e análise dos estudos."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Análise de políticas",
+       "criterio": "Selecionar quando o foco principal é analisar sistematicamente políticas públicas, programas, instrumentos, processos de formulação, implementação ou avaliação de políticas."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Selecionar quando a estratégia de investigação não se enquadrar adequadamente nas categorias anteriores. Especificar a estratégia identificada no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar o desenho ou a estratégia de investigação com base nas informações disponíveis."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 10,
+     "titulo": "Fontes ou tipos de dados analisados",
+     "var": "q10_fontes_dados",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione todas as categorias que descrevem as fontes ou os tipos de dados analisados no artigo. Quando o estudo utilizar mais de uma fonte ou tipo de dado, marque todas as opções correspondentes."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Entrevistas ou grupos focais",
+       "criterio": "Selecionar quando os dados analisados são provenientes de entrevistas individuais, entrevistas em grupo ou grupos focais, realizados pelos pesquisadores ou disponibilizados por terceiros."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Questionários ou inquéritos",
+       "criterio": "Selecionar quando os dados analisados são provenientes de questionários, surveys ou outros instrumentos padronizados aplicados a participantes ou respondentes."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Observação",
+       "criterio": "Selecionar quando os dados são produzidos por meio de observação sistemática, participante ou não participante."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Documentos oficiais ou legislação",
+       "criterio": "Selecionar quando os dados são provenientes de leis, decretos, regulamentos, atos administrativos, relatórios oficiais, documentos institucionais ou outros documentos produzidos por órgãos públicos."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Decisões judiciais",
+       "criterio": "Selecionar quando os dados analisados são provenientes de decisões, acórdãos, sentenças ou outros documentos produzidos por tribunais ou órgãos judiciais."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Debates ou atas parlamentares",
+       "criterio": "Selecionar quando os dados são provenientes de debates, discursos, sessões, atas, proposições ou outros registros de atividades parlamentares."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Artigos científicos ou literatura publicada",
+       "criterio": "Selecionar quando os dados ou materiais analisados são provenientes de artigos científicos, livros, capítulos, teses, dissertações ou outras publicações acadêmicas."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Relatórios de organizações",
+       "criterio": "Selecionar quando os dados são provenientes de relatórios, estudos, documentos técnicos ou publicações produzidas por organizações públicas, privadas, internacionais ou da sociedade civil."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Bases de dados estatísticas ou registros administrativos",
+       "criterio": "Selecionar quando os dados são provenientes de bases estatísticas, indicadores, censos, conjuntos de dados quantitativos ou registros administrativos produzidos por instituições ou órgãos públicos."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Dados digitais ou redes sociais",
+       "criterio": "Selecionar quando os dados são provenientes de websites, plataformas digitais, redes sociais, aplicativos, fóruns ou outras fontes digitais."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Dados de imprensa/mídia",
+       "criterio": "Selecionar quando os dados são provenientes de jornais, revistas, televisão, rádio, portais de notícias ou outros meios de comunicação."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Dados experimentais",
+       "criterio": "Selecionar quando os dados são produzidos por meio de experimentos ou intervenções realizadas no âmbito da pesquisa."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Selecionar quando a fonte ou o tipo de dados não se enquadrar adequadamente nas categorias anteriores. Especificar a fonte ou o tipo de dado no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a fonte ou o tipo de dados utilizados com base nas informações disponíveis."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando o artigo não utiliza dados empíricos ou fontes documentais para sua análise, por exemplo, em trabalhos exclusivamente teóricos, conceituais ou normativos."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 11,
+     "titulo": "Técnicas de análise",
+     "var": "q11_tecnicas",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Análise de conteúdo",
+       "criterio": "Selecionar quando o artigo utiliza procedimentos sistemáticos para identificar, categorizar, quantificar ou interpretar conteúdos presentes em textos, documentos, discursos ou outros materiais."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Análise temática",
+       "criterio": "Selecionar quando o artigo identifica, organiza e interpreta temas ou padrões recorrentes nos dados, de forma sistemática."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Análise discursiva",
+       "criterio": "Selecionar quando o artigo analisa discursos, linguagem, narrativas ou práticas discursivas, considerando seus significados, contextos e formas de construção da realidade."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Análise jurídica/doutrinária",
+       "criterio": "Selecionar quando o artigo realiza interpretação e análise sistemática de normas, princípios, legislação, jurisprudência, doutrina ou outros materiais jurídicos."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Análise comparativa",
+       "criterio": "Selecionar quando o artigo realiza comparação sistemática entre casos, unidades, períodos, instituições, países, políticas ou outros contextos."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Análise estatística",
+       "criterio": "Selecionar quando o artigo utiliza técnicas estatísticas para descrever, testar relações, identificar padrões ou estimar efeitos a partir de dados quantitativos."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Análise bibliométrica",
+       "criterio": "Selecionar quando o artigo utiliza métodos bibliométricos para analisar a produção científica, incluindo citações, coautoria, produtividade, impacto ou evolução da literatura."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Análise de redes",
+       "criterio": "Selecionar quando o artigo analisa relações ou estruturas de conexão entre atores, organizações, documentos, conceitos ou outros elementos por meio de técnicas de análise de redes."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Análise de políticas",
+       "criterio": "Selecionar quando o artigo analisa sistematicamente políticas públicas, programas, instrumentos, processos de formulação, implementação ou avaliação de políticas."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Análise de coocorrências",
+       "criterio": "Selecionar quando o artigo analisa a ocorrência conjunta de palavras, conceitos, termos, categorias ou outros elementos para identificar relações, padrões ou estruturas de associação."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outra — especificar",
+       "criterio": "Selecionar quando a técnica de análise não se enquadrar adequadamente nas categorias anteriores. Especificar a técnica utilizada no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar as técnicas de análise utilizadas com base nas informações disponíveis."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando o artigo não realiza análise sistemática de dados, por exemplo, em trabalhos exclusivamente teóricos, conceituais ou normativos."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 12,
+     "titulo": "Fase da política ou do processo analisada",
+     "var": "q12_fase_politica",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Formulação/construção do problema",
+       "criterio": "Selecionar quando o artigo analisa como um problema público é definido, enquadrado, interpretado ou construído, incluindo a definição de causas, consequências e possíveis soluções."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Definição da agenda",
+       "criterio": "Selecionar quando o artigo analisa o processo pelo qual um problema ou tema é incorporado à agenda pública ou política, tornando-se objeto de atenção dos tomadores de decisão."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Adoção",
+       "criterio": "Selecionar quando o artigo analisa a decisão formal de aprovar, adotar ou instituir uma política, programa, lei, regulamento ou instrumento de política pública."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Desenho da política ou programa",
+       "criterio": "Selecionar quando o artigo analisa a definição dos objetivos, instrumentos, regras, mecanismos, recursos ou demais componentes de uma política ou programa."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Implementação",
+       "criterio": "Selecionar quando o artigo analisa a execução, operacionalização ou funcionamento de uma política ou programa após sua adoção."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Monitoramento",
+       "criterio": "Selecionar quando o artigo analisa o acompanhamento sistemático da execução, dos indicadores, das atividades ou do desempenho de uma política ou programa."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Avaliação de resultados",
+       "criterio": "Selecionar quando o artigo analisa os efeitos, resultados ou impactos produzidos por uma política ou programa, incluindo a verificação do alcance de seus objetivos."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Consolidação/institucionalização",
+       "criterio": "Selecionar quando o artigo analisa a continuidade, estabilização, incorporação ou institucionalização de uma política, programa, prática ou instrumento ao longo do tempo."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Retrocesso/descontinuação",
+       "criterio": "Selecionar quando o artigo analisa redução, enfraquecimento, reversão, abandono ou encerramento de uma política, programa ou instrumento."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Mais de uma fase",
+       "criterio": "Selecionar quando o artigo analisa de forma substantiva duas ou mais fases do processo de política pública. Quando possível, selecionar também as fases específicas analisadas."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a análise não se refere a uma política pública ou a um processo de política que possa ser situado nessas fases."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a fase da política ou do processo analisada com base nas informações disponíveis."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 13,
+     "titulo": "Escala geográfica principal",
+     "var": "q13_escala_geo",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Local/municipal",
+       "criterio": "Selecionar quando as unidades analisadas estão concentradas principalmente em um município, cidade ou território local."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Regional/estadual/provincial",
+       "criterio": "Selecionar quando as unidades analisadas estão concentradas principalmente em uma região subnacional, estado, província ou unidade territorial equivalente."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Nacional",
+       "criterio": "Selecionar quando a análise se concentra principalmente em um país ou em suas instituições, políticas, processos ou dados nacionais."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Internacional/transnacional",
+       "criterio": "Selecionar quando o artigo analisa relações, processos, instituições ou fenômenos que atravessam fronteiras nacionais, envolvendo dois ou mais países, sem que o foco principal seja uma perspectiva global."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Global",
+       "criterio": "Selecionar quando o objeto de análise é tratado em escala mundial ou envolve um conjunto amplo de países ou regiões com perspectiva explicitamente global."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Multinível/multiescalar",
+       "criterio": "Selecionar quando o artigo analisa de forma substantiva duas ou mais escalas territoriais ou níveis de governo, articulando-os na análise."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a dimensão geográfica ou territorial não for relevante para o objeto do artigo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a escala geográfica principal com base nas informações disponíveis."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 14,
+     "titulo": "Unidade(s) de análise",
+     "var": "q14_unidade_analise",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Instituição",
+       "criterio": "Selecionar quando a unidade principal de análise é uma instituição, órgão ou entidade específica."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Política pública",
+       "criterio": "Selecionar quando a unidade de análise é uma política pública, programa, iniciativa ou instrumento de política."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Norma jurídica",
+       "criterio": "Selecionar quando a unidade de análise é uma norma, princípio, regra ou disposição jurídica."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Documento/relatório",
+       "criterio": "Selecionar quando a unidade de análise é um documento, relatório ou outro material textual que não se enquadra especificamente nas categorias jurídicas ou institucionais."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Lei ou regulamento",
+       "criterio": "Selecionar quando a unidade de análise é especificamente uma lei, decreto, regulamento ou outro ato normativo formal."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Decisão judicial",
+       "criterio": "Selecionar quando a unidade de análise é uma decisão, sentença, acórdão ou outro pronunciamento judicial."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Parlamento/órgão legislativo",
+       "criterio": "Selecionar quando a unidade de análise é um parlamento, assembleia, congresso ou outro órgão legislativo."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Tribunal",
+       "criterio": "Selecionar quando a unidade de análise é um tribunal ou órgão do Poder Judiciário considerado como instituição."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Administração pública",
+       "criterio": "Selecionar quando a unidade de análise é um órgão, entidade, estrutura ou conjunto de práticas da administração pública."
+      },
+      {
+       "cod": "10",
+       "rotulo": "País",
+       "criterio": "Selecionar quando o país é a principal unidade de comparação ou análise."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Município/região",
+       "criterio": "Selecionar quando a principal unidade de análise é um município, cidade, região, estado, província ou outra unidade territorial subnacional."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Plataforma digital",
+       "criterio": "Selecionar quando a unidade de análise é uma plataforma digital, website, rede social, aplicativo ou outro ambiente digital."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Processo/procedimento",
+       "criterio": "Selecionar quando a unidade de análise é um processo, procedimento, fluxo de trabalho ou conjunto estruturado de atividades."
+      },
+      {
+       "cod": "14",
+       "rotulo": "Organização da sociedade civil",
+       "criterio": "Selecionar quando a unidade de análise é uma organização da sociedade civil, associação, movimento social, ONG ou entidade equivalente."
+      },
+      {
+       "cod": "15",
+       "rotulo": "Meio de comunicação",
+       "criterio": "Selecionar quando a unidade de análise é um jornal, revista, emissora, portal de notícias ou outro meio de comunicação."
+      },
+      {
+       "cod": "16",
+       "rotulo": "Cidadão/indivíduo/utilizador",
+       "criterio": "Selecionar quando a unidade de análise é uma pessoa, grupo de cidadãos, usuário ou participante individual."
+      },
+      {
+       "cod": "17",
+       "rotulo": "Relação Estado–sociedade",
+       "criterio": "Selecionar quando a unidade de análise é a relação, interação ou dinâmica entre instituições estatais e atores da sociedade."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Selecionar quando a unidade de análise não se enquadrar adequadamente nas categorias anteriores. Especificar a unidade no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar a unidade de análise com base nas informações disponíveis."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando o artigo não possui uma unidade de análise identificável, por exemplo, em trabalhos exclusivamente teóricos ou conceituais."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 15,
+     "titulo": "Descrição da unidade e evidência",
+     "var": "q15_unidade_desc",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Descrição da unidade principal — Descrever de forma objetiva a principal unidade ou unidades analisadas no artigo, especificando, quando pertinente, a instituição, política, documento, país, município, organização, indivíduo ou outro objeto analisado.",
+      "Amostra ou conjunto de casos — Informar, quando aplicável, o tamanho e as características da amostra, o número de casos, documentos, entrevistas, decisões judiciais, instituições ou outras unidades analisadas.",
+      "Delimitação — Indicar os critérios utilizados para definir ou selecionar a unidade, a amostra ou os casos analisados, quando essa informação estiver disponível.",
+      "Evidência no artigo — Indicar a página, seção, tabela, figura ou outro local do artigo que sustenta a informação registrada.",
+      "Regra de codificação — Registrar apenas informações explicitamente apresentadas no artigo. Não inferir características da unidade, da amostra ou dos casos quando essas informações não estiverem disponíveis."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  },
+  {
+   "n": 3,
+   "titulo": "Conceitos e definição",
+   "questoes": [
+    {
+     "q": 16,
+     "titulo": "Conceitos de abertura analisados",
+     "var": "q16_conceitos_abertura",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Estado Aberto",
+       "criterio": "Selecionar quando o artigo aborda explicitamente o conceito de Open State / Estado Aberto."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Governo Aberto",
+       "criterio": "Selecionar quando o artigo aborda explicitamente Open Government / Governo Aberto."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Governança Aberta",
+       "criterio": "Selecionar quando o artigo aborda explicitamente Open Governance / Governança Aberta."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Parlamento Aberto",
+       "criterio": "Selecionar quando o artigo aborda explicitamente Open Parliament / Parlamento Aberto."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Justiça Aberta",
+       "criterio": "Selecionar quando o artigo aborda explicitamente Open Justice / Justiça Aberta."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro conceito — especificar",
+       "criterio": "Selecionar quando o artigo analisa outro conceito de abertura relevante para a investigação. Registrar o conceito no campo de especificação."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar apenas quando nenhum dos conceitos de abertura acima é analisado de forma substantiva."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 17,
+     "titulo": "Conceitos relacionados ou dimensões explicitamente analisados",
+     "var": "q17_conceitos_relac",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecionar uma dimensão ou conceito apenas quando este é explicitamente analisado, discutido, definido, operacionalizado ou utilizado como dimensão relevante para compreender os conceitos de abertura estudados."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Transparência",
+       "criterio": "Quando a transparência é analisada como princípio, dimensão ou mecanismo de abertura."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Abertura legislativa",
+       "criterio": "Quando é explicitamente analisada como conceito ou dimensão relacionada com a abertura do processo legislativo."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Acesso à justiça",
+       "criterio": "Quando o acesso à justiça é analisado como dimensão, princípio ou condição relacionada com a Justiça Aberta."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Abertura dos tribunais",
+       "criterio": "Quando a abertura ou acessibilidade dos tribunais é explicitamente analisada."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Participação",
+       "criterio": "Quando a participação de cidadãos, sociedade civil ou outros atores é analisada como dimensão de abertura."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Acesso à informação",
+       "criterio": "Quando o direito, mecanismo ou prática de acesso à informação é analisado."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Accountability/prestação de contas",
+       "criterio": "Quando a responsabilização, prestação de contas ou accountability é explicitamente analisada."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Dados abertos",
+       "criterio": "Quando os dados abertos são analisados como instrumento, mecanismo ou dimensão de abertura."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Colaboração",
+       "criterio": "Quando a colaboração entre Estado e sociedade ou entre diferentes atores é analisada."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Coprodução",
+       "criterio": "Quando a coprodução de políticas, serviços, decisões ou conhecimento é explicitamente analisada."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Quando é analisado outro conceito ou dimensão relevante não contemplado nas opções anteriores. Especificar qual."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Quando nenhuma das dimensões listadas é explicitamente analisada."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Utilizar quando a questão não se aplica ao artigo, por exemplo, quando o artigo não analisa conceitos de abertura ou quando a natureza do estudo não permite identificar dimensões relacionadas."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 18,
+     "titulo": "Conceito principal ou dominante",
+     "var": "q18_conceito_principal",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Identificar o conceito de abertura que apresenta maior centralidade analítica no artigo."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Estado Aberto",
+       "criterio": "O Estado Aberto constitui o principal objeto conceptual ou empírico do artigo."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Governo Aberto",
+       "criterio": "O Governo Aberto constitui o principal objeto conceptual ou empírico."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Governança Aberta",
+       "criterio": "A Governança Aberta constitui o principal objeto conceptual ou empírico."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Parlamento Aberto",
+       "criterio": "O Parlamento Aberto constitui o principal objeto conceptual ou empírico."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Justiça Aberta",
+       "criterio": "A Justiça Aberta constitui o principal objeto conceptual ou empírico."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Outro conceito de abertura é claramente dominante. Especificar qual."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Há dois ou mais conceitos igualmente centrais",
+       "criterio": "Utilizar quando dois ou mais conceitos recebem peso analítico equivalente e não é possível identificar um conceito dominante."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Não há conceito dominante",
+       "criterio": "Utilizar quando vários conceitos são mencionados ou analisados, mas nenhum assume centralidade suficiente para ser considerado dominante."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Utilizar quando não é possível identificar nenhum conceito de abertura como objeto de análise."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 19,
+     "titulo": "Definição textual ou paráfrase fiel",
+     "var": "q19_definicao",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Correspondência com a Q18 — A resposta deve corresponder ao conceito selecionado na Questão 18.",
+      "Conceito principal/dominante — Se foi identificado um conceito principal ou dominante, transcreva uma passagem curta ou faça uma paráfrase fiel da definição apresentada pelo artigo.",
+      "Dois ou mais conceitos igualmente centrais — Se foram identificados dois ou mais conceitos igualmente centrais, registre a definição de cada conceito separadamente.",
+      "Outro — Se foi selecionado Outro, informe a definição do conceito indicado.",
+      "Não há conceito dominante — Se foi selecionado Não há conceito dominante, registre, quando pertinente, como o artigo apresenta ou define os principais conceitos utilizados.",
+      "Não identificado no artigo — Se foi selecionado Não identificado no artigo, escreva exatamente: “Não identificado no artigo”."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 20,
+     "titulo": "Tipo de definição apresentada",
+     "var": "q20_tipo_definicao",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Definição explícita e completa",
+       "criterio": "Selecionar quando o artigo apresenta diretamente o que o conceito significa, fornecendo elementos suficientes para caracterizá-lo e diferenciá-lo de outros conceitos."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Definição explícita, mas parcial",
+       "criterio": "Selecionar quando o artigo apresenta diretamente uma definição, mas ela é incompleta, limitada ou aborda apenas alguns dos elementos que caracterizam o conceito."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Definição apenas implícita",
+       "criterio": "Selecionar quando não há uma definição direta, mas o significado do conceito pode ser inferido a partir de sua descrição, uso, aplicação ou operacionalização no artigo."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Não apresenta definição",
+       "criterio": "Selecionar quando o conceito é utilizado no artigo, mas não há definição explícita nem elementos suficientes para inferir uma definição implícita."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando o conceito não é identificado no artigo."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a classificação da definição não se aplica ao conteúdo analisado."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 21,
+     "titulo": "Delimitação em relação a conceitos próximos",
+     "var": "q21_delimitacao",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Identifique como o artigo relaciona o conceito principal com conceitos próximos ou relacionados. Considere apenas relações explicitamente apresentadas ou claramente estabelecidas pelo artigo. É possível selecionar mais de uma opção quando o artigo estabelecer relações diferentes com conceitos distintos."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Diferencia explicitamente",
+       "criterio": "O artigo estabelece uma distinção clara entre os conceitos."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Trata como equivalente",
+       "criterio": "O artigo utiliza os conceitos como sinônimos ou com significado equivalente."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Apresenta como conceito mais amplo",
+       "criterio": "O conceito analisado é apresentado como abrangendo outro conceito."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Apresenta como subconceito/componente",
+       "criterio": "O conceito analisado é apresentado como parte ou dimensão de outro conceito."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Apresenta como condição",
+       "criterio": "Um conceito é apresentado como condição necessária ou facilitadora para o outro."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Apresenta como consequência",
+       "criterio": "Um conceito é apresentado como resultado ou consequência do outro."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Apresenta como conceito complementar",
+       "criterio": "Os conceitos são apresentados como distintos, mas complementares."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Apresenta como conceito concorrente",
+       "criterio": "Os conceitos são apresentados como abordagens alternativas ou concorrentes."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Relação ambígua",
+       "criterio": "O artigo estabelece alguma relação entre os conceitos, mas não permite determinar claramente qual é a natureza dessa relação."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Não discute a relação",
+       "criterio": "O artigo utiliza ou menciona conceitos próximos, mas não estabelece qualquer relação entre eles."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Não é possível identificar, no artigo, como o conceito se relaciona com conceitos próximos."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 22,
+     "titulo": "Explicação da delimitação conceitual",
+     "var": "q22_delimitacao_expl",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Explicar a relação entre os conceitos e indicar a evidência."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 23,
+     "titulo": "Relação do conceito principal com Governo Aberto",
+     "var": "q23_rel_gov_aberto",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Classifique como o artigo relaciona o conceito principal com o conceito de Governo Aberto. Considere apenas a relação apresentada ou claramente estabelecida pelo próprio artigo. Não faça inferências com base em literatura externa ou no seu conhecimento prévio."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "O conceito principal é mais amplo",
+       "criterio": "O artigo apresenta Governo Aberto como parte de um conceito principal mais abrangente."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Governo Aberto é mais amplo",
+       "criterio": "O artigo apresenta o conceito principal como abrangido por Governo Aberto."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Governo Aberto é componente do conceito principal",
+       "criterio": "Governo Aberto é apresentado como um elemento constitutivo do conceito principal."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Governo Aberto é dimensão do conceito principal",
+       "criterio": "Governo Aberto é apresentado como uma dimensão ou aspecto específico do conceito principal."
+      },
+      {
+       "cod": "5",
+       "rotulo": "O conceito principal é componente de Governo Aberto",
+       "criterio": "O conceito principal é apresentado como um elemento constitutivo de Governo Aberto."
+      },
+      {
+       "cod": "6",
+       "rotulo": "O conceito principal é dimensão de Governo Aberto",
+       "criterio": "O conceito principal é apresentado como uma dimensão ou aspecto específico de Governo Aberto."
+      },
+      {
+       "cod": "7",
+       "rotulo": "São tratados como equivalentes",
+       "criterio": "Os dois conceitos são utilizados como sinônimos ou apresentados como tendo o mesmo significado."
+      },
+      {
+       "cod": "8",
+       "rotulo": "São distintos, mas complementares",
+       "criterio": "O artigo diferencia os conceitos, mas estabelece que eles se complementam."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Relação ambígua",
+       "criterio": "O artigo relaciona os conceitos, mas não permite determinar claramente a natureza ou direção dessa relação."
+      },
+      {
+       "cod": "10",
+       "rotulo": "O artigo não estabelece relação",
+       "criterio": "Ambos os conceitos aparecem no artigo, mas não há uma relação conceitual estabelecida entre eles."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Utilizar quando a relação com Governo Aberto não existir no estudo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Utilizar quando o artigo não fornecer informação suficiente para determinar se ou como estabelece uma relação entre os conceitos."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 24,
+     "titulo": "Relação do conceito principal com Governança Aberta",
+     "var": "q24_rel_governanca_aberta",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Classifique como o artigo relaciona o conceito principal com o conceito de Governança Aberta. Considere exclusivamente a relação apresentada ou claramente estabelecida pelo próprio artigo. Não faça inferências com base em literatura externa ou no conhecimento prévio do avaliador."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "O conceito principal é mais amplo",
+       "criterio": "O artigo apresenta Governança Aberta como parte de um conceito principal mais abrangente."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Governança Aberta é mais amplo",
+       "criterio": "O artigo apresenta o conceito principal como abrangido por Governança Aberta."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Governança Aberta é componente do conceito principal",
+       "criterio": "Governança Aberta é apresentada como elemento constitutivo do conceito principal."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Governança Aberta é dimensão do conceito principal",
+       "criterio": "Governança Aberta é apresentada como uma dimensão ou aspecto específico do conceito principal."
+      },
+      {
+       "cod": "5",
+       "rotulo": "O conceito principal é componente de Governança Aberta",
+       "criterio": "O conceito principal é apresentado como elemento constitutivo de Governança Aberta."
+      },
+      {
+       "cod": "6",
+       "rotulo": "O conceito principal é dimensão de Governança Aberta",
+       "criterio": "O conceito principal é apresentado como uma dimensão ou aspecto específico de Governança Aberta."
+      },
+      {
+       "cod": "7",
+       "rotulo": "São tratados como equivalentes",
+       "criterio": "Os dois conceitos são utilizados como sinônimos ou apresentados com significado equivalente."
+      },
+      {
+       "cod": "8",
+       "rotulo": "São distintos, mas complementares",
+       "criterio": "O artigo diferencia os conceitos, mas estabelece que eles se complementam."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Relação ambígua",
+       "criterio": "O artigo estabelece alguma relação entre os conceitos, mas não permite determinar claramente sua natureza ou direção."
+      },
+      {
+       "cod": "10",
+       "rotulo": "O artigo não estabelece relação",
+       "criterio": "Os conceitos aparecem no artigo, mas não é estabelecida uma relação conceitual entre eles."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Utilizar quando a relação com Governança Aberta não existir no estudo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Utilizar quando não houver informação suficiente no artigo para determinar se ou como os conceitos se relacionam."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 25,
+     "titulo": "Relações entre pares conceituais específicos",
+     "var": "q25_pares_conceituais",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Caso o artigo não trate desta relação conceitual, deixar a questão em branco.",
+      "Orientação geral — Para cada par conceitual indicado abaixo, identificar se e como o artigo estabelece uma relação entre os dois conceitos. Registrar a relação explicitamente apresentada no artigo e a respectiva evidência textual.",
+      "Pares conceituais a analisar:",
+      "Parlamento Aberto / Transparência Parlamentar",
+      "Parlamento Aberto / Abertura Legislativa",
+      "Justiça Aberta / Transparência Judicial",
+      "Justiça Aberta / Acesso à Justiça",
+      "Justiça Aberta / Abertura dos Tribunais",
+      "Relação conceitual — Para cada par, a relação pode ser classificada como: um conceito é mais amplo que o outro; um conceito é parte do outro; um conceito é condição do outro; um conceito resulta do outro; os conceitos são equivalentes; os conceitos são distintos, mas relacionados; relação ambígua; relação não discutida; não aplicável; ou relação não identificada.",
+      "Evidência textual — Para cada relação identificada, transcrever uma passagem curta ou fazer uma paráfrase fiel do artigo que justifique a classificação. Indicar a página, seção ou outra localização da evidência.",
+      "Relação não discutida — Indicar quando os dois conceitos são relevantes ou mencionados no artigo, mas o artigo não estabelece ou explica explicitamente a relação entre eles.",
+      "Relação não identificada — Indicar quando os conceitos são mencionados, mas a informação apresentada no artigo não permite determinar a relação existente entre eles.",
+      "Relação ambígua — Indicar quando o artigo apresenta uma relação, mas sua natureza ou interpretação não é suficientemente clara para permitir uma classificação inequívoca.",
+      "Não fazer inferências — Considerar apenas as relações explicitamente apresentadas ou sustentadas pelo artigo. Não fazer inferências com base em conhecimento externo, interpretações pessoais ou pressupostos sobre os conceitos."
+     ],
+     "opcoes": [],
+     "kind": "pairs",
+     "pares": [
+      "Parlamento Aberto / Transparência Parlamentar",
+      "Parlamento Aberto / Abertura Legislativa",
+      "Justiça Aberta / Transparência Judicial",
+      "Justiça Aberta / Acesso à Justiça",
+      "Justiça Aberta / Abertura dos Tribunais"
+     ]
+    }
+   ]
+  },
+  {
+   "n": 4,
+   "titulo": "Princípios e dimensões normativas",
+   "questoes": [
+    {
+     "q": 26,
+     "titulo": "Princípios associados ao conceito",
+     "var": "q26_principios",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Orientação geral — Selecionar apenas os princípios explicitamente associados pelo artigo ao conceito principal ou apresentados como elementos normativos de seu modelo.",
+      "Mais de um princípio — Pode selecionar mais de uma opção quando o artigo associa explicitamente vários princípios ao conceito.",
+      "Associação direta — Codificar apenas princípios que o artigo relacione diretamente ao conceito. Não fazer inferências com base em conhecimento externo, interpretações pessoais ou características que não estejam explicitamente apresentadas no artigo.",
+      "Menções genéricas ou ocasionais — Não codificar como princípios associados quando o princípio é apenas mencionado de forma genérica, incidental ou sem relação direta com o conceito analisado."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Transparência",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Participação",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Accountability/prestação de contas",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Colaboração",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Integridade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Inclusão",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Acessibilidade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Responsividade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Confiança",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Legalidade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Equidade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Deliberação",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Eficiência",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "14",
+       "rotulo": "Publicidade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "15",
+       "rotulo": "Independência",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "16",
+       "rotulo": "Imparcialidade",
+       "criterio": "Associado explicitamente ao conceito principal."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Selecionar quando o artigo apresentar explicitamente um princípio associado ao conceito que não esteja incluído nas opções disponíveis. Especificar o princípio no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar, com base no artigo, quais princípios estão associados ao conceito."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a identificação de princípios associados não se aplicar ao estudo ou ao conceito analisado."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 27,
+     "titulo": "O artigo apresenta dimensões, componentes ou pilares?",
+     "var": "q27_tem_dimensoes",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Avalie se o artigo estrutura o conceito principal em dimensões, componentes, elementos ou pilares, de forma explícita ou claramente identificável no texto.",
+      "Regra de codificação: considere apenas dimensões ou componentes efetivamente apresentados pelo artigo. Não crie dimensões a partir da interpretação do avaliador nem utilize modelos externos para completar a estrutura conceitual."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Sim",
+       "criterio": "O artigo apresenta uma estrutura clara, com duas ou mais dimensões, componentes, elementos ou pilares que integram o conceito."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Parcialmente",
+       "criterio": "O artigo apresenta alguns elementos ou dimensões do conceito, mas sem uma estrutura completa, sistemática ou claramente delimitada."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Não",
+       "criterio": "O artigo trata o conceito como uma unidade, sem apresentar dimensões, componentes ou pilares."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo aborda o conceito, mas não fornece informação suficiente para determinar se possui dimensões, componentes ou pilares."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Utilizar quando a questão não se aplica ao estudo ou quando não há um conceito pertinente a ser analisado."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 28,
+     "titulo": "Dimensões, componentes ou pilares",
+     "var": "q28_dimensoes_desc",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registre as dimensões, componentes ou pilares apresentados no artigo, utilizando, sempre que possível, os termos empregados pelos próprios autores. Para cada item, informe brevemente sua definição ou descrição conforme apresentada no artigo e indique a página ou seção em que aparece.",
+      "Regra de codificação: não criar, agrupar ou renomear dimensões com base na interpretação do avaliador. Se houver várias dimensões, componentes ou pilares, registre cada um."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  },
+  {
+   "n": 5,
+   "titulo": "Operacionalização",
+   "questoes": [
+    {
+     "q": 29,
+     "titulo": "O conceito é operacionalizado?",
+     "var": "q29_operacionalizado",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Sim, explicitamente",
+       "criterio": "Apresenta indicadores, variáveis, categorias ou procedimentos de observação."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Sim, implicitamente",
+       "criterio": "Orienta a análise sem tradução clara em elementos observáveis."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Não",
+       "criterio": "O conceito não é operacionalizado."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Ver Convenções."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Ver Convenções."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 30,
+     "titulo": "Forma da operacionalização",
+     "var": "q30_forma_operac",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Indicadores",
+       "criterio": "O conceito é representado por indicadores específicos utilizados para observá-lo ou mensurá-lo."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Variáveis",
+       "criterio": "O conceito é transformado em uma ou mais variáveis utilizadas na análise."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Dimensões analíticas",
+       "criterio": "O conceito é operacionalizado por meio de dimensões ou componentes utilizados para orientar a análise empírica."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Princípios ou critérios normativos",
+       "criterio": "O conceito é observado ou avaliado a partir de princípios, critérios ou parâmetros normativos."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Procedimentos de observação",
+       "criterio": "O artigo define procedimentos específicos para identificar ou observar empiricamente o conceito."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Resultados/efeitos usados no modelo",
+       "criterio": "O conceito é operacionalizado por meio de resultados, efeitos ou consequências associados a ele e utilizados na análise."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Escala ou índice",
+       "criterio": "O conceito é medido por uma escala, índice ou medida composta."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Há outra forma de operacionalização não contemplada nas opções anteriores. Especificar qual."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo indica que o conceito é operacionalizado, mas não permite identificar de que forma."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Não há operacionalização do conceito que possa ser classificada."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 31,
+     "titulo": "Objeto de aplicação do conceito",
+     "var": "q31_objeto_aplicacao",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione onde ou sobre o que o conceito principal é aplicado, observado ou analisado no artigo. Pode selecionar mais de uma opção quando o conceito for aplicado a diferentes objetos."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Práticas institucionais",
+       "criterio": "Práticas, ações ou atividades realizadas por instituições."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Instrumentos jurídicos",
+       "criterio": "Leis, regulamentos, normas, tratados ou outros instrumentos legais."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Políticas públicas",
+       "criterio": "Políticas, programas ou iniciativas governamentais."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Plataformas digitais",
+       "criterio": "Websites, portais, sistemas ou outras plataformas digitais."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Procedimentos",
+       "criterio": "Processos, rotinas ou procedimentos institucionais."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Comportamentos institucionais",
+       "criterio": "Condutas ou formas de atuação de instituições ou agentes institucionais."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Relações Estado–sociedade",
+       "criterio": "Interações, relações ou formas de articulação entre instituições públicas e sociedade."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Documentos ou textos",
+       "criterio": "Documentos, discursos, relatórios, legislação, publicações ou outros materiais textuais analisados."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Decisões judiciais",
+       "criterio": "Decisões, acórdãos, sentenças ou outros atos decisórios judiciais."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Objeto não contemplado nas opções anteriores. Especificar qual."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Não é possível determinar sobre o que o conceito é aplicado ou analisado."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "O conceito não é aplicado, observado ou analisado empiricamente no artigo."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 32,
+     "titulo": "Descrição da operacionalização",
+     "var": "q32_operac_desc",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Explicar como o conceito foi convertido em elementos observáveis, indicadores, práticas, mecanismos ou variáveis. Incluir página/seção."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  },
+  {
+   "n": 6,
+   "titulo": "Instituições, direito e tecnologia",
+   "questoes": [
+    {
+     "q": 33,
+     "titulo": "Instituições ou atores incluídos",
+     "var": "q33_atores",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione as instituições ou atores que constituem objeto de análise ou que são diretamente envolvidos no fenómeno estudado. Pode selecionar mais de uma opção.",
+      "Regra de especificidade: quando o artigo analisar uma instituição específica, selecione preferencialmente a categoria institucional mais específica (por exemplo, Parlamento/órgão legislativo ou Tribunais). Utilize Poder Legislativo ou Poder Judiciário quando o estudo tratar do Poder como um todo ou quando não houver uma instituição específica claramente identificada."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Poder Executivo",
+       "criterio": "Órgãos e instituições que integram o Executivo."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Poder Legislativo",
+       "criterio": "Instituições ou órgãos pertencentes ao Legislativo."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Poder Judiciário",
+       "criterio": "Órgãos e instituições que integram o Judiciário."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Administração pública",
+       "criterio": "Órgãos, serviços ou entidades da administração pública, quando não for possível ou necessário classificá-los como integrantes de um dos Poderes. É comum em arranjos institucionais diferentes do Brasil."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Parlamento/órgão legislativo",
+       "criterio": "Parlamentos, assembleias ou órgãos legislativos analisados especificamente como instituições. É comum em arranjos institucionais diferentes do Brasil."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Tribunais",
+       "criterio": "Tribunais ou órgãos jurisdicionais analisados especificamente. É comum em arranjos institucionais diferentes do Brasil."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Órgãos de controle",
+       "criterio": "Instituições de fiscalização, auditoria, supervisão ou controlo."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Ministério Público",
+       "criterio": "Ministério Público ou instituições equivalentes."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Sociedade civil",
+       "criterio": "Organizações, movimentos, associações ou outros atores da sociedade civil."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Organizações privadas",
+       "criterio": "Empresas ou outras organizações do setor privado."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Arranjos multissetoriais",
+       "criterio": "Iniciativas, redes ou estruturas que reúnem atores de diferentes setores."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Organizações internacionais",
+       "criterio": "Organizações ou instituições de âmbito internacional."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Cidadãos/utilizadores",
+       "criterio": "Indivíduos enquanto cidadãos, utilizadores de serviços ou participantes."
+      },
+      {
+       "cod": "14",
+       "rotulo": "Mídia",
+       "criterio": "Meios de comunicação, jornalistas ou organizações de mídia."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Instituição ou ator não contemplado nas opções anteriores."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "O artigo não envolve instituições ou atores como objeto, unidade de análise ou participantes."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo apresenta uma análise envolvendo instituições ou atores, mas não permite identificar claramente quais."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 34,
+     "titulo": "Nível institucional/governamental",
+     "var": "q34_nivel_inst",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione os níveis institucionais ou governamentais efetivamente analisados no artigo. Pode selecionar mais de uma opção quando o estudo abranger ou articular diferentes níveis."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Municipal/local",
+       "criterio": "Municípios, governos locais ou instituições de âmbito local."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Regional/estadual/provincial",
+       "criterio": "Estados, províncias, regiões ou instituições de âmbito subnacional."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Nacional",
+       "criterio": "Governo, instituições ou políticas de âmbito nacional."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Supranacional",
+       "criterio": "Instituições com autoridade ou competências exercidas acima do Estado, como estruturas de integração regional."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Internacional",
+       "criterio": "Organizações, acordos ou arranjos que envolvem dois ou mais Estados, sem que haja necessariamente autoridade supranacional."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Multinível",
+       "criterio": "O artigo analisa explicitamente dois ou mais níveis institucionais/governamentais e a relação ou articulação entre eles."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "O artigo não possui uma dimensão institucional ou governamental pertinente à questão."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Há uma dimensão institucional ou governamental, mas não é possível determinar o nível."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 35,
+     "titulo": "Instrumentos normativos, jurídicos ou de política pública",
+     "var": "q35_instrumentos",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione os instrumentos normativos, jurídicos ou de política pública efetivamente analisados, utilizados ou diretamente relacionados ao conceito principal no artigo. Pode selecionar mais de uma opção."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Constituição",
+       "criterio": "Constituição nacional ou documento constitucional equivalente."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Lei",
+       "criterio": "Leis ou atos legislativos com força de lei."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Decreto",
+       "criterio": "Decretos ou atos normativos de natureza equivalente."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Regulamento",
+       "criterio": "Regulamentos ou normas que detalham a aplicação de leis ou políticas."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Regimento parlamentar",
+       "criterio": "Regimentos internos ou normas que disciplinam o funcionamento de parlamentos ou órgãos legislativos."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Resolução",
+       "criterio": "Resoluções ou atos normativos equivalentes emitidos por instituições públicas."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Norma processual",
+       "criterio": "Regras que disciplinam procedimentos administrativos, judiciais ou institucionais."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Decisão judicial",
+       "criterio": "Decisões, sentenças, acórdãos ou outros atos decisórios judiciais analisados pelo artigo."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Tratado/acordo internacional",
+       "criterio": "Tratados, convenções ou acordos celebrados entre Estados ou organizações internacionais."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Política pública",
+       "criterio": "Políticas, programas ou iniciativas governamentais formalmente identificáveis."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Plano ou estratégia governamental",
+       "criterio": "Planos, estratégias, agendas ou documentos de planejamento governamental."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Código de conduta",
+       "criterio": "Códigos ou normas que estabelecem princípios e regras de comportamento institucional ou profissional."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Instrumento não contemplado nas opções anteriores."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Nenhum instrumento identificado",
+       "criterio": "O artigo analisa o conceito, mas não identifica nem utiliza instrumentos normativos, jurídicos ou de política pública."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "A questão não se aplica ao objeto ou à abordagem do artigo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo indica a existência ou relevância de instrumentos, mas não permite determinar quais são."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 36,
+     "titulo": "Especificação dos instrumentos",
+     "var": "q36_instrumentos_espec",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registrar nome, jurisdição, ano e dispositivo/seção, quando disponível."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 37,
+     "titulo": "O artigo analisa ferramentas ou plataformas digitais?",
+     "var": "q37_analisa_digital",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Ferramenta \"mencionada\" sem análise substantiva deve ser codificada como \"Não\". Se a resposta for 3, 97 ou 98, as Q38 a Q40 tendem a receber 97 (Não aplicável)."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Sim",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Parcialmente",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Não",
+       "criterio": ""
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": ""
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": ""
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 38,
+     "titulo": "Ferramentas ou plataformas digitais analisadas",
+     "var": "q38_ferramentas_dig",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Portal institucional",
+       "criterio": "Selecionar quando o artigo analisa um website ou portal oficial utilizado por uma instituição pública para disponibilizar informações, serviços ou conteúdos institucionais."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Portal de transparência",
+       "criterio": "Selecionar quando o artigo analisa uma plataforma específica destinada à divulgação de informações públicas, dados orçamentários, gastos, contratos, receitas ou outros conteúdos de transparência."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Sistema de dados abertos",
+       "criterio": "Selecionar quando o artigo analisa uma plataforma ou sistema destinado à disponibilização de dados públicos em formato aberto para acesso, reutilização ou processamento."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Ferramenta de visualização de dados",
+       "criterio": "Selecionar quando o artigo analisa ferramentas, painéis, dashboards, mapas, gráficos ou outras interfaces destinadas à visualização e exploração de dados."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Plataforma de participação",
+       "criterio": "Selecionar quando o artigo analisa uma plataforma digital criada para possibilitar participação, interação, colaboração ou deliberação entre cidadãos e instituições."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Consulta pública digital",
+       "criterio": "Selecionar quando o artigo analisa ferramentas ou plataformas utilizadas especificamente para realizar consultas públicas, receber contribuições ou coletar opiniões da sociedade por meios digitais."
+      },
+      {
+       "cod": "7",
+       "rotulo": "E-democracia",
+       "criterio": "Selecionar quando o artigo analisa ferramentas ou plataformas digitais destinadas a ampliar a participação democrática, a deliberação, a interação entre cidadãos e governo ou outros processos democráticos mediados por tecnologia."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Sistema judicial eletrônico",
+       "criterio": "Selecionar quando o artigo analisa sistemas digitais utilizados por tribunais ou órgãos judiciais para tramitação, consulta, gestão ou acompanhamento de processos judiciais."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Repositório de decisões/documentos",
+       "criterio": "Selecionar quando o artigo analisa plataformas ou sistemas destinados ao armazenamento, organização e disponibilização de decisões judiciais ou outros documentos públicos."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Plataforma de acesso a decisões",
+       "criterio": "Selecionar quando o artigo analisa especificamente uma plataforma ou ferramenta destinada a facilitar a consulta, pesquisa ou acesso público a decisões judiciais."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Transmissão/audiovisual",
+       "criterio": "Selecionar quando o artigo analisa ferramentas de transmissão ao vivo, gravação ou disponibilização de sessões, audiências, debates ou outros conteúdos audiovisuais institucionais."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Redes sociais",
+       "criterio": "Selecionar quando o artigo analisa o uso de redes sociais por instituições, órgãos públicos, tribunais, parlamentos ou outros atores relacionados ao objeto do estudo."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Aplicativo",
+       "criterio": "Selecionar quando o artigo analisa um aplicativo ou aplicação móvel utilizado para disponibilizar informações, serviços, participação, acesso a processos ou outras funcionalidades relacionadas ao estudo."
+      },
+      {
+       "cod": "14",
+       "rotulo": "Inteligência artificial",
+       "criterio": "Selecionar quando o artigo analisa o uso de sistemas ou aplicações de inteligência artificial no contexto do objeto investigado."
+      },
+      {
+       "cod": "15",
+       "rotulo": "Chatbot/assistente virtual",
+       "criterio": "Selecionar quando o artigo analisa especificamente chatbots, assistentes virtuais ou sistemas conversacionais automatizados utilizados para interação, atendimento, acesso à informação ou prestação de serviços."
+      },
+      {
+       "cod": "16",
+       "rotulo": "Tecnologia de acessibilidade",
+       "criterio": "Selecionar quando o artigo analisa tecnologias ou funcionalidades digitais destinadas a ampliar a acessibilidade de informações, serviços ou participação para pessoas com deficiência ou outras necessidades de acesso."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outra — especificar",
+       "criterio": "Selecionar quando a ferramenta ou plataforma digital analisada não se enquadrar adequadamente nas categorias anteriores. Especificar a ferramenta ou plataforma no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando o artigo aborda ferramentas ou plataformas digitais, mas não fornece informações suficientes para identificar sua natureza ou categoria."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando o artigo não analisa ferramentas ou plataformas digitais."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 39,
+     "titulo": "Funções atribuídas às ferramentas digitais",
+     "var": "q39_funcoes_dig",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Transparência",
+       "criterio": "Selecionar quando a ferramenta é apresentada como mecanismo para tornar informações, processos, decisões ou ações institucionais mais visíveis e acessíveis ao público."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Acesso à informação",
+       "criterio": "Selecionar quando a ferramenta é apresentada como meio de facilitar a obtenção, consulta ou disponibilização de informações públicas."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Participação",
+       "criterio": "Selecionar quando a ferramenta é utilizada para permitir ou ampliar a participação de cidadãos ou outros atores em processos institucionais ou decisórios."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Deliberação",
+       "criterio": "Selecionar quando a ferramenta é utilizada para promover discussão, debate, troca de argumentos ou formação coletiva de opiniões antes ou durante processos decisórios."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Colaboração",
+       "criterio": "Selecionar quando a ferramenta é apresentada como meio de facilitar a cooperação entre cidadãos, organizações públicas, instituições ou outros atores na realização de atividades ou na resolução de problemas."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Coprodução",
+       "criterio": "Selecionar quando a ferramenta permite ou apoia a produção conjunta de políticas, serviços, conteúdos, decisões ou soluções entre instituições públicas e outros atores."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Accountability/controle",
+       "criterio": "Selecionar quando a ferramenta é apresentada como mecanismo de prestação de contas, fiscalização, responsabilização ou controle das ações de instituições ou agentes públicos."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Comunicação",
+       "criterio": "Selecionar quando a principal função atribuída à ferramenta é facilitar a comunicação, divulgação ou interação entre instituições e seus públicos."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Acesso à justiça",
+       "criterio": "Selecionar quando a ferramenta é apresentada como meio de facilitar o acesso a serviços, informações, procedimentos ou mecanismos relacionados à justiça."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Eficiência",
+       "criterio": "Selecionar quando a ferramenta é associada à melhoria da eficiência, agilidade, redução de custos ou otimização de processos e serviços institucionais."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Monitoramento",
+       "criterio": "Selecionar quando a ferramenta permite acompanhar, fiscalizar ou monitorar políticas, serviços, atividades, processos ou resultados."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Aproximação Estado–sociedade",
+       "criterio": "Selecionar quando a ferramenta é apresentada como mecanismo para fortalecer a interação, o diálogo ou a aproximação entre instituições estatais e sociedade."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Inclusão/acessibilidade",
+       "criterio": "Selecionar quando a ferramenta é associada à ampliação do acesso, inclusão ou participação de grupos com barreiras de acesso, incluindo pessoas com deficiência."
+      },
+      {
+       "cod": "14",
+       "rotulo": "Redistribuição de poder",
+       "criterio": "Selecionar quando o artigo relaciona explicitamente a ferramenta à transferência, compartilhamento ou redistribuição de poder decisório entre instituições e cidadãos ou outros atores."
+      },
+      {
+       "cod": "15",
+       "rotulo": "Vigilância/controle",
+       "criterio": "Selecionar quando a ferramenta é apresentada como mecanismo de vigilância, supervisão ou controle sobre indivíduos, grupos ou comportamentos."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outra — especificar",
+       "criterio": "Selecionar quando a função atribuída à ferramenta não se enquadrar adequadamente nas categorias anteriores. Especificar a função no campo correspondente."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando o artigo analisa uma ferramenta digital, mas não permite identificar claramente as funções que lhe são atribuídas."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando a questão não se aplicar ao estudo ou quando não houver ferramenta digital analisada."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 40,
+     "titulo": "Enquadramento teórico das tecnologias digitais",
+     "var": "q40_enquadr_tec",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Instrumento neutro",
+       "criterio": "Selecionar quando o artigo apresenta a tecnologia principalmente como ferramenta ou meio técnico, sem atribuir-lhe efeitos políticos, institucionais ou sociais próprios."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Instrumento de transparência",
+       "criterio": "Selecionar quando a tecnologia é enquadrada teoricamente como instrumento para ampliar a transparência, a visibilidade ou a disponibilização de informações."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Instrumento de participação",
+       "criterio": "Selecionar quando a tecnologia é enquadrada como instrumento para ampliar, facilitar ou viabilizar a participação de cidadãos ou outros atores nos processos públicos ou decisórios."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Instrumento de inclusão/acessibilidade",
+       "criterio": "Selecionar quando a tecnologia é enquadrada como mecanismo para ampliar a inclusão, reduzir barreiras de acesso ou melhorar a acessibilidade a informações, serviços ou processos."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Infraestrutura de governança",
+       "criterio": "Selecionar quando a tecnologia é apresentada como parte da infraestrutura que sustenta, organiza ou viabiliza processos de governança, coordenação, interação ou prestação de serviços."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Mecanismo de mediação",
+       "criterio": "Selecionar quando a tecnologia é apresentada como mediadora das relações, interações, fluxos de informação ou processos entre diferentes atores."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Mecanismo de transformação institucional",
+       "criterio": "Selecionar quando o artigo atribui à tecnologia potencial ou capacidade de modificar estruturas, práticas, processos, relações ou formas de funcionamento das instituições."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Mecanismo de redistribuição de poder",
+       "criterio": "Selecionar quando a tecnologia é teoricamente relacionada à transferência, compartilhamento ou redistribuição de poder, influência ou capacidade decisória entre diferentes atores."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Fator ambivalente",
+       "criterio": "Selecionar quando o artigo apresenta a tecnologia como capaz de produzir simultaneamente efeitos positivos e negativos, ou quando seus efeitos dependem das condições de uso, contexto ou atores envolvidos."
+      },
+      {
+       "cod": "10",
+       "rotulo": "Fonte de riscos/novas assimetrias",
+       "criterio": "Selecionar quando a tecnologia é enquadrada como fonte de riscos, desigualdades, assimetrias de informação, poder ou capacidade de ação."
+      },
+      {
+       "cod": "11",
+       "rotulo": "Fator de exclusão digital",
+       "criterio": "Selecionar quando o artigo destaca que a tecnologia pode produzir ou aprofundar exclusão em razão de desigualdades de acesso, competências, recursos ou condições de uso."
+      },
+      {
+       "cod": "12",
+       "rotulo": "Instrumento de vigilância/controle",
+       "criterio": "Selecionar quando a tecnologia é enquadrada como mecanismo de vigilância, monitoramento, supervisão ou controle de indivíduos, grupos ou comportamentos."
+      },
+      {
+       "cod": "13",
+       "rotulo": "Não há enquadramento teórico",
+       "criterio": "Selecionar quando o artigo utiliza ou analisa tecnologias digitais, mas não apresenta um enquadramento teórico sobre seu papel, natureza ou efeitos."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Selecionar quando não for possível determinar, com base nas informações disponíveis, como as tecnologias digitais são enquadradas teoricamente."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Selecionar quando o artigo não analisa tecnologias digitais ou quando a questão não se aplica ao objeto do estudo."
+      }
+     ],
+     "kind": "multi"
+    }
+   ]
+  },
+  {
+   "n": 7,
+   "titulo": "Implementação, obstáculos e efeitos",
+   "questoes": [
+    {
+     "q": 41,
+     "titulo": "Estágio de implementação",
+     "var": "q41_estagio_impl",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Classifique o estágio de implementação do conceito, política, prática ou instrumento analisado, com base nas evidências apresentadas pelo artigo. Considere a implementação efetiva, e não apenas sua adoção formal."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Conceitual",
+       "criterio": "O conceito ou proposta está em fase de formulação, discussão ou desenvolvimento, sem implementação prática identificada."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Experimental/piloto",
+       "criterio": "Está sendo testado em escala limitada, experimental ou como projeto-piloto."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Inicial",
+       "criterio": "Há implementação prática, mas ainda incipiente, limitada ou recente."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Parcial",
+       "criterio": "Há implementação efetiva, mas ela é incompleta, limitada a determinados contextos ou ainda apresenta lacunas relevantes."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Institucionalizado",
+       "criterio": "O conceito, política ou prática foi incorporado a normas, estruturas, procedimentos ou rotinas institucionais regulares."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Consolidado",
+       "criterio": "Há evidências de aplicação estável, abrangente e rotineira, com continuidade ao longo do tempo."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Em retrocesso",
+       "criterio": "O artigo apresenta evidências de redução, enfraquecimento, descontinuidade ou reversão de uma implementação anteriormente existente."
+      },
+      {
+       "cod": "8",
+       "rotulo": "O artigo não avalia implementação",
+       "criterio": "O artigo trata de adoção, formulação, agenda ou discussão do conceito, mas não avalia sua implementação efetiva."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "A questão não se aplica ao objeto ou à abordagem do artigo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo aborda implementação, mas não fornece evidências suficientes para determinar seu estágio."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 42,
+     "titulo": "Princípios com manifestação concreta",
+     "var": "q42_princ_concretos",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione apenas os princípios para os quais o artigo apresenta evidência ou manifestação concreta na prática.",
+      "Categorias e códigos idênticos aos da Q26: 1 Transparência; 2 Participação; 3 Accountability/prestação de contas; 4 Colaboração; 5 Integridade; 6 Inclusão; 7 Acessibilidade; 8 Responsividade; 9 Confiança; 10 Legalidade; 11 Equidade; 12 Deliberação; 13 Eficiência; 14 Publicidade; 15 Independência; 16 Imparcialidade; 88 Outro — especificar; 97 Não aplicável; 98 Não identificado no artigo."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Transparência",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Participação",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Accountability/prestação de contas",
+       "criterio": ""
+      },
+      {
+       "cod": "4",
+       "rotulo": "Colaboração",
+       "criterio": ""
+      },
+      {
+       "cod": "5",
+       "rotulo": "Integridade",
+       "criterio": ""
+      },
+      {
+       "cod": "6",
+       "rotulo": "Inclusão",
+       "criterio": ""
+      },
+      {
+       "cod": "7",
+       "rotulo": "Acessibilidade",
+       "criterio": ""
+      },
+      {
+       "cod": "8",
+       "rotulo": "Responsividade",
+       "criterio": ""
+      },
+      {
+       "cod": "9",
+       "rotulo": "Confiança",
+       "criterio": ""
+      },
+      {
+       "cod": "10",
+       "rotulo": "Legalidade",
+       "criterio": ""
+      },
+      {
+       "cod": "11",
+       "rotulo": "Equidade",
+       "criterio": ""
+      },
+      {
+       "cod": "12",
+       "rotulo": "Deliberação",
+       "criterio": ""
+      },
+      {
+       "cod": "13",
+       "rotulo": "Eficiência",
+       "criterio": ""
+      },
+      {
+       "cod": "14",
+       "rotulo": "Publicidade",
+       "criterio": ""
+      },
+      {
+       "cod": "15",
+       "rotulo": "Independência",
+       "criterio": ""
+      },
+      {
+       "cod": "16",
+       "rotulo": "Imparcialidade",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": ""
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": ""
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 43,
+     "titulo": "Princípios frágeis, limitados ou ausentes",
+     "var": "q43_princ_frageis",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione apenas os princípios cuja insuficiência, limitação ou ausência é explicitamente indicada ou demonstrada pelo artigo.",
+      "Categorias e códigos idênticos aos da Q26 (1 a 16, 88, 97 e 98)."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Transparência",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Participação",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Accountability/prestação de contas",
+       "criterio": ""
+      },
+      {
+       "cod": "4",
+       "rotulo": "Colaboração",
+       "criterio": ""
+      },
+      {
+       "cod": "5",
+       "rotulo": "Integridade",
+       "criterio": ""
+      },
+      {
+       "cod": "6",
+       "rotulo": "Inclusão",
+       "criterio": ""
+      },
+      {
+       "cod": "7",
+       "rotulo": "Acessibilidade",
+       "criterio": ""
+      },
+      {
+       "cod": "8",
+       "rotulo": "Responsividade",
+       "criterio": ""
+      },
+      {
+       "cod": "9",
+       "rotulo": "Confiança",
+       "criterio": ""
+      },
+      {
+       "cod": "10",
+       "rotulo": "Legalidade",
+       "criterio": ""
+      },
+      {
+       "cod": "11",
+       "rotulo": "Equidade",
+       "criterio": ""
+      },
+      {
+       "cod": "12",
+       "rotulo": "Deliberação",
+       "criterio": ""
+      },
+      {
+       "cod": "13",
+       "rotulo": "Eficiência",
+       "criterio": ""
+      },
+      {
+       "cod": "14",
+       "rotulo": "Publicidade",
+       "criterio": ""
+      },
+      {
+       "cod": "15",
+       "rotulo": "Independência",
+       "criterio": ""
+      },
+      {
+       "cod": "16",
+       "rotulo": "Imparcialidade",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": ""
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": ""
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 44,
+     "titulo": "Obstáculos à abertura",
+     "var": "q44_obstaculos",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione os obstáculos à abertura que o artigo identifica, analisa ou demonstra. Pode selecionar mais de uma opção."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Institucionais",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Jurídicos",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Políticos",
+       "criterio": ""
+      },
+      {
+       "cod": "4",
+       "rotulo": "Culturais",
+       "criterio": ""
+      },
+      {
+       "cod": "5",
+       "rotulo": "Tecnológicos",
+       "criterio": ""
+      },
+      {
+       "cod": "6",
+       "rotulo": "Econômicos",
+       "criterio": ""
+      },
+      {
+       "cod": "7",
+       "rotulo": "Organizacionais",
+       "criterio": ""
+      },
+      {
+       "cod": "8",
+       "rotulo": "Informacionais",
+       "criterio": ""
+      },
+      {
+       "cod": "9",
+       "rotulo": "Assimetrias de poder",
+       "criterio": ""
+      },
+      {
+       "cod": "10",
+       "rotulo": "Resistência burocrática",
+       "criterio": ""
+      },
+      {
+       "cod": "11",
+       "rotulo": "Desigualdades sociais",
+       "criterio": ""
+      },
+      {
+       "cod": "12",
+       "rotulo": "Falta de participação",
+       "criterio": ""
+      },
+      {
+       "cod": "13",
+       "rotulo": "Falta de capacidade institucional",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      },
+      {
+       "cod": "14",
+       "rotulo": "Nenhum identificado",
+       "criterio": ""
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": ""
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": ""
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 45,
+     "titulo": "Condições para uma abertura efetiva",
+     "var": "q45_condicoes",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione as condições que o artigo identifica como necessárias, favoráveis ou facilitadoras para uma abertura efetiva. Pode selecionar mais de uma opção."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Vontade política",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Capacidade institucional",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Marco jurídico adequado",
+       "criterio": ""
+      },
+      {
+       "cod": "4",
+       "rotulo": "Recursos financeiros",
+       "criterio": ""
+      },
+      {
+       "cod": "5",
+       "rotulo": "Recursos tecnológicos",
+       "criterio": ""
+      },
+      {
+       "cod": "6",
+       "rotulo": "Cultura institucional",
+       "criterio": ""
+      },
+      {
+       "cod": "7",
+       "rotulo": "Participação social",
+       "criterio": ""
+      },
+      {
+       "cod": "8",
+       "rotulo": "Sociedade civil organizada",
+       "criterio": ""
+      },
+      {
+       "cod": "9",
+       "rotulo": "Mecanismos de accountability",
+       "criterio": ""
+      },
+      {
+       "cod": "10",
+       "rotulo": "Educação/capacitação",
+       "criterio": ""
+      },
+      {
+       "cod": "11",
+       "rotulo": "Acessibilidade",
+       "criterio": ""
+      },
+      {
+       "cod": "12",
+       "rotulo": "Inclusão",
+       "criterio": ""
+      },
+      {
+       "cod": "13",
+       "rotulo": "Independência institucional",
+       "criterio": ""
+      },
+      {
+       "cod": "14",
+       "rotulo": "Proteção de direitos",
+       "criterio": ""
+      },
+      {
+       "cod": "15",
+       "rotulo": "Continuidade institucional",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": ""
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": ""
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 46,
+     "titulo": "Extensão da mudança",
+     "var": "q46_extensao_mudanca",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Classifique a extensão da mudança associada à abertura, com base nas evidências apresentadas no artigo."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Nenhuma ou mínima",
+       "criterio": "Não há mudança relevante ou ela é muito limitada."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Incremental",
+       "criterio": "Há mudanças pontuais ou graduais, sem alterar significativamente as estruturas existentes."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Substantiva",
+       "criterio": "Há mudanças relevantes nas práticas, processos ou instituições, mas sem transformação estrutural."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Transformadora",
+       "criterio": "A mudança altera de forma profunda estruturas, relações, práticas ou formas de funcionamento."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Ambivalente",
+       "criterio": "O artigo apresenta efeitos de mudança contraditórios, com avanços e limitações relevantes."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Não é possível determinar",
+       "criterio": "O artigo aborda mudanças, mas não fornece evidências suficientes para classificá-las."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "Não há mudança ou processo de mudança pertinente ao estudo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Não há informação suficiente no artigo sobre a extensão da mudança."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 47,
+     "titulo": "Evidência de mudança nas relações de poder",
+     "var": "q47_mudanca_poder",
+     "tipo": "Escolha única",
+     "orientacao": [
+      "Classifique se o artigo apresenta evidências de mudança nas relações de poder decorrentes da abertura."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Sim, claramente",
+       "criterio": "Há evidências explícitas de mudança na autoridade, influência, voz, controle, capacidade decisória ou distribuição de recursos."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Sim, parcialmente",
+       "criterio": "Há indícios de mudança, mas limitados ou incompletos."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Sim, mas com efeitos contraditórios",
+       "criterio": "O artigo identifica mudanças de poder, mas com efeitos simultaneamente positivos e negativos ou em direções distintas."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Não",
+       "criterio": "O artigo analisa as relações de poder, mas não identifica mudanças."
+      },
+      {
+       "cod": "5",
+       "rotulo": "O artigo não analisa",
+       "criterio": "O artigo não aborda relações de poder."
+      },
+      {
+       "cod": "97",
+       "rotulo": "Não aplicável",
+       "criterio": "A questão não se aplica ao estudo."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "Não há informação suficiente para determinar se houve mudança."
+      }
+     ],
+     "kind": "single"
+    }
+   ]
+  },
+  {
+   "n": 8,
+   "titulo": "Sociedade civil e mídia",
+   "questoes": [
+    {
+     "q": 48,
+     "titulo": "Papel da sociedade civil",
+     "var": "q48_papel_soc_civil",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione o(s) papel(is) atribuído(s) à sociedade civil no artigo, com base no que é explicitamente descrito ou demonstrado. Pode selecionar mais de uma opção."
+     ],
+     "opcoes": [
+      {
+       "cod": "96",
+       "rotulo": "Não mencionada",
+       "criterio": "A sociedade civil não aparece no artigo."
+      },
+      {
+       "cod": "1",
+       "rotulo": "Mencionada, mas sem papel especificado",
+       "criterio": "É mencionada, mas o artigo não define sua função."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Participante",
+       "criterio": "Participa de processos, consultas, decisões ou atividades institucionais."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Fiscalizadora",
+       "criterio": "Exerce monitoramento, controle ou acompanhamento das instituições."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Mobilizadora",
+       "criterio": "Promove mobilização social, campanhas ou ações coletivas."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Coprodutora",
+       "criterio": "Participa da produção conjunta de políticas, serviços, decisões ou soluções."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Mediadora",
+       "criterio": "Atua como intermediária entre instituições, Estado e/ou outros atores."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Contestadora",
+       "criterio": "Questiona, critica ou contesta decisões, políticas ou práticas institucionais."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Beneficiária",
+       "criterio": "É apresentada como destinatária ou beneficiária das ações ou resultados."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Pressionadora institucional",
+       "criterio": "Exerce pressão sobre instituições para promover mudanças ou respostas."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Papel não contemplado nas opções anteriores."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "O artigo aborda a sociedade civil, mas não fornece informação suficiente para determinar seu papel."
+      }
+     ],
+     "kind": "multi"
+    },
+    {
+     "q": 49,
+     "titulo": "Papel da mídia ou cobertura mediática",
+     "var": "q49_papel_midia",
+     "tipo": "Caixas de seleção (múltipla)",
+     "orientacao": [
+      "Selecione o(s) papel(is) atribuído(s) à mídia ou à cobertura mediática no artigo, com base no que é explicitamente descrito ou demonstrado. Pode selecionar mais de uma opção."
+     ],
+     "opcoes": [
+      {
+       "cod": "96",
+       "rotulo": "Não mencionada",
+       "criterio": "A mídia não é mencionada no artigo."
+      },
+      {
+       "cod": "1",
+       "rotulo": "Mencionada, mas sem função especificada",
+       "criterio": "A mídia é mencionada, mas não lhe é atribuído um papel específico."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Divulgação",
+       "criterio": "Dissemina informações, decisões, políticas ou iniciativas."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Mediação",
+       "criterio": "Atua como intermediária entre instituições, atores públicos e sociedade."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Fiscalização",
+       "criterio": "Exerce ou contribui para o acompanhamento e controle das instituições."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Enquadramento",
+       "criterio": "Influencia a forma como questões, atores ou acontecimentos são apresentados e interpretados."
+      },
+      {
+       "cod": "6",
+       "rotulo": "Mobilização",
+       "criterio": "Contribui para mobilizar a sociedade ou estimular participação e ação coletiva."
+      },
+      {
+       "cod": "7",
+       "rotulo": "Amplificação",
+       "criterio": "Amplia a visibilidade ou alcance de determinadas questões, discursos ou demandas."
+      },
+      {
+       "cod": "8",
+       "rotulo": "Pressão institucional",
+       "criterio": "Contribui para pressionar instituições ou autoridades a responderem ou mudarem suas práticas."
+      },
+      {
+       "cod": "9",
+       "rotulo": "Crítica",
+       "criterio": "Questiona, critica ou problematiza ações, decisões ou práticas institucionais."
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": "Papel não contemplado nas opções anteriores."
+      },
+      {
+       "cod": "98",
+       "rotulo": "Não identificado no artigo",
+       "criterio": "A mídia é relevante para o estudo, mas não há informação suficiente para determinar seu papel."
+      }
+     ],
+     "kind": "multi"
+    }
+   ]
+  },
+  {
+   "n": 9,
+   "titulo": "Síntese analítica",
+   "questoes": [
+    {
+     "q": 50,
+     "titulo": "Principal contribuição conceitual",
+     "var": "q50_contrib_conceitual",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registrar a contribuição para definir, distinguir, relacionar ou reformular os conceitos."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 51,
+     "titulo": "Principal contribuição empírica",
+     "var": "q51_contrib_empirica",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registrar o que o artigo acrescenta com base em dados, casos, documentos, entrevistas ou análises sistemáticas. Para artigos não empíricos: \"Não aplicável\"."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 52,
+     "titulo": "Principal tese ou conclusão",
+     "var": "q52_tese",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Resumir a conclusão dos autores."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 53,
+     "titulo": "Contributo para o quadro conceitual da revisão",
+     "var": "q53_contrib_quadro",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Interpretar, com base nos campos anteriores, o que o artigo acrescenta ao quadro conceitual."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 54,
+     "titulo": "Limitações e lacunas",
+     "var": "q54_limitacoes",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Separar limitações reconhecidas pelos autores e lacunas identificadas pelo avaliador."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  },
+  {
+   "n": 10,
+   "titulo": "Qualidade e auditoria",
+   "questoes": [
+    {
+     "q": 55,
+     "titulo": "Clareza do artigo para a extração",
+     "var": "q55_clareza",
+     "tipo": "Escala 1–5",
+     "orientacao": [
+      "Avalie quão fácil é extrair e codificar as informações do artigo, e não a qualidade ou o rigor metodológico do estudo.",
+      "Regra de codificação: atribua uma nota de 1 a 5 conforme o grau de clareza das informações necessárias para o preenchimento do formulário. Considere a clareza, consistência e explicitação das informações no artigo. Quanto maior a clareza e menor a necessidade de inferência, maior a pontuação."
+     ],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Muito difícil",
+       "criterio": "Informação ausente, contraditória ou impossível de interpretar."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Difícil",
+       "criterio": "Várias variáveis exigem inferência ou permanecem ambíguas."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Moderada",
+       "criterio": "Parte da informação é clara, mas existem ambiguidades relevantes."
+      },
+      {
+       "cod": "4",
+       "rotulo": "Clara",
+       "criterio": "A maioria das informações é explícita, com poucas ambiguidades."
+      },
+      {
+       "cod": "5",
+       "rotulo": "Muito clara",
+       "criterio": "Objetivos, conceitos, método, dados e conclusões estão claramente apresentados."
+      }
+     ],
+     "kind": "scale"
+    },
+    {
+     "q": 56,
+     "titulo": "Confiança global na codificação",
+     "var": "q56_confianca",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Alta",
+       "criterio": "A informação codificada é explícita e inequívoca."
+      },
+      {
+       "cod": "2",
+       "rotulo": "Média",
+       "criterio": "A informação é parcialmente explícita."
+      },
+      {
+       "cod": "3",
+       "rotulo": "Baixa",
+       "criterio": "A informação é incompleta ou ambígua."
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 57,
+     "titulo": "Observações do avaliador",
+     "var": "q57_observacoes",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Registrar dúvidas, decisões interpretativas ou pontos para consenso."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    },
+    {
+     "q": 58,
+     "titulo": "Uso de inteligência artificial na extração",
+     "var": "q58_uso_ia",
+     "tipo": "Escolha única",
+     "orientacao": [],
+     "opcoes": [
+      {
+       "cod": "1",
+       "rotulo": "Não",
+       "criterio": ""
+      },
+      {
+       "cod": "2",
+       "rotulo": "Sim, para localizar informação",
+       "criterio": ""
+      },
+      {
+       "cod": "3",
+       "rotulo": "Sim, para resumir ou parafrasear",
+       "criterio": ""
+      },
+      {
+       "cod": "4",
+       "rotulo": "Sim, para sugerir codificações",
+       "criterio": ""
+      },
+      {
+       "cod": "5",
+       "rotulo": "Sim, para preencher campos preliminares",
+       "criterio": ""
+      },
+      {
+       "cod": "6",
+       "rotulo": "Sim, para verificar consistência",
+       "criterio": ""
+      },
+      {
+       "cod": "88",
+       "rotulo": "Outro — especificar",
+       "criterio": ""
+      }
+     ],
+     "kind": "single"
+    },
+    {
+     "q": 59,
+     "titulo": "Ferramenta, finalidade e prompt",
+     "var": "q59_ia_detalhe",
+     "tipo": "Resposta longa",
+     "orientacao": [
+      "Indicar ferramenta, finalidade, prompt completo e validação humana."
+     ],
+     "opcoes": [],
+     "kind": "text"
+    }
+   ]
+  }
+ ]
+}

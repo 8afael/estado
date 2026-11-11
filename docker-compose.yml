@@ -13,4 +13,17 @@ services:
       - "127.0.0.1:9010:9000"
     environment:
       - PYTHONUNBUFFERED=1
+      # origens que podem ler a API pública do site de resultados (separadas por vírgula)
+      - DASHBOARD_ORIGINS=https://politeiaconecta.org
+    restart: unless-stopped
+
+  # site de resultados (pasta dashboard/) + repasse de /api/dashboard para a API
+  resultados:
+    build:
+      context: .
+      dockerfile: Dockerfile.resultados
+    depends_on:
+      - api
+    ports:
+      - "127.0.0.1:9011:80"
     restart: unless-stopped

@@ -1,0 +1,26 @@
+<!--
+  Código para incorporar o site de resultados em uma página do WordPress do Politeia Conecta.
+  1. Publique a pasta do site em um endereço público (ex.: https://politeiaconecta.org/resultados-estado-aberto/).
+  2. No editor do WordPress, adicione um bloco "HTML personalizado" e cole o trecho abaixo,
+     trocando o endereço em src pelo endereço real da pasta.
+  O script ajusta a altura do iframe ao conteúdo (sem barra de rolagem dupla) e leva a página
+  ao topo do iframe quando a pessoa muda de seção.
+-->
+<iframe id="politeia-estado-aberto"
+        src="https://politeiaconecta.org/resultados-estado-aberto/index.html"
+        title="Resultados da revisão sistemática Estado Aberto"
+        style="width:100%;border:0;min-height:900px;display:block"
+        loading="lazy"></iframe>
+<script>
+(function () {
+  var f = document.getElementById('politeia-estado-aberto');
+  window.addEventListener('message', function (e) {
+    if (e.source !== f.contentWindow || !e.data || typeof e.data !== 'object') return;
+    if (e.data.type === 'politeia:height') f.style.height = e.data.height + 'px';
+    if (e.data.type === 'politeia:scrollTop') {
+      var top = f.getBoundingClientRect().top + window.pageYOffset - 90; // 90px = altura do menu fixo do tema
+      if (window.pageYOffset > top) window.scrollTo({top: top, behavior: 'smooth'});
+    }
+  });
+})();
+</script>

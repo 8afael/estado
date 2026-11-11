@@ -1,0 +1,433 @@
+{
+ "projeto": "Estado Aberto: promovendo a cultura e as práticas de governo, parlamento e justiça aberta",
+ "acao": "Ação 2 – Ciência Aberta",
+ "grupo": "Grupo de Pesquisa Politeia · Udesc/ESAG",
+ "pergunta": "Como Estado Aberto, Parlamento Aberto e Justiça Aberta são conceitualmente definidos, delimitados e operacionalizados na literatura, e como se relacionam com Governo Aberto e Governança Aberta?",
+ "pergunta_en": "How are open state, open parliament, and open justice conceptually defined, delimited, and operationalized in the literature, and how do they relate to open government and open governance?",
+ "objetivo_geral": "Analisar, por meio de uma revisão sistemática da literatura, como os conceitos de Estado Aberto, Parlamento Aberto e Justiça Aberta são definidos, delimitados, operacionalizados e concretizados, e como se relacionam com Governo Aberto e Governança Aberta.",
+ "sintese_geral": "A literatura sobre abertura do setor público é, na prática, uma literatura sobre Governo Aberto e transparência no Poder Executivo. Estado, Parlamento e Justiça Aberta são conceitos periféricos no corpus (18 de 282 artigos como conceito dominante; 16, 14 e 18 artigos, respectivamente, os abordam) e recentes, com concentração a partir de 2022. Os achados centrais são:",
+ "sintese_achados": [
+  {
+   "titulo": "Definição.",
+   "texto": "Os três conceitos são definidos por derivação: herdam a tríade transparência–participação–colaboração do Governo Aberto e a aplicam a outro Poder ou ao Estado como um todo. A exceção é a Justiça Aberta, que tem uma segunda genealogia, mais antiga e própria: o princípio jurídico de publicidade dos julgamentos (open justice) do common law e do art. 6 da Convenção Europeia dos Direitos Humanos (CEDH)."
+  },
+  {
+   "titulo": "Delimitação.",
+   "texto": "Predomina a sobreposição parcial com conceitos próximos (relações hierárquicas ou funcionais), não a fronteira clara. A transparência é tratada como componente ou condição dos conceitos focais, nunca como equivalente; a Justiça Aberta é a única delimitada por conceitos concorrentes (privacidade, confidencialidade, segredo)."
+  },
+  {
+   "titulo": "Relação com Governo e Governança Aberta.",
+   "texto": "Coexistem três arquiteturas: extensão (o Governo Aberto levado ao Legislativo e ao Judiciário), guarda-chuva (o Estado Aberto engloba Governo, Parlamento e Justiça Aberta) e setorial paralelo (a Justiça Aberta como princípio autônomo). A Governança Aberta aparece como lógica relacional multiator, mas raramente é posicionada de forma explícita em relação aos conceitos focais."
+  },
+  {
+   "titulo": "Operacionalização.",
+   "texto": "Os conceitos focais são operacionalizados sobretudo por listas de verificação de critérios normativos aplicadas a portais e práticas institucionais; há poucos índices próprios (Índice Institucional de Governo Aberto Legislativo Estatal – IIGALE-Brasil, índice latino-americano de 85 indicadores, Métrica de Justicia Abierta). Mede-se mais transparência do que participação, colaboração e accountability."
+  },
+  {
+   "titulo": "Concretização.",
+   "texto": "A implementação é majoritariamente parcial e a mudança, incremental. Há um hiato sistemático entre princípios declarados e concretizados: transparência e publicidade se realizam; participação, accountability, colaboração, confiança, inclusão e equidade ficam frágeis."
+  },
+  {
+   "titulo": "Fatores.",
+   "texto": "A abertura é protagonizada pelo Executivo; o direito funciona mais como fundamento e instrumento de institucionalização do que como limite (exceto na Justiça Aberta); a tecnologia é lida de forma predominantemente instrumental; a sociedade civil é retratada como ativa, mas com participação quase sempre consultiva; e a mídia está ausente em um terço do corpus."
+  }
+ ],
+ "resposta_pergunta": [
+  {
+   "titulo": "Definição.",
+   "texto": "Estado, Parlamento e Justiça Aberta são definidos como projeções da tríade transparência–participação–colaboração sobre diferentes escopos institucionais: o Estado como um todo, o Legislativo e o sistema de justiça. O Parlamento Aberto é o mais bem definido e estável (modelo institucional de visibilidade, acessibilidade e permeabilidade); o Estado Aberto é o mais invocado e o menos teorizado; a Justiça Aberta é o mais heterogêneo, dividido entre um princípio jurídico de publicidade com longa tradição e uma agenda recente de governo aberto judicial."
+  },
+  {
+   "titulo": "Delimitação.",
+   "texto": "Os conceitos são delimitados por inclusão, não por exclusão: transparência, acesso à informação e abertura legislativa são componentes ou condições do Parlamento Aberto; transparência judicial e abertura dos tribunais são componentes da Justiça Aberta, e o acesso à justiça, sua finalidade. A única fronteira nítida é a que separa a Justiça Aberta da privacidade e do segredo, que funcionam como conceitos concorrentes."
+  },
+  {
+   "titulo": "Relação com Governo e Governança Aberta.",
+   "texto": "O Governo Aberto é o conceito matriz. A literatura propõe uma arquitetura dominante em que o Parlamento e a Justiça Aberta são extensões setoriais do Governo Aberto e o Estado Aberto é o guarda-chuva que os reúne, combinação que se consolida na produção ibero-americana a partir de 2022. Essa arquitetura convive com uma leitura setorial paralela da Justiça Aberta (common law) e com uma Governança Aberta que opera como horizonte relacional e multiator, mas não é articulada com os conceitos focais."
+  },
+  {
+   "titulo": "Operacionalização e concretização.",
+   "texto": "Os conceitos são operacionalizados por critérios normativos aplicados a portais, normas e práticas, com poucos índices próprios e nenhum de Estado Aberto. Mede-se e concretiza-se sobretudo a dimensão informacional; participação, colaboração e accountability são declaradas, mas pouco medidas e frágeis na prática. A implementação é parcial e a mudança, incremental, com redistribuição de poder limitada."
+  },
+  {
+   "titulo": "Fatores.",
+   "texto": "A abertura depende de capacidade institucional, vontade política e marco jurídico; é protagonizada pelo Executivo; é sustentada e institucionalizada pelo direito, que, na justiça, também a limita; é mediada por tecnologias lidas de modo sobretudo instrumental; conta com uma sociedade civil ativa, mas com pouco poder decisório; e ignora, em grande medida, a mídia."
+  }
+ ],
+ "objetivos_especificos": [
+  {
+   "id": "OE1",
+   "titulo": "Caracterizar o perfil da produção científica",
+   "eixos": "E0",
+   "sintese": "O corpus é dominado pelo Governo Aberto, que é o conceito principal em 145 artigos (51,4%) e é abordado em 251 (89,6%). Um segundo bloco expressivo (103 artigos; 36,5%) tem como eixo conceitos correlatos de abertura, sobretudo transparência e acesso à informação (41), dados abertos (26), participação/colaboração (9), governo eletrônico (8) e accountability/integridade (7). Os conceitos focais da pergunta são minoritários: Justiça Aberta é dominante em 9 artigos (3,2%) e abordada em 18; Parlamento Aberto, em 7 (2,5%) e 14; Estado Aberto, em apenas 2 (0,7%) e 16; Governança Aberta, em 7 (2,5%) e 38. Em outras palavras, Estado Aberto é sobretudo um conceito mencionado (14 dos 16 artigos que o abordam não o têm como central). A produção cresce de forma contínua de 2009 (2 artigos) até 2023 (27), com patamar de 23 a 27 artigos por ano entre 2019 e 2025 (2026 é ano parcial). Os conceitos focais são recentes: os dois artigos de Estado Aberto são de 2022 e 2025, e 6 dos 9 de Justiça Aberta são de 2022–2026. A associação entre conceito e período não é estatisticamente clara (χ² = 26,5; p = 0,19; V = 0,18), mas o padrão descritivo é consistente com a difusão recente da agenda de Estado Aberto promovida pela Comissão Econômica para a América Latina e o Caribe (CEPAL), pela Organização para a Cooperação e Desenvolvimento Econômico (OCDE) e pela Parceria para Governo Aberto (Open Government Partnership – OGP)."
+  },
+  {
+   "id": "OE2",
+   "titulo": "Identificar como os conceitos são definidos",
+   "eixos": "E1",
+   "sintese": "Os três conceitos são definidos por derivação: herdam a tríade transparência–participação–colaboração do Governo Aberto e a aplicam a outro Poder ou ao Estado como um todo. A exceção é a Justiça Aberta, que tem uma segunda genealogia, mais antiga e própria: o princípio jurídico de publicidade dos julgamentos (open justice) do common law e do art. 6 da Convenção Europeia dos Direitos Humanos (CEDH)."
+  },
+  {
+   "id": "OE3",
+   "titulo": "Analisar a delimitação em relação a conceitos próximos",
+   "eixos": "E2",
+   "sintese": "Predomina a sobreposição parcial com conceitos próximos (relações hierárquicas ou funcionais), não a fronteira clara. A transparência é tratada como componente ou condição dos conceitos focais, nunca como equivalente; a Justiça Aberta é a única delimitada por conceitos concorrentes (privacidade, confidencialidade, segredo)."
+  },
+  {
+   "id": "OE4",
+   "titulo": "Analisar a relação com Governo Aberto e Governança Aberta",
+   "eixos": "E3",
+   "sintese": "Coexistem três arquiteturas: extensão (o Governo Aberto levado ao Legislativo e ao Judiciário), guarda-chuva (o Estado Aberto engloba Governo, Parlamento e Justiça Aberta) e setorial paralelo (a Justiça Aberta como princípio autônomo). A Governança Aberta aparece como lógica relacional multiator, mas raramente é posicionada de forma explícita em relação aos conceitos focais."
+  },
+  {
+   "id": "OE5",
+   "titulo": "Identificar a operacionalização em dimensões, indicadores e critérios",
+   "eixos": "E4",
+   "sintese": "Os conceitos focais são operacionalizados sobretudo por listas de verificação de critérios normativos aplicadas a portais e práticas institucionais; há poucos índices próprios (Índice Institucional de Governo Aberto Legislativo Estatal – IIGALE-Brasil, índice latino-americano de 85 indicadores, Métrica de Justicia Abierta). Mede-se mais transparência do que participação, colaboração e accountability."
+  },
+  {
+   "id": "OE6",
+   "titulo": "Analisar a concretização: estágio, obstáculos, condições e efeitos",
+   "eixos": "E5",
+   "sintese": "A implementação é majoritariamente parcial e a mudança, incremental. Há um hiato sistemático entre princípios declarados e concretizados: transparência e publicidade se realizam; participação, accountability, colaboração, confiança, inclusão e equidade ficam frágeis."
+  },
+  {
+   "id": "OE7",
+   "titulo": "Analisar o papel de instituições, direito, ferramentas digitais, sociedade civil e mídia",
+   "eixos": "E6–E10",
+   "sintese": "A abertura é protagonizada pelo Executivo; o direito funciona mais como fundamento e instrumento de institucionalização do que como limite (exceto na Justiça Aberta); a tecnologia é lida de forma predominantemente instrumental; a sociedade civil é retratada como ativa, mas com participação quase sempre consultiva; e a mídia está ausente em um terço do corpus."
+  }
+ ],
+ "consensos": [
+  {
+   "titulo": "",
+   "texto": "A abertura depende de condições políticas e institucionais (vontade política, cultura organizacional, capacidades e institucionalização): tema de 102 teses."
+  },
+  {
+   "titulo": "A mudança produzida pela abertura é predominantemente incremental:",
+   "texto": "149 de 221 artigos com mudança determinável."
+  },
+  {
+   "titulo": "Há um hiato entre abertura formal e efetiva (simbólica, retórica, openwashing):",
+   "texto": "95 teses; avanço em transparência com déficit de participação em outras 15."
+  },
+  {
+   "titulo": "Colaboração, coprodução e ecossistemas multiatores são o horizonte normativo da abertura:",
+   "texto": "100 teses, com destaque para o Parlamento Aberto (5 de 7)."
+  }
+ ],
+ "controversias": [
+  {
+   "titulo": "Otimismo × ceticismo.",
+   "texto": "As teses críticas (44,1%) superam as condicionais (29,3%) e as otimistas (6,1%). A crítica concentra-se no Governo Aberto (47%) e nos conceitos correlatos; o Parlamento Aberto é mais otimista (1 tese crítica em 7), e a Justiça Aberta não tem nenhuma tese crítica, predominando as prescritivas e condicionais."
+  },
+  {
+   "titulo": "Tecnologia como instrumento × fonte de riscos.",
+   "texto": "52 artigos adotam visão crítica da tecnologia e 52 teses tratam de riscos (privacidade, vigilância, exclusão, desigualdade)."
+  },
+  {
+   "titulo": "Arquitetura conceitual.",
+   "texto": "Estado Aberto como guarda-chuva × extensão do Governo Aberto × agendas setoriais por Poder."
+  },
+  {
+   "titulo": "Direito como fundamento × limite.",
+   "texto": "O direito garante a abertura, mas, na Justiça Aberta, a tensão entre publicidade e privacidade ou dignidade aparece em 4 de 9 teses."
+  },
+  {
+   "titulo": "Contexto de regime.",
+   "texto": "Em 28 teses, o contexto político (inclusive autoritário) altera o sentido da transparência, que pode funcionar como instrumento de controle governamental."
+  }
+ ],
+ "conceitos": {
+  "governo": {
+   "nome": "Governo Aberto",
+   "mensagens": [
+    {
+     "titulo": "Como é definido?",
+     "texto": "Como paradigma de governança ou política pública baseada na tríade transparência, participação e colaboração, à qual se somam accountability e integridade (OCDE, CLAD). É o conceito com a definição mais frequente e mais estruturada em dimensões, mas também o que acumula mais sentidos."
+    },
+    {
+     "titulo": "Como é delimitado?",
+     "texto": "Por inclusão: é apresentado como mais amplo do que transparência, dados abertos e participação. Concentra, porém, os problemas de delimitação do corpus: alargamento conceitual, uso intercambiável e a necessidade de se definir pelo que não é."
+    },
+    {
+     "titulo": "Como se relaciona com Governança Aberta e com os conceitos focais?",
+     "texto": "É a referência dos demais conceitos, que se definem como seus componentes ou extensões, mas raramente se define em relação a eles. A Governança Aberta aparece como lógica complementar ou mais ampla, de caráter relacional."
+    },
+    {
+     "titulo": "Como é operacionalizado?",
+     "texto": "De forma explícita, por dimensões, indicadores e índices, com amplo repertório internacional (WJP, Open Data Barometer, IRM da OGP). Mede-se mais transparência e dados abertos do que accountability e colaboração."
+    },
+    {
+     "titulo": "Como se concretiza?",
+     "texto": "De forma parcial e incremental, no Executivo e, cada vez mais, no nível local. A transparência se realiza; a participação existe, mas é frágil; accountability e colaboração ficam aquém do declarado. O obstáculo central é a falta de capacidade institucional."
+    }
+   ],
+   "em_uma_frase": "na literatura analisada, o Governo Aberto é o conceito que organiza o campo da abertura, bem definido em sua tríade e amplamente medido, mas cuja expansão de sentido e cujo hiato entre transparência realizada e participação, colaboração e accountability frágeis o tornam, ao mesmo tempo, a referência e o principal desafio conceitual da agenda.",
+   "lugar_no_corpus": "A literatura sobre abertura do setor público é, sobretudo, uma literatura sobre Governo Aberto. O conceito é central em 145 artigos (51,4%) e abordado em 251 (89,0%), muito acima da Governança Aberta (38 artigos a abordam; 7 a têm como central) e dos conceitos focais da revisão, cada um central em no máximo 9 artigos (Figura 3). Mesmo os artigos cujo conceito principal é outro, como transparência ou dados abertos, quase sempre se situam em relação ao Governo Aberto: ele é abordado em 81,5% dos demais artigos.",
+   "distintivo": "A Figura 11 reúne os indicadores em que os artigos centrais de Governo Aberto mais se afastam dos demais. O Governo Aberto se distingue pela colaboração, pela sociedade civil coprodutora, pelas plataformas de participação, pelas organizações internacionais e pelos arranjos multissetoriais, e é mais vezes concebido como paradigma de governança. Também se distingue por suas fragilidades: accountability e colaboração frágeis são mais frequentes do que nos demais artigos. Em sentido inverso, o direito e a mídia perdem peso: análise jurídica, obstáculos jurídicos e o conceito como princípio jurídico são muito menos frequentes, assim como a fragilidade da acessibilidade, preocupação típica dos estudos de transparência e de dados abertos. Essa figura é a candidata natural a síntese visual na apresentação.",
+   "recorte": [
+    "Conceito central (n = 145): artigos em que o Governo Aberto é o conceito principal ou dominante (variável Q18 no codebook). É o grupo de referência deste relatório.",
+    "Abordagem explícita (n = 251): artigos que abordam explicitamente o Governo Aberto (variável Q16 no codebook). Como esse grupo reúne 89% do corpus, ele é praticamente o próprio corpus e não serve de recorte; é usado apenas para descrever a presença do conceito (Figuras 2 a 5)."
+   ],
+   "lacunas": [
+    {
+     "titulo": "Efeitos.",
+     "texto": "A maioria dos estudos descreve iniciativas e compromissos; são poucos os que avaliam efeitos sobre accountability, corrupção, confiança ou qualidade das políticas, e menos ainda com desenhos longitudinais ou experimentais."
+    },
+    {
+     "titulo": "Medida da accountability e da colaboração.",
+     "texto": "Faltam instrumentos que meçam os pilares declarados mais frágeis, além da transparência e dos dados abertos."
+    },
+    {
+     "titulo": "Delimitação conceitual.",
+     "texto": "O alargamento do termo pede trabalhos que distingam Governo Aberto de transparência, dados abertos, governo digital e Governança Aberta, e que expliquem sua relação com o Estado Aberto."
+    },
+    {
+     "titulo": "Para além do Executivo.",
+     "texto": "O Governo Aberto continua a ser estudado no Executivo; a extensão aos demais Poderes e aos órgãos de controle é tratada como horizonte, não como objeto."
+    },
+    {
+     "titulo": "Equidade e assimetrias.",
+     "texto": "Poucos estudos examinam quem participa e quem se beneficia da abertura, e como ela afeta desigualdades sociais e territoriais (Schommer & Hernández Quiñonez, 2024a; Chen, 2024)."
+    },
+    {
+     "titulo": "Abertura simbólica e retrocesso.",
+     "texto": "O uso instrumental da abertura e os retrocessos merecem investigação sistemática, inclusive em contextos de erosão democrática."
+    }
+   ]
+  },
+  "governanca": {
+   "nome": "Governança Aberta",
+   "mensagens": [
+    {
+     "titulo": "Como é definida?",
+     "texto": "Como paradigma de governança que põe em prática os princípios do Governo Aberto por meio da colaboração entre Estado, cidadãos, sociedade civil e empresas, com ênfase em responsividade e inclusão. As definições são autorais e não se apoiam em organismos internacionais."
+    },
+    {
+     "titulo": "Como é delimitada?",
+     "texto": "Mal. Convive sem fronteira clara com Governo Aberto, boa governança e governança colaborativa; em alguns artigos é sinônimo de Governo Aberto, em outros, a lógica mais ampla que o abrange."
+    },
+    {
+     "titulo": "Como se relaciona com o Governo Aberto e com os conceitos focais?",
+     "texto": "Como horizonte relacional do Governo Aberto, e não como parte da hierarquia que leva ao Estado Aberto. Nenhum artigo central menciona Estado, Parlamento ou Justiça Aberta."
+    },
+    {
+     "titulo": "Como é operacionalizada?",
+     "texto": "De forma difusa: 4 dos 7 artigos centrais a operacionalizam explicitamente, só um tem instrumento próprio, e apenas 21% das dimensões declaradas são medidas."
+    },
+    {
+     "titulo": "Como se concretiza?",
+     "texto": "De forma parcial ou inicial e incremental. A transparência se realiza; a colaboração, que define o conceito, não se concretiza em nenhum artigo, e participação e responsividade são frágeis. Os obstáculos são institucionais e jurídicos."
+    }
+   ],
+   "em_uma_frase": "na literatura analisada, a Governança Aberta é a promessa relacional do Governo Aberto, um paradigma de colaboração entre Estado e sociedade muito invocado, pouco delimitado e quase nunca medido, cujo traço definidor, a colaboração, é justamente o que menos se observa na prática.",
+   "lugar_no_corpus": "A literatura sobre abertura do setor público é, sobretudo, uma literatura sobre Governo Aberto: o conceito é central em 145 artigos (51,4%) e abordado em 251. A Governança Aberta é o segundo conceito de abertura mais mencionado, abordada em 38 artigos (13,5%), mais do que qualquer conceito focal, mas é central em apenas 7 (2,5%). Só um em cada cinco artigos que a mencionam faz dela seu objeto (Figura 3).",
+   "distintivo": "A Figura 11 reúne os indicadores em que os artigos centrais de Governança Aberta mais se afastam do corpus. A Governança Aberta é um paradigma relacional, que valoriza responsividade e inclusão, toma as organizações da sociedade civil como unidade de análise, observa as redes sociais e aposta nos mecanismos de accountability como condição. Distingue-se também pelo peso dos obstáculos jurídicos. Em sentido inverso, nenhuma definição vem de organismo internacional, os obstáculos culturais quase não aparecem e a colaboração, embora central na definição, não se concretiza em nenhum artigo. Essa figura é a candidata natural a síntese visual na apresentação.",
+   "recorte": [
+    "Núcleo (n = 7): artigos em que a Governança Aberta é o conceito principal ou dominante (variável Q18 no codebook). É o grupo de referência para as análises conceituais, porque nele as definições, princípios e relações codificadas dizem respeito à própria Governança Aberta.",
+    "Recorte ampliado (n = 38): todos os artigos que abordam explicitamente a Governança Aberta (variável Q16 no codebook), incluindo 31 em que ela aparece ao lado de outro conceito central, quase sempre o Governo Aberto (22 artigos)."
+   ],
+   "lacunas": [
+    {
+     "titulo": "Definição e delimitação.",
+     "texto": "Faltam trabalhos que distingam a Governança Aberta do Governo Aberto, da boa governança e da governança colaborativa, e que expliquem sua relação com o Estado Aberto."
+    },
+    {
+     "titulo": "Instrumentos de medida.",
+     "texto": "Só um artigo propõe instrumento próprio; faltam medidas da colaboração, da responsividade e da inclusão, os princípios que distinguem o conceito."
+    },
+    {
+     "titulo": "Colaboração na prática.",
+     "texto": "Nenhum artigo central observa colaboração concretizada; estudos sobre arranjos de cocriação, laboratórios e fóruns multiatores poderiam preencher essa lacuna."
+    },
+    {
+     "titulo": "América Latina.",
+     "texto": "A região, que lidera a produção sobre Governo e Estado Aberto, não tem nenhum artigo central de Governança Aberta."
+    },
+    {
+     "titulo": "Outros Poderes.",
+     "texto": "A Governança Aberta é estudada só no Executivo; sua aplicação ao Legislativo, ao Judiciário e aos órgãos de controle é inexplorada."
+    },
+    {
+     "titulo": "Perspectiva dos cidadãos.",
+     "texto": "Mills (2016) mostra o valor de observar a abertura a partir da experiência cotidiana dos cidadãos, abordagem rara no corpus."
+    }
+   ]
+  },
+  "estado": {
+   "nome": "Estado Aberto",
+   "mensagens": [
+    {
+     "titulo": "Como é definido?",
+     "texto": "Como a extensão dos princípios do Governo Aberto aos três Poderes, aos órgãos de controle e aos níveis subnacionais, seja como vontade institucional (Oszlak, em Moyado Flores, 2022), seja como paradigma de governança (Giorgetti et al., 2025). A definição é convergente, mas pouco desenvolvida, porque só dois artigos fazem do conceito seu objeto."
+    },
+    {
+     "titulo": "Como é delimitado?",
+     "texto": "Por inclusão: o Estado Aberto engloba Governo, Parlamento e Justiça Aberta. A delimitação não é problematizada, e o termo funciona sobretudo como enquadramento, guarda-chuva ou horizonte."
+    },
+    {
+     "titulo": "Como se relaciona com Governo Aberto e Governança Aberta?",
+     "texto": "O Governo Aberto é sua parte relativa ao Executivo e sua origem; o recorte concentra toda a arquitetura guarda-chuva do corpus. A Governança Aberta quase não aparece."
+    },
+    {
+     "titulo": "Como é operacionalizado?",
+     "texto": "Indiretamente, por instrumentos de Governo Aberto, de Parlamento Aberto ou de transparência. Não há instrumento que meça o Estado Aberto como sistema."
+    },
+    {
+     "titulo": "Como se concretiza?",
+     "texto": "De forma parcial e incremental. A transparência se realiza; a participação e a accountability, que justificam a extensão aos demais Poderes, são as mais frágeis. Os obstáculos são institucionais e de capacidade, agravados pela necessidade de coordenar instituições autônomas."
+    }
+   ],
+   "em_uma_frase": "na literatura analisada, o Estado Aberto é mais um horizonte do que um objeto, um conceito de enquadramento, latino-americano e recente, que dá nome à extensão do Governo Aberto aos demais Poderes, mas que ainda carece de definição desenvolvida, de instrumentos próprios e de estudos que analisem os Poderes de forma articulada.",
+   "lugar_no_corpus": "A literatura sobre abertura do setor público é, sobretudo, uma literatura sobre Governo Aberto: o conceito é central em 145 artigos (51,4%) e abordado em 251. O Estado Aberto é abordado em 16 artigos (5,7%), mais do que o Parlamento Aberto (14) e quase tanto quanto a Justiça Aberta (18), mas é central em apenas 2 (0,7%). É o conceito focal com a maior distância entre presença e centralidade: enquanto metade dos artigos que abordam Parlamento Aberto ou Justiça Aberta os tem como objeto, só um em cada oito artigos que mencionam o Estado Aberto o estuda (Figura 3).",
+   "distintivo": "A Figura 11 reúne os indicadores em que os 16 artigos mais se afastam do corpus. A literatura que mobiliza o Estado Aberto concentra toda a arquitetura guarda-chuva do corpus, inclui com frequência o Legislativo, o Judiciário e os órgãos de controle, adota escalas multinível e arranjos multissetoriais, apoia-se em tratados e acordos internacionais e dá mais peso à integridade e à coprodução. É recente e escrita em espanhol. Em sentido inverso, a administração pública, presente em quase todo o corpus, perde centralidade. Essa figura é a candidata natural a síntese visual na apresentação.",
+   "recorte": [
+    "Conceito central (n = 2): artigos em que o Estado Aberto é o conceito principal ou dominante (variável Q18 no codebook): Moyado Flores (2022) e Giorgetti et al. (2025).",
+    "Recorte (n = 16): todos os artigos que abordam explicitamente o Estado Aberto (variável Q16 no codebook), incluindo 14 em que ele aparece ao lado de outro conceito central, quase sempre Governo Aberto, Parlamento Aberto ou Justiça Aberta."
+   ],
+   "lacunas": [
+    {
+     "titulo": "Estado Aberto como objeto.",
+     "texto": "Faltam estudos que tomem o Estado Aberto como categoria analítica, com definição própria e delimitação em relação ao Governo Aberto e à Governança Aberta."
+    },
+    {
+     "titulo": "Instrumento de medida.",
+     "texto": "Não há índice ou conjunto de critérios que meça a abertura do Estado como sistema, articulando Executivo, Legislativo, Judiciário e órgãos de controle."
+    },
+    {
+     "titulo": "Análise articulada dos Poderes.",
+     "texto": "Só um artigo analisa mais de um Poder; faltam estudos sobre coordenação, interdependência e assimetrias de abertura entre eles."
+    },
+    {
+     "titulo": "Planos nacionais de Estado Aberto.",
+     "texto": "A experiência da Colômbia, do México, da Argentina e de outros países que adotaram o termo em planos e políticas é pouco avaliada."
+    },
+    {
+     "titulo": "Efeitos.",
+     "texto": "Os estudos descrevem compromissos e portais, mas raramente avaliam efeitos sobre accountability, controle da corrupção ou participação efetiva."
+    },
+    {
+     "titulo": "Fora da América Latina.",
+     "texto": "O termo é praticamente ausente da literatura em inglês, o que sugere investigar conceitos equivalentes em outras tradições, como whole-of-state ou open state na OCDE."
+    }
+   ]
+  },
+  "parlamento": {
+   "nome": "Parlamento Aberto",
+   "mensagens": [
+    {
+     "titulo": "Como é definido?",
+     "texto": "Como modelo institucional do Legislativo, com a definição mais estável entre os conceitos focais: um parlamento visível, acessível e permeável à participação (Seo & Raunio, 2017), que comunica sua atividade em formatos abertos e abre espaços de colaboração e de influência cidadã."
+    },
+    {
+     "titulo": "Como é delimitado?",
+     "texto": "Por inclusão. A transparência parlamentar é seu componente, nunca seu sinônimo, e a abertura legislativa é sua manifestação prática no processo de produção das leis. Não há conceitos concorrentes."
+    },
+    {
+     "titulo": "Como se relaciona com Governo Aberto e Governança Aberta?",
+     "texto": "Como extensão do Governo Aberto ao Legislativo (6 de 7 artigos) e, na produção latino-americana recente, como componente do Estado Aberto. A Governança Aberta é pouco articulada."
+    },
+    {
+     "titulo": "Como é operacionalizado?",
+     "texto": "De forma explícita em todos os artigos centrais, por listas de critérios e índices aplicados a portais e plataformas parlamentares (IIGALE-Brasil, índice latino-americano de 85 indicadores, princípios de visibilidade, acessibilidade e permeabilidade)."
+    },
+    {
+     "titulo": "Como se concretiza?",
+     "texto": "De forma institucionalizada ou parcial, com mudança incremental. A transparência se realiza; a participação existe, mas é frágil; a deliberação fica no plano da promessa. Os obstáculos são tecnológicos e políticos, e a participação social e a vontade política são as condições mais citadas."
+    }
+   ],
+   "em_uma_frase": "na literatura analisada, o Parlamento Aberto é o Governo Aberto traduzido para o Poder Legislativo, um modelo institucional bem definido e bem medido em sua face informacional, cujo desafio é transformar canais digitais de participação em influência efetiva sobre as decisões legislativas.",
+   "lugar_no_corpus": "A literatura sobre abertura do setor público é, sobretudo, uma literatura sobre Governo Aberto: o conceito é central em 145 artigos (51,4%) e abordado em 251. O Parlamento Aberto ocupa uma posição minoritária: é abordado em 14 artigos (5,0%) e é central em 7 (2,5%). Como na Justiça Aberta, em metade dos artigos em que aparece ele é o próprio objeto de análise; o contraste é com o Estado Aberto, que é muito mais citado do que estudado (16 artigos o abordam, 2 o têm como conceito central) (Figura 3).",
+   "distintivo": "A Figura 11 reúne, em uma única visão, os indicadores em que os artigos centrais de Parlamento Aberto mais se afastam do corpus. O Parlamento Aberto é estudado tendo o parlamento como unidade de análise, com o regimento como instrumento e as plataformas de e-democracia como objeto; é derivado do Governo Aberto por extensão; e se distingue pelo peso da abertura legislativa, da deliberação e da sociedade civil coprodutora. A administração pública, presente em quase todo o corpus, praticamente desaparece. Essa figura é a candidata natural a síntese visual na apresentação.",
+   "recorte": [
+    "Núcleo (n = 7): artigos em que o Parlamento Aberto é o conceito principal ou dominante (variável Q18 no codebook). É o grupo de referência para as análises conceituais, porque nele as definições, princípios e relações codificadas dizem respeito ao próprio Parlamento Aberto.",
+    "Recorte ampliado (n = 14): todos os artigos que abordam explicitamente o Parlamento Aberto (variável Q16 no codebook), incluindo 7 em que ele aparece ao lado de outro conceito central, como Governo Aberto, Estado Aberto, transparência ou governança fiscal aberta."
+   ],
+   "lacunas": [
+    {
+     "titulo": "Efeitos sobre a produção legislativa.",
+     "texto": "Os estudos medem a oferta de transparência e de canais participativos, mas não seus efeitos sobre leis, emendas, agenda ou comportamento parlamentar."
+    },
+    {
+     "titulo": "Participação e deliberação.",
+     "texto": "Faltam instrumentos validados para medir a influência da participação e a qualidade da deliberação, as dimensões declaradas mais frágeis."
+    },
+    {
+     "titulo": "Comissões e bastidores.",
+     "texto": "O trabalho das comissões, o lobby e a negociação legislativa seguem pouco abertos e pouco estudados (Seo & Raunio, 2017; Gonzalo, 2017)."
+    },
+    {
+     "titulo": "Parlamentares e usuários.",
+     "texto": "A perspectiva dos próprios parlamentares, dos cidadãos que usam os canais e das organizações de monitoramento é pouco ouvida."
+    },
+    {
+     "titulo": "Níveis subnacionais e comparação.",
+     "texto": "Assembleias estaduais e câmaras municipais aparecem pontualmente (Matoso & Dias, 2025; Victorino et al., 2023; Lozano González, 2016), e faltam comparações entre países e ao longo do tempo."
+    },
+    {
+     "titulo": "Tecnologia e riscos.",
+     "texto": "Nenhum artigo central adota visão crítica da tecnologia; desinformação, exclusão digital e uso de inteligência artificial no Legislativo merecem agenda própria."
+    }
+   ]
+  },
+  "justica": {
+   "nome": "Justiça Aberta",
+   "mensagens": [
+    {
+     "titulo": "Como é definida?",
+     "texto": "Por duas genealogias: o princípio jurídico de publicidade dos julgamentos (open justice), de longa tradição no common law e no sistema europeu de direitos humanos, e a agenda recente de Governo Aberto aplicada ao sistema de justiça, difundida na América Latina pela OGP. As duas tradições raramente se citam; Mercado (2023) é a principal ponte entre elas."
+    },
+    {
+     "titulo": "Como é delimitada?",
+     "texto": "Por inclusão e por exclusão. Transparência judicial e abertura dos tribunais são seus componentes, e o acesso à justiça, sua finalidade. Privacidade, proteção de dados e segredo de justiça são conceitos concorrentes, o que torna a Justiça Aberta o único conceito focal com uma fronteira nítida."
+    },
+    {
+     "titulo": "Como se relaciona com Governo Aberto e Governança Aberta?",
+     "texto": "Na tradição anglófona, como agenda setorial paralela, que não se reconhece no Governo Aberto; na latino-americana, como extensão do Governo Aberto e componente do Estado Aberto. A Governança Aberta quase não é mencionada."
+    },
+    {
+     "titulo": "Como é operacionalizada?",
+     "texto": "Sobretudo de forma implícita, por critérios normativos aplicados a procedimentos e decisões judiciais, e pela observação dos desvios da publicidade. A Métrica de Justicia Abierta é o único instrumento composto identificado."
+    },
+    {
+     "titulo": "Como se concretiza?",
+     "texto": "De forma parcial e ambivalente. A publicidade e a transparência se realizam, mas com restrições; inclusão, acessibilidade, equidade e confiança ficam frágeis. Os obstáculos são organizacionais e jurídicos, e o marco jurídico e a proteção de direitos são as condições mais citadas."
+    }
+   ],
+   "em_uma_frase": "na literatura analisada, a Justiça Aberta é um conceito jurídico antes de ser uma política de abertura, centrado na publicidade e no escrutínio, que convive com a tensão permanente entre o direito do público de ver a justiça sendo feita e o direito das partes à privacidade.",
+   "lugar_no_corpus": "A literatura sobre abertura do setor público é, sobretudo, uma literatura sobre Governo Aberto: o conceito é central em 145 artigos (51,4%) e abordado em 251. A Justiça Aberta ocupa uma posição minoritária, mas não marginal entre os conceitos focais: é abordada em 18 artigos (6,4%) e é central em 9 (3,2%), o maior número de artigos centrais entre Estado Aberto (2), Parlamento Aberto (7) e Governança Aberta (7). Em metade dos artigos em que aparece, portanto, ela é o próprio objeto de análise (Figura 3).",
+   "distintivo": "A Figura 11 reúne, em uma única visão, os indicadores em que os artigos centrais de Justiça Aberta mais se afastam do corpus. A distância é grande em quase todos: a Justiça Aberta é discutida como princípio de direito, com método jurídico, a partir de decisões judiciais e tendo o tribunal como unidade de análise, enquanto os demais conceitos de abertura são estudados como políticas e práticas institucionais do Executivo. Essa figura é a candidata natural a síntese visual na apresentação.",
+   "recorte": [
+    "Núcleo (n = 9): artigos em que a Justiça Aberta é o conceito principal ou dominante (variável Q18). É o grupo de referência para as análises conceituais, porque nele as definições, princípios e relações codificadas dizem respeito à própria Justiça Aberta.",
+    "Recorte ampliado (n = 18): todos os artigos que abordam explicitamente a Justiça Aberta (variável Q16), incluindo 9 em que ela aparece ao lado de outro conceito central, como Governo Aberto, Estado Aberto ou dados abertos."
+   ],
+   "lacunas": [
+    {
+     "titulo": "Diálogo entre tradições.",
+     "texto": "Faltam estudos que articulem a open justice do common law e a Justiça Aberta latino-americana, inclusive em países de tradição romano-germânica, como o Brasil, onde o tema aparece apenas de forma não central."
+    },
+    {
+     "titulo": "Avaliação empírica.",
+     "texto": "A maioria dos artigos centrais é normativo-jurídica; são raros os estudos que medem efeitos da abertura sobre a confiança, a legitimidade ou o acesso à justiça, e não há desenhos longitudinais."
+    },
+    {
+     "titulo": "Instrumentos de medida.",
+     "texto": "Fora a Métrica de Justicia Abierta, não há índices validados; participação, colaboração e efetividade dos mecanismos participativos são as dimensões mais difíceis de medir (Ruvalcaba-Gómez, 2025)."
+    },
+    {
+     "titulo": "Usuários e atores.",
+     "texto": "A perspectiva das partes, de jornalistas e de organizações da sociedade civil é pouco ouvida (Magrath, 2018; Morgan, 2026)."
+    },
+    {
+     "titulo": "Tecnologia e direitos.",
+     "texto": "Tribunais virtuais, dados judiciais abertos e inteligência artificial exigem critérios de ponderação entre publicidade e privacidade, ainda pouco desenvolvidos."
+    },
+    {
+     "titulo": "Outros atores do sistema de justiça.",
+     "texto": "Ministério Público, defensorias e tribunais eleitorais aparecem pontualmente (Bermúdez Castillo, 2023; Medina Torres & Jaramillo, 2021) e merecem agenda própria."
+    }
+   ]
+  }
+ }
+}
